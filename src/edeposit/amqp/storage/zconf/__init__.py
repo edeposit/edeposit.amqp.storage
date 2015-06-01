@@ -8,11 +8,11 @@ import os.path
 
 import ZODB.config
 from ZODB import DB
-from persistent.mapping import PersistentMapping
+from BTrees.OOBTree import OOBTree
 
 
 # Variables ===================================================================
-PROJECT_KEY = "abclinuxu"
+PROJECT_KEY = "edeposit_storage"
 
 
 # Functions & classes =========================================================
@@ -30,13 +30,12 @@ def get_zeo_root():
     dbroot = conn.root()
 
     if PROJECT_KEY not in dbroot:
-        from BTrees.OOBTree import OOBTree
         dbroot[PROJECT_KEY] = OOBTree()
 
     return dbroot[PROJECT_KEY]
 
 
-def get_zeo_key(key, new_obj=PersistentMapping):
+def get_zeo_key(key, new_obj=OOBTree):
     root = get_zeo_root()
 
     if not root.get(key, None):
