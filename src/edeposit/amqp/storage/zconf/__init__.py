@@ -10,15 +10,13 @@ import ZODB.config
 from ZODB import DB
 from BTrees.OOBTree import OOBTree
 
-
-# Variables ===================================================================
-PROJECT_KEY = "edeposit_storage"
+from ..settings import ZCONF_PATH
+from ..settings import PROJECT_KEY
 
 
 # Functions & classes =========================================================
 def get_zeo_connection():
-    path = os.path.join(os.path.dirname(__file__), "zeo_client.conf")
-
+    path = os.path.join(ZCONF_PATH, "zeo_client.conf")
     db = DB(
         ZODB.config.storageFromFile(open(path))
     )
@@ -30,6 +28,7 @@ def get_zeo_root():
     dbroot = conn.root()
 
     if PROJECT_KEY not in dbroot:
+        from BTrees.OOBTree import OOBTree
         dbroot[PROJECT_KEY] = OOBTree()
 
     return dbroot[PROJECT_KEY]
