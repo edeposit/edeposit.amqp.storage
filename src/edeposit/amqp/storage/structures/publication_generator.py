@@ -108,7 +108,7 @@ def generate_database():
 
     return Template(DATABASE_STRUCTURE).substitute(
         fields=fields,
-        class_name=CLASS_NAME,
+        class_name="DB" + CLASS_NAME,
         docstring_fields=_get_docstring_fields(
             COMMON_FIELDS + DATABASE_FIELDS
         )
@@ -116,7 +116,7 @@ def generate_database():
 
 
 def generate_structures():
-    with open("communication/publication.py", "w") as f:
+    with open("publication.py", "w") as f:
         f.write(
             Template(TEMPLATE).substitute(
                 imports="from collections import namedtuple",
@@ -124,7 +124,7 @@ def generate_structures():
             )
         )
 
-    with open("storage/publication.py", "w") as f:
+    with open("db_publication.py", "w") as f:
         f.write(
             Template(TEMPLATE).substitute(
                 imports="from persistent import Persistent",
@@ -133,5 +133,6 @@ def generate_structures():
         )
 
 
+# Main program ================================================================
 if __name__ == '__main__':
     generate_structures()
