@@ -6,3 +6,9 @@
 # Imports =====================================================================
 from publication import Publication
 from db_publication import DBPublication
+
+# AMQP connections
+from requests import SaveRequest
+from requests import SearchRequest
+
+from responses import SearchResult
