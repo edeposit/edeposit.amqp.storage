@@ -21,7 +21,7 @@ fields = [
     "urnnbn",
     "uuid",
     "is_public",
-    "format",
+    "filename",
     "b64_data",
 ]
 
@@ -38,7 +38,7 @@ class Publication(namedtuple('Publication', fields)):
         urnnbn (str): URN:NBN for the publication.
         uuid (str): UUID string to pair the publication with edeposit.
         is_public (bool): Is the file public?
-        format (str): Mime for the format.
+        filename (str): Original filename.
         b64_data (str): Base64 encoded data ebook file.
     '''
 
