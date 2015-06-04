@@ -1,4 +1,4 @@
 ZEO
-ZODB
+ZODB3
 bottle
 kwargs_obj
