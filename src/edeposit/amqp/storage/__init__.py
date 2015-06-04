@@ -40,7 +40,9 @@ def reactToAMQPMessage(message, send_back):
         ValueError: if bad type of `message` structure is given.
     """
     if _instanceof(message, structures.SaveRequest):
-        return save_publication(message.pub)
+        return save_publication(
+            structures.DBPublication.from_comm(message.pub)
+        )
 
     elif _instanceof(message, structures.SearchRequest):
         return structures.SearchResult(
