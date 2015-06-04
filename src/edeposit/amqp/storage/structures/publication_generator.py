@@ -18,7 +18,7 @@ COMMON_FIELDS = [
     ["urnnbn", "(str): URN:NBN for the publication."],
     ["uuid", "(str): UUID string to pair the publication with edeposit."],
     ["is_public", "(bool): Is the file public?"],
-    ["format", "(str): Mime for the format."],
+    ["filename", "(str): Original filename."]
 ]
 
 COMMUNICATION_FIELDS = [
@@ -63,17 +63,64 @@ class $class_name(namedtuple('$class_name', fields)):
     '''
 """
 
+DATABASE_IMPORTS = """
+import os
+import uuid
+import base64
+
+from kwargs_obj import KwargsObj
+from persistent import Persistent
+
+from ..settings import PUBLIC_DIR
+from ..settings import PRIVATE_DIR
+
+from publication import Publication
+
+""".strip()
+
 
 DATABASE_STRUCTURE = """
-class $class_name(Persistent):
+class DB$class_name(Persistent, KwargsObj):
     '''
     Database structure used to store basic metadata about Publications.
 
     Attributes:
         $docstring_fields
     '''
-    def __init__(self):
+    def __init__(self, **kwargs):
         $fields
+        self._kwargs_to_attributes(kwargs)
+
+    @staticmethod
+    def from_comm(pub):
+        dirpath = PUBLIC_DIR if pub.is_public else PRIVATE_DIR
+
+        if not os.path.exists(dirpath):
+            raise IOError("\%s doesn't exists!" % dirpath)
+
+        # get uniq filename
+        filename = "/"
+        while os.path.exists(filename):
+            filename = os.path.join(dirpath, str(uuid.uuid4()))
+
+        with open(filename, "wb") as f:
+            f.write(
+                base64.b64decode(pub.b64_data)
+            )
+
+        return DB$class_name(
+            $comm_to_db_fields
+            file_pointer=filename
+        )
+
+    def to_comm(self):
+        with open(self.file_pointer) as f:
+            data = base64.b64encode(f.read())
+
+        return $class_name(
+            $db_to_comm_fields
+            b64_data=data
+        )
 """
 
 
@@ -106,9 +153,21 @@ def generate_database():
         for name, x in COMMON_FIELDS + DATABASE_FIELDS
     )
 
+    comm_to_db_fields = "            ".join(
+        "%s=pub.%s,\n" % (name, name)
+        for name, x in COMMON_FIELDS
+    )
+
+    db_to_comm_fields = "            ".join(
+        "%s=self.%s,\n" % (name, name)
+        for name, x in COMMON_FIELDS
+    )
+
     return Template(DATABASE_STRUCTURE).substitute(
         fields=fields,
-        class_name="DB" + CLASS_NAME,
+        class_name=CLASS_NAME,
+        comm_to_db_fields=comm_to_db_fields,
+        db_to_comm_fields=db_to_comm_fields,
         docstring_fields=_get_docstring_fields(
             COMMON_FIELDS + DATABASE_FIELDS
         )
@@ -127,7 +186,7 @@ def generate_structures():
     with open("db_publication.py", "w") as f:
         f.write(
             Template(TEMPLATE).substitute(
-                imports="from persistent import Persistent",
+                imports=DATABASE_IMPORTS,
                 classes=generate_database()
             )
         )
