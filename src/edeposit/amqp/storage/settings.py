@@ -35,13 +35,13 @@ import os.path
 #: Path to the directory with zeo.conf and zeo_client.conf
 ZCONF_PATH = os.path.join(os.path.dirname(__file__), "zconf")
 
-PROJECT_KEY = "edeposit_storage"  #: This is used in ZODB.
+PROJECT_KEY = "edeposit_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
 
 PUBLIC_DIR = ""
 PRIVATE_DIR = ""
 
 
-# User configuration reader (don't edit this ==================================
+# User configuration reader (don't edit this) =================================
 _ALLOWED = [str, unicode, int, float, long]
 _SETTINGS_PATH = "edeposit/storage.json"  #: appended to default search paths
 
