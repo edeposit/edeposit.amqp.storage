@@ -14,6 +14,7 @@ from multiprocessing import Process
 
 import pytest
 
+import storage
 from storage import zconf
 from storage import settings
 from storage import storage_handler
@@ -72,7 +73,17 @@ def test_get_db_connectors():
 
 
 def test_check_pub_type():
-    pass
+    with pytest.raises(storage_handler.InvalidType):
+        storage_handler._check_pub_type(object)
+
+    with pytest.raises(storage_handler.InvalidType):
+        storage_handler._check_pub_type(
+            storage.structures.publication.Publication(*range(9))
+        )
+
+    storage_handler._check_pub_type(
+        storage.structures.db_publication.DBPublication()
+    )
 
 
 def teardown_module(module):
