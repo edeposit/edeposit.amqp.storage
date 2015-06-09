@@ -7,6 +7,7 @@
 import os.path
 
 import ZODB.config
+import transaction
 from ZODB import DB
 from BTrees.OOBTree import OOBTree
 
@@ -39,5 +40,6 @@ def get_zeo_key(key, new_obj=OOBTree):
 
     if not root.get(key, None):
         root[key] = new_obj()
+        transaction.commit()
 
     return root[key]
