@@ -18,6 +18,7 @@ import storage
 from storage import zconf
 from storage import settings
 from storage import storage_handler
+from storage.structures import DBPublication
 
 
 # Variables ===================================================================
@@ -33,6 +34,21 @@ def data_context(fn):
         return f.read()
 
 
+@pytest.fixture
+def full_publication():
+    return DBPublication(
+        title="title",
+        author="author",
+        pub_year="2015",
+        isbn="ISBN",
+        urnnbn="URN",
+        uuid="UUID",
+        is_public=True,
+        filename="/home/xex.pdf",
+        file_pointer="/tmp/uuid287378",
+    )
+
+
 # Tests =======================================================================
 def setup_module(module):
     global TMP_DIR
@@ -46,9 +62,7 @@ def setup_module(module):
     zeo_conf_path = os.path.join(TMP_DIR, "zeo.conf")
     with open(zeo_conf_path, "w") as f:
         f.write(
-            Template(data_context("zeo.conf")).substitute(
-                path=TMP_DIR
-            )
+            Template(data_context("zeo.conf")).substitute(path=TMP_DIR)
         )
 
     # write client config to temp directory
@@ -58,7 +72,9 @@ def setup_module(module):
 
     # run the ZEO server
     def run_zeo():
-        subprocess.check_call("runzeo -C " + zeo_conf_path, shell=True)
+        # subprocess.check_call("runzeo -C " + zeo_conf_path, shell=True)
+        import sh  # TODO: remove
+        sh.runzeo(C=zeo_conf_path)
 
     global SERV
     SERV = Process(target=run_zeo)
@@ -66,7 +82,6 @@ def setup_module(module):
 
 
 def test_get_db_connectors():
-    print settings.ZCONF_PATH
     connectors = storage_handler._get_db_connectors()
 
     assert len(list(connectors)) > 1
@@ -81,11 +96,13 @@ def test_check_pub_type():
             storage.structures.publication.Publication(*range(9))
         )
 
-    storage_handler._check_pub_type(
-        storage.structures.db_publication.DBPublication()
-    )
+    storage_handler._check_pub_type(DBPublication())
+
+
+def test_save_publication(full_publication):
+    storage_handler.save_publication(full_publication)
 
 
 def teardown_module(module):
-    shutil.rmtree(TMP_DIR)
     SERV.terminate()
+    shutil.rmtree(TMP_DIR)
