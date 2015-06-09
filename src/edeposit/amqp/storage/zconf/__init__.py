@@ -15,7 +15,7 @@ from ..settings import PROJECT_KEY
 
 
 # Variables ===================================================================
-CONNECTION = None
+_ROOT = None
 
 
 # Functions & classes =========================================================
@@ -27,17 +27,19 @@ def get_zeo_connection():
     return db.open()
 
 
-def get_zeo_root():
-    global CONNECTION
-    conn = CONNECTION if CONNECTION else get_zeo_connection()
-    CONNECTION = conn
+def get_zeo_root(cached=True):
+    global _ROOT
+    if _ROOT and cached:
+        return _ROOT
 
-    dbroot = conn.root()
+    connection = get_zeo_connection()
+    dbroot = connection.root()
 
     if PROJECT_KEY not in dbroot:
         dbroot[PROJECT_KEY] = OOBTree()
 
-    return dbroot[PROJECT_KEY]
+    _ROOT = dbroot[PROJECT_KEY]
+    return _ROOT
 
 
 def get_zeo_key(key, new_obj=OOBTree):
