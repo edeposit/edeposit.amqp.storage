@@ -5,10 +5,9 @@
 #
 # Imports =====================================================================
 import transaction
-from BTrees.OOBTree import OOSet
+from BTrees.OOBTree import OOTreeSet, intersection
 
 
-import settings
 from zconf import get_zeo_key
 
 from structures import DBPublication
@@ -48,32 +47,40 @@ def _check_pub_type(pub, name="pub"):
         )
 
 
-def save_publication(pub):
-    _check_pub_type(pub)
-
+def _index_publication(pub):
     no_of_used_indexes = 0
-    for field_name, db_connector in _get_db_connectors():
+    for field_name, db_connector in list(_get_db_connectors()):
         attr = getattr(pub, field_name)
 
-        if not attr:
+        if not attr:  # index only by set attributes
             continue
 
-        db_connector[attr] = db_connector.get(attr, []) + [pub]
+        handler = db_connector.get(attr, OOTreeSet())
+        handler.insert(pub)
+        db_connector[attr] = handler
+
         no_of_used_indexes += 1
 
     # make sure that atleast one attr was used
     if no_of_used_indexes <= 0:
-        transaction.abort()
         raise UnindexablePublication(
             "You have to use atleast one of the identificators!"
         )
 
-    # save to list of public/private publications
-    key_type = PUB_KEY if pub.is_public else PRIV_KEY
-    list_db = get_zeo_key(key_type, OOSet)
-    list_db.insert(pub)
 
-    transaction.commit()
+def save_publication(pub):
+    _check_pub_type(pub)
+
+    with transaction.manager:
+        # put publication into all indexes
+        _index_publication(pub)
+
+        # save to list of public/private publications
+        list_db = get_zeo_key(
+            PUB_KEY if pub.is_public else PRIV_KEY,
+            OOTreeSet
+        )
+        list_db.insert(pub)
 
 
 def _get_subset_matches(query):
@@ -99,6 +106,6 @@ def search_publications(query):
             final_result = result
             continue
 
-        final_result = final_result.intersection(result)
+        final_result = intersection(final_result, result)
 
     return final_result
