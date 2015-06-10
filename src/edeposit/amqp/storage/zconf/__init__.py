@@ -17,11 +17,25 @@ from ..settings import PROJECT_KEY
 
 
 # Variables ===================================================================
-_ROOT = None
+_ROOT = None  #: cache for one connection for all calls to :meth:`get_zeo_key`
 
 
 # Functions & classes =========================================================
 def get_zeo_connection(on_close_callback=None):
+    """
+    Return connection to the database. You can get root of the database from
+    this connection.
+
+    Warning:
+        Don't try to put one object into multiple connections. It won't work.
+
+    Args:
+        on_close_callback (fn pointer, default None): Function which should be
+                          used when the connection is closed.
+
+    Returns:
+        obj: ZODB connection object.
+    """
     path = os.path.join(ZCONF_PATH, "zeo_client.conf")
     db = DB(storageFromFile(open(path)))
     connection = db.open()
@@ -33,6 +47,16 @@ def get_zeo_connection(on_close_callback=None):
 
 
 def get_zeo_root(cached=True):
+    """
+    Return :attr:`.PROJECT_KEY` from the root of the database.
+
+    Args:
+        cached (bool, default True): Cache object. This will prevent nasty
+               problems with putting same object into multiple connections.
+
+    Returns:
+        OOBTree: Project key from the root of the database.
+    """
     global _ROOT
     if _ROOT and cached:
         return _ROOT
@@ -56,6 +80,18 @@ def get_zeo_root(cached=True):
 
 
 def get_zeo_key(key, new_type=OOBTree):
+    """
+    Get key from the PROJECT_KEY root. Use `new_type` as the new type of the
+    key, if not found.
+
+    Args:
+        key (str): Name of the key which will be returned from the root.
+        new_type (obj, default OOBTree): Put `new_type` into key if the key
+                 wasn't found.
+
+    Returns:
+        obj: Object at `key`. `new_type` instance if not found.
+    """
     root = get_zeo_root()
 
     if not root.get(key, None):
