@@ -108,4 +108,8 @@ def search_publications(query):
 
         final_result = intersection(final_result, result)
 
+    # if no result is found, this is None, and I want []
+    if not final_result:
+        return []
+
     return list(final_result)
