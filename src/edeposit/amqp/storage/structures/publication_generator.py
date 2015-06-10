@@ -134,6 +134,11 @@ class DB$class_name(Persistent, KwargsObj):
 
     def __ne__(self, obj):
         return not self.__eq__(obj)
+
+    def __hash__(self):
+        return hash(
+            "".join(str(x) for x in self.__dict__.values())
+        )
 """
 
 
