@@ -13,11 +13,6 @@ from structures import DBPublication
 from structures.publication_generator import COMMON_FIELDS
 
 
-# Variables ===================================================================
-PUB_KEY = "public"
-PRIV_KEY = "private"
-
-
 # Exceptions ==================================================================
 class InvalidType(Exception):
     pass
@@ -37,9 +32,6 @@ def _get_db_connectors():
         list: List of OOBTree's for each item in :attr:`.COMMON_FIELDS`.
     """
     for field_name, docstring in COMMON_FIELDS:
-        if "(bool" in docstring:  # TODO: try to remove this
-            continue
-
         yield field_name, get_zeo_key(field_name)
 
 
@@ -78,7 +70,7 @@ def _put_into_indexes(pub):
     for field_name, db_connector in list(_get_db_connectors()):
         attr = getattr(pub, field_name)
 
-        if not attr:  # index only by set attributes
+        if attr is None:  # index only by set attributes
             continue
 
         handler = db_connector.get(attr, OOTreeSet())
@@ -109,15 +101,7 @@ def save_publication(pub):
     _check_pub_type(pub)
 
     with transaction.manager:
-        # put publication into all indexes
         _put_into_indexes(pub)
-
-        # save to list of public/private publications
-        list_db = get_zeo_key(
-            PUB_KEY if pub.is_public else PRIV_KEY,
-            OOTreeSet
-        )
-        list_db.insert(pub)
 
 
 def _get_subset_matches(query):
