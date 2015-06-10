@@ -55,6 +55,7 @@ def different_pub():
     dp = copy.deepcopy(full_publication())
     dp.title = "other title"
     dp.author = "other author"
+    dp.is_public = False
 
     return dp
 
@@ -148,6 +149,24 @@ def test_no_result_from_query(full_publication, different_pub):
     )
 
     assert not result
+
+
+def test_get_public_publications(full_publication):
+    result = storage_handler.search_publications(
+        DBPublication(is_public=True)
+    )
+
+    assert result
+    assert set(result) == set([full_publication])
+
+
+def test_get_private_publications(different_pub):
+    result = storage_handler.search_publications(
+        DBPublication(is_public=False)
+    )
+
+    assert result
+    assert set(result) == set([different_pub])
 
 
 def teardown_module(module):
