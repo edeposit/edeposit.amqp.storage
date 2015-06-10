@@ -121,6 +121,19 @@ class DB$class_name(Persistent, KwargsObj):
             $db_to_comm_fields
             b64_data=data
         )
+
+    def __eq__(self, obj):
+        if not isinstance(obj, self.__class__):
+            return False
+
+        for key in self.__dict__.keys():
+            if self.__dict__[key] != getattr(obj, key):
+                return False
+
+        return True
+
+    def __ne__(self, obj):
+        return not self.__eq__(obj)
 """
 
 
