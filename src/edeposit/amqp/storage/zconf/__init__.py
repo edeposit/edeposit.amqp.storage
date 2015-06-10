@@ -6,8 +6,10 @@
 # Imports =====================================================================
 import os.path
 
-import ZODB.config
 from ZODB import DB
+from ZODB.config import storageFromFile
+from ZODB.POSException import ConnectionStateError
+
 from BTrees.OOBTree import OOBTree
 
 from ..settings import ZCONF_PATH
@@ -19,12 +21,15 @@ _ROOT = None
 
 
 # Functions & classes =========================================================
-def get_zeo_connection():
+def get_zeo_connection(on_close_callback=None):
     path = os.path.join(ZCONF_PATH, "zeo_client.conf")
-    db = DB(
-        ZODB.config.storageFromFile(open(path))
-    )
-    return db.open()
+    db = DB(storageFromFile(open(path)))
+    connection = db.open()
+
+    if on_close_callback:
+        connection.onCloseCallback(on_close_callback)
+
+    return connection
 
 
 def get_zeo_root(cached=True):
@@ -32,8 +37,16 @@ def get_zeo_root(cached=True):
     if _ROOT and cached:
         return _ROOT
 
-    connection = get_zeo_connection()
-    dbroot = connection.root()
+    def unset_root_cache():
+        global _ROOT
+        _ROOT = None
+
+    connection = get_zeo_connection(on_close_callback=unset_root_cache)
+
+    try:
+        dbroot = connection.root()
+    except ConnectionStateError:
+        return get_zeo_root(cached=False)
 
     if PROJECT_KEY not in dbroot:
         dbroot[PROJECT_KEY] = OOBTree()
@@ -42,10 +55,10 @@ def get_zeo_root(cached=True):
     return _ROOT
 
 
-def get_zeo_key(key, new_obj=OOBTree):
+def get_zeo_key(key, new_type=OOBTree):
     root = get_zeo_root()
 
     if not root.get(key, None):
-        root[key] = new_obj()
+        root[key] = new_type()
 
     return root[key]
