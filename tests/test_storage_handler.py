@@ -5,6 +5,7 @@
 #
 # Imports =====================================================================
 import os
+import copy
 import shutil
 import os.path
 import tempfile
@@ -47,6 +48,15 @@ def full_publication():
         filename="/home/xex.pdf",
         file_pointer="/tmp/uuid287378",
     )
+
+
+@pytest.fixture
+def different_pub():
+    dp = copy.deepcopy(full_publication())
+    dp.title = "other title"
+    dp.author = "other author"
+
+    return dp
 
 
 # Tests =======================================================================
@@ -101,6 +111,43 @@ def test_check_pub_type():
 
 def test_save_publication(full_publication):
     storage_handler.save_publication(full_publication)
+
+
+def test_search_publication(full_publication):
+    result = storage_handler.search_publications(full_publication)
+
+    assert result
+    assert result[0] == full_publication
+
+
+def test_search_multiple_publications(full_publication, different_pub):
+    storage_handler.save_publication(different_pub)
+
+    result = storage_handler.search_publications(
+        DBPublication(title=different_pub.title)
+    )
+
+    assert result
+    assert len(result) == 1
+    assert result[0] == different_pub
+
+
+def test_result_multiple_publications(full_publication, different_pub):
+    result = storage_handler.search_publications(
+        DBPublication(isbn=different_pub.isbn)  # ISBN should be same
+    )
+
+    assert result
+    assert len(result) == 2
+    assert set(result) == set([full_publication, different_pub])
+
+
+def test_no_result_from_query(full_publication, different_pub):
+    result = storage_handler.search_publications(
+        DBPublication(isbn="azgabash")  # this isbn is not in database
+    )
+
+    assert not result
 
 
 def teardown_module(module):
