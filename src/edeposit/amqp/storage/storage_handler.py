@@ -93,7 +93,7 @@ def _get_subset_matches(query):
         results = db_connector.get(attr, [])
 
         if results:
-            yield set(results)
+            yield results
 
 
 def search_publications(query):
@@ -108,4 +108,4 @@ def search_publications(query):
 
         final_result = intersection(final_result, result)
 
-    return final_result
+    return list(final_result)
