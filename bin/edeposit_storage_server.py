@@ -54,8 +54,8 @@ def index():
 if __name__ == '__main__':
     run(
         # server="paste",
-        # host="",
-        port=8080,
+        # host=settings.WEB_ADDR,
+        port=settings.WEB_PORT,
         debug=True,
         reloader=True
     )

@@ -32,13 +32,16 @@ import os.path
 
 # Module configuration ========================================================
 
-#: Path to the directory with zeo.conf and zeo_client.conf
+#: Path to the directory with zeo.conf and zeo_client.conf.
 ZCONF_PATH = os.path.join(os.path.dirname(__file__), "zconf")
 
 PROJECT_KEY = "edeposit_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
 
-PUBLIC_DIR = ""
-PRIVATE_DIR = ""
+PUBLIC_DIR = ""  #: Path to the directory for public publications.
+PRIVATE_DIR = ""  #: Path to the private directory, for non-downloadabe pubs.
+
+WEB_ADDR = ""  #: Address where the webserver should listen.
+WEB_PORT = 8080  #: Port for the webserver.
 
 
 # User configuration reader (don't edit this) =================================
