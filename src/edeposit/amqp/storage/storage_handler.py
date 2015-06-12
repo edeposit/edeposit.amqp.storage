@@ -8,6 +8,7 @@ import transaction
 from BTrees.OOBTree import OOTreeSet, intersection
 
 from zconf import get_zeo_key
+from zconf import use_new_connection
 
 from structures import DBPublication
 from structures.publication_generator import COMMON_FIELDS
@@ -23,16 +24,19 @@ class UnindexablePublication(Exception):
 
 
 # Functions & classes =========================================================
-def _get_db_connectors():
+def _get_db_connectors(cached=True):
     """
     Return list of database dictionaries, which are used as indexes for each
     attributes.
+
+    Args:
+        cached (bool, default True): Use cached connection to database.
 
     Returns:
         list: List of OOBTree's for each item in :attr:`.COMMON_FIELDS`.
     """
     for field_name, docstring in COMMON_FIELDS:
-        yield field_name, get_zeo_key(field_name)
+        yield field_name, get_zeo_key(field_name, cached=cached)
 
 
 def _check_pub_type(pub, name="pub"):
@@ -114,6 +118,8 @@ def _get_subset_matches(query):
     Yields:
         list: List of matching publications.
     """
+    use_new_connection()  # use new ZEO connection
+
     for field_name, db_connector in _get_db_connectors():
         attr = getattr(query, field_name)
 
