@@ -79,7 +79,7 @@ def get_zeo_root(cached=True):
     return _ROOT
 
 
-def get_zeo_key(key, new_type=OOBTree):
+def get_zeo_key(key, new_type=OOBTree, cached=True):
     """
     Get key from the PROJECT_KEY root. Use `new_type` as the new type of the
     key, if not found.
@@ -88,11 +88,14 @@ def get_zeo_key(key, new_type=OOBTree):
         key (str): Name of the key which will be returned from the root.
         new_type (obj, default OOBTree): Put `new_type` into key if the key
                  wasn't found.
+        cached (bool, default True): Use cached connection - good for writing,
+               but don't use this for reading, or you will get unupdated view
+               to database.
 
     Returns:
         obj: Object at `key`. `new_type` instance if not found.
     """
-    root = get_zeo_root()
+    root = get_zeo_root(cached=cached)
 
     if not root.get(key, None):
         root[key] = new_type()
