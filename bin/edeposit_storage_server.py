@@ -8,6 +8,7 @@ import sys
 import os.path
 from os.path import join
 from os.path import dirname
+from string import Template
 
 from bottle import run
 from bottle import abort
@@ -23,11 +24,63 @@ from storage import settings
 
 
 # Variables ===================================================================
+INDEX_TEMPLATE = """<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cs" xml:lang="cs">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Seznam veřejně přístupných publikací</title>
+</head>
+<body>
+<h1>Seznam veřejně přístupných publikací projektu E-deposit</h1>
 
+<div id="content">
+$publications
+</div>
+
+</body>
+</html>
+"""
+
+PUB_TEMPLATE = """<div class="publication">
+<table>
+    <tr>
+        <td colspan='4' class="title_link"><a href="$url">$title</a></td>
+    </tr>
+    <tr>
+        <td class="author">Autor$delimiter</td>
+        <td class="author_content">$author</td>
+
+        <td class="isbn">ISBN$delimiter</td>
+        <td class="isbn_content">$isbn</td>
+    </tr>
+    <tr>
+        <td class="year">Rok vydání$delimiter</td>
+        <td class="year_content">$year</td>
+
+        <td class="urn_nbn">URN:NBN$delimiter</td>
+        <td class="urn_nbn_content">$urn_nbn</td>
+    </tr>
+</table>
+</div>"""
+
+
+DOWNLOAD_KEY = "download"
 
 
 # Functions & classes =========================================================
-@route("/download/<book_fn>")
+def render_publication(pub):
+    return Template(PUB_TEMPLATE).substitute(
+        title=pub.title,
+        author=pub.author,
+        year=pub.pub_year,
+        isbn=pub.isbn,
+        urn_nbn=pub.urnnbn,
+        url=join("/", DOWNLOAD_KEY, pub.uuid),
+        delimiter=";"
+    )
+
+
+@route(join("/", DOWNLOAD_KEY, "<book_fn>"))
 def serve_static(book_fn):
     book_fn = os.path.basename(book_fn)  # remove slashes, leave only filename
     full_path = join(settings.PUBLIC_DIR, book_fn)
@@ -47,7 +100,15 @@ def index():
     publications = search_publications(
         DBPublication(is_public=True)
     )
-    return "Here will be index"
+
+    publications = "\n".join(
+        render_publication(pub)
+        for pub in publications
+    )
+
+    return Template(INDEX_TEMPLATE).substitute(
+        publications=publications
+    )
 
 
 # Main program ================================================================
