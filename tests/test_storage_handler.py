@@ -104,7 +104,7 @@ def test_check_pub_type():
 
     with pytest.raises(storage_handler.InvalidType):
         storage_handler._check_pub_type(
-            storage.structures.publication.Publication(*range(9))
+            storage.structures.publication.Publication(*range(11))
         )
 
     storage_handler._check_pub_type(DBPublication())

@@ -17,6 +17,8 @@ COMMON_FIELDS = [
     ["isbn", "(str): ISBN for the publication."],
     ["urnnbn", "(str): URN:NBN for the publication."],
     ["uuid", "(str): UUID string to pair the publication with edeposit."],
+    ["aleph_id", "(str): ID used in aleph."],
+    ["producent_id", "(str): ID used for producent."],
     ["is_public", "(bool): Is the file public?"],
     ["filename", "(str): Original filename."]
 ]

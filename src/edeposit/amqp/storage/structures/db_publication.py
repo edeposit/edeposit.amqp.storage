@@ -34,6 +34,8 @@ class DBPublication(Persistent, KwargsObj):
         isbn (str): ISBN for the publication.
         urnnbn (str): URN:NBN for the publication.
         uuid (str): UUID string to pair the publication with edeposit.
+        aleph_id (str): ID used in aleph.
+        producent_id (str): ID used for producent.
         is_public (bool): Is the file public?
         filename (str): Original filename.
         file_pointer (str): Pointer to the file on the file server.
@@ -45,6 +47,8 @@ class DBPublication(Persistent, KwargsObj):
         self.isbn = None
         self.urnnbn = None
         self.uuid = None
+        self.aleph_id = None
+        self.producent_id = None
         self.is_public = None
         self.filename = None
         self.file_pointer = None
@@ -75,6 +79,8 @@ class DBPublication(Persistent, KwargsObj):
             isbn=pub.isbn,
             urnnbn=pub.urnnbn,
             uuid=pub.uuid,
+            aleph_id=pub.aleph_id,
+            producent_id=pub.producent_id,
             is_public=pub.is_public,
             filename=pub.filename,
 
@@ -92,6 +98,8 @@ class DBPublication(Persistent, KwargsObj):
             isbn=self.isbn,
             urnnbn=self.urnnbn,
             uuid=self.uuid,
+            aleph_id=self.aleph_id,
+            producent_id=self.producent_id,
             is_public=self.is_public,
             filename=self.filename,
 
