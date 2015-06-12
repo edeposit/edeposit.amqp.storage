@@ -40,12 +40,12 @@ PROJECT_KEY = "edeposit_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
 PUBLIC_DIR = ""  #: Path to the directory for public publications.
 PRIVATE_DIR = ""  #: Path to the private directory, for non-downloadabe pubs.
 
-WEB_ADDR = ""  #: Address where the webserver should listen.
+WEB_ADDR = None  #: Address where the webserver should listen.
 WEB_PORT = 8080  #: Port for the webserver.
 
 
 # User configuration reader (don't edit this) =================================
-_ALLOWED = [str, unicode, int, float, long]
+_ALLOWED = [str, unicode, int, float, long, type(None)]
 _SETTINGS_PATH = "edeposit/storage.json"  #: appended to default search paths
 
 

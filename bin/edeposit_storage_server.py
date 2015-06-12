@@ -162,7 +162,7 @@ def index():
 if __name__ == '__main__':
     run(
         # server="paste",
-        # host=settings.WEB_ADDR,
+        host=settings.WEB_ADDR,
         port=settings.WEB_PORT,
         debug=True,
         reloader=True
