@@ -29,6 +29,54 @@ INDEX_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Seznam veřejně přístupných publikací</title>
+    <style>
+        html {
+            height: 95%;
+        }
+        body {
+            display: block;
+            margin: 0 auto;
+
+            margin-top: 1em;
+            margin-bottom: 1em;
+
+            width: 900px;
+            padding: 1em;
+
+            border: 1px solid gray;
+            text-align: justify;
+
+            min-height: 95%;
+        }
+        h1 {
+            text-align: center;
+        }
+        #content {
+            margin-top: 5em;
+        }
+        .publication {
+            border-top: 1px solid gray;
+        }
+        .title_link {
+            font-size: 2em;
+        }
+        .author {
+            width: 7em;
+            font-weight: bold;
+        }
+        .isbn {
+            width: 7em;
+            padding-left: 5em;
+            font-weight: bold;
+        }
+        .urn_nbn {
+            padding-left: 5em;
+            font-weight: bold;
+        }
+        .year {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <h1>Seznam veřejně přístupných publikací projektu E-deposit</h1>
@@ -63,8 +111,7 @@ PUB_TEMPLATE = """<div class="publication">
 </table>
 </div>"""
 
-
-DOWNLOAD_KEY = "download"
+DOWNLOAD_KEY = "download"  #: Used as part of the url
 
 
 # Functions & classes =========================================================
@@ -76,7 +123,7 @@ def render_publication(pub):
         isbn=pub.isbn,
         urn_nbn=pub.urnnbn,
         url=join("/", DOWNLOAD_KEY, pub.uuid),
-        delimiter=";"
+        delimiter=":"
     )
 
 
@@ -86,7 +133,7 @@ def serve_static(book_fn):
     full_path = join(settings.PUBLIC_DIR, book_fn)
 
     if not os.path.exists(full_path):
-        abort(404, "%s is not available for download." % book_fn)
+        abort(404, "'%s' není dostupný ke stažení." % book_fn)
 
     return static_file(
         book_fn,
