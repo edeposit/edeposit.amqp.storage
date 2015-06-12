@@ -40,7 +40,7 @@ INDEX_TEMPLATE = """<!DOCTYPE html>
             margin-top: 1em;
             margin-bottom: 1em;
 
-            width: 900px;
+            width: 56.2em;
             padding: 1em;
 
             border: 1px solid gray;
