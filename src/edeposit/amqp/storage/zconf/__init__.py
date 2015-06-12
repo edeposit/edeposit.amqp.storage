@@ -21,6 +21,14 @@ _ROOT = None  #: cache for one connection for all calls to :meth:`get_zeo_key`
 
 
 # Functions & classes =========================================================
+def use_new_connection():
+    """
+    Use new connection to ZEO.
+    """
+    global _ROOT
+    _ROOT = None
+
+
 def get_zeo_connection(on_close_callback=None):
     """
     Return connection to the database. You can get root of the database from
@@ -61,11 +69,7 @@ def get_zeo_root(cached=True):
     if _ROOT and cached:
         return _ROOT
 
-    def unset_root_cache():
-        global _ROOT
-        _ROOT = None
-
-    connection = get_zeo_connection(on_close_callback=unset_root_cache)
+    connection = get_zeo_connection(on_close_callback=use_new_connection)
 
     try:
         dbroot = connection.root()
