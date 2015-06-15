@@ -46,6 +46,7 @@ PRIVATE_DIR = ""  #: Path to the private directory, for non-downloadabe pubs.
 
 WEB_ADDR = "localhost"  #: Address where the webserver should listen.
 WEB_PORT = 8080  #: Port for the webserver.
+WEB_SERVER = 'wsgiref'  #: Use `paste` for threading.
 
 
 # User configuration reader (don't edit this) =================================

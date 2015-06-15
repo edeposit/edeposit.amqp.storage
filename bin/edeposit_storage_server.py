@@ -201,7 +201,7 @@ def index():
 # Main program ================================================================
 if __name__ == '__main__':
     run(
-        # server="paste",
+        server=settings.WEB_SERVER,
         host=settings.WEB_ADDR,
         port=settings.WEB_PORT,
         debug=True,
