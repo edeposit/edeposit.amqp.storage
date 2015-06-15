@@ -15,6 +15,8 @@ from bottle import abort
 from bottle import route
 from bottle import static_file
 
+from bottle import auth_basic
+
 sys.path.insert(0, join(dirname(__file__), "../src/edeposit/amqp"))
 
 from storage.storage_handler import DBPublication
@@ -116,6 +118,10 @@ DOWNLOAD_KEY = "download"  #: Used as part of the url
 
 # Functions & classes =========================================================
 def render_publication(pub):
+    """
+    Render `pub` (:class:`.DBPublication` instance) to HTML using
+    :attr:`PUB_TEMPLATE`.
+    """
     return Template(PUB_TEMPLATE).substitute(
         title=pub.title,
         author=pub.author,
@@ -129,6 +135,9 @@ def render_publication(pub):
 
 @route(join("/", DOWNLOAD_KEY, "<book_fn>"))
 def serve_static(book_fn):
+    """
+    Serve static files. Make sure that user can't access other files on disk.
+    """
     book_fn = os.path.basename(book_fn)  # remove slashes, leave only filename
     full_path = join(settings.PUBLIC_DIR, book_fn)
 
@@ -142,8 +151,10 @@ def serve_static(book_fn):
     )
 
 
-@route("/")
-def index():
+def list_publications():
+    """
+    Return list of all publications in basic graphic HTML render.
+    """
     publications = search_publications(
         DBPublication(is_public=True)
     )
@@ -156,6 +167,35 @@ def index():
     return Template(INDEX_TEMPLATE).substitute(
         publications=publications
     )
+
+
+def check_auth(username, password):
+    """
+    This function is used to check `username` and `password` in case that
+    :attr:`.settings.PRIVATE_INDEX` is set to ``True`` (default is ``False``).
+    """
+    return (username == settings.PRIVATE_INDEX_USERNAME and
+            settings.PRIVATE_INDEX_PASSWORD and
+            password == settings.PRIVATE_INDEX_PASSWORD)
+
+
+@auth_basic(check_auth)
+def private_index():
+    """
+    Private index in case that login is enabled.
+    """
+    return list_publications()
+
+
+@route("/")
+def index():
+    """
+    Handle index of the project.
+    """
+    if not settings.PRIVATE_INDEX:
+        return list_publications()
+
+    return private_index()
 
 
 # Main program ================================================================
