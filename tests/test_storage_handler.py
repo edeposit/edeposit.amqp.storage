@@ -4,6 +4,8 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
+from __future__ import unicode_literals
+
 import os
 import copy
 import shutil
@@ -21,10 +23,13 @@ from storage import settings
 from storage import storage_handler
 from storage.structures import DBPublication
 
+from structures.test_db_publication import random_publication
+
 
 # Variables ===================================================================
 TMP_DIR = None
 SERV = None
+FULL_PUB = random_publication()
 
 
 # Fixtures ====================================================================
@@ -37,17 +42,7 @@ def data_context(fn):
 
 @pytest.fixture
 def full_publication():
-    return DBPublication(
-        title="title",
-        author="author",
-        pub_year="2015",
-        isbn="ISBN",
-        urnnbn="URN",
-        uuid="UUID",
-        is_public=True,
-        filename="/home/xex.pdf",
-        file_pointer="/tmp/uuid287378",
-    )
+    return FULL_PUB
 
 
 @pytest.fixture

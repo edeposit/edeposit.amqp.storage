@@ -55,7 +55,8 @@ setup(
     tests_require=["pytest"],
     extras_require={
         "test": [
-            "pytest"
+            "pytest",
+            "fake-factory"
         ],
         "docs": [
             "sphinx",
