@@ -139,7 +139,7 @@ class DB$class_name(Persistent, KwargsObj):
 
     def __hash__(self):
         return hash(
-            "".join(str(x) for x in self.__dict__.values())
+            "".join(x.__repr__() for x in self.__dict__.values())
         )
 """
 
