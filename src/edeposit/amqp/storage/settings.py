@@ -39,7 +39,7 @@ PROJECT_KEY = "edeposit_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
 
 PRIVATE_INDEX = False  #: Should the index be private?
 PRIVATE_INDEX_USERNAME = "edeposit"  #: Username for private index.
-PRIVATE_INDEX_PASSWORD = ""  #: Password for private index.
+PRIVATE_INDEX_PASSWORD = ""  #: Password for private index. You HAVE TO set it.
 
 PUBLIC_DIR = ""  #: Path to the directory for public publications.
 PRIVATE_DIR = ""  #: Path to the private directory, for non-downloadabe pubs.
