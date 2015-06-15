@@ -118,8 +118,6 @@ def _get_subset_matches(query):
     Yields:
         list: List of matching publications.
     """
-    use_new_connection()  # use new ZEO connection
-
     for field_name, db_connector in _get_db_connectors():
         attr = getattr(query, field_name)
 

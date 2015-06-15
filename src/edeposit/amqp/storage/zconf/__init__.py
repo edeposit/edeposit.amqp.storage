@@ -17,7 +17,7 @@ from ..settings import PROJECT_KEY
 
 
 # Variables ===================================================================
-_ROOT = None  #: cache for one connection for all calls to :meth:`get_zeo_key`
+_CONNECTION = None  #: cache for all calls to :meth:`get_zeo_connection`
 
 
 # Functions & classes =========================================================
@@ -25,11 +25,12 @@ def use_new_connection():
     """
     Use new connection to ZEO.
     """
-    global _ROOT
-    _ROOT = None
+    global _CONNECTION
+    _CONNECTION.sync()
+    _CONNECTION = None
 
 
-def get_zeo_connection(on_close_callback=None):
+def get_zeo_connection(cached=True, on_close_callback=None):
     """
     Return connection to the database. You can get root of the database from
     this connection.
@@ -44,12 +45,19 @@ def get_zeo_connection(on_close_callback=None):
     Returns:
         obj: ZODB connection object.
     """
+    global _CONNECTION
+    if _CONNECTION and cached:
+        return _CONNECTION
+
     path = os.path.join(ZCONF_PATH, "zeo_client.conf")
     db = DB(storageFromFile(open(path)))
     connection = db.open()
 
     if on_close_callback:
         connection.onCloseCallback(on_close_callback)
+
+    if cached:
+        _CONNECTION = connection
 
     return connection
 
@@ -65,11 +73,7 @@ def get_zeo_root(cached=True):
     Returns:
         OOBTree: Project key from the root of the database.
     """
-    global _ROOT
-    if _ROOT and cached:
-        return _ROOT
-
-    connection = get_zeo_connection(on_close_callback=use_new_connection)
+    connection = get_zeo_connection(cached=cached)
 
     try:
         dbroot = connection.root()
@@ -79,8 +83,7 @@ def get_zeo_root(cached=True):
     if PROJECT_KEY not in dbroot:
         dbroot[PROJECT_KEY] = OOBTree()
 
-    _ROOT = dbroot[PROJECT_KEY]
-    return _ROOT
+    return dbroot[PROJECT_KEY]
 
 
 def get_zeo_key(key, new_type=OOBTree, cached=True):
