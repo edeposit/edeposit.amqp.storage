@@ -37,15 +37,19 @@ ZCONF_PATH = os.path.join(os.path.dirname(__file__), "zconf")
 
 PROJECT_KEY = "edeposit_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
 
+PRIVATE_INDEX = False  #: Should the index be private?
+PRIVATE_INDEX_USERNAME = "edeposit"  #: Username for private index.
+PRIVATE_INDEX_PASSWORD = ""  #: Password for private index.
+
 PUBLIC_DIR = ""  #: Path to the directory for public publications.
 PRIVATE_DIR = ""  #: Path to the private directory, for non-downloadabe pubs.
 
-WEB_ADDR = None  #: Address where the webserver should listen.
+WEB_ADDR = "localhost"  #: Address where the webserver should listen.
 WEB_PORT = 8080  #: Port for the webserver.
 
 
 # User configuration reader (don't edit this) =================================
-_ALLOWED = [str, unicode, int, float, long, type(None)]
+_ALLOWED = [str, unicode, int, float, long, bool]
 _SETTINGS_PATH = "edeposit/storage.json"  #: appended to default search paths
 
 
