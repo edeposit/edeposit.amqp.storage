@@ -94,7 +94,7 @@ class DB$class_name(Persistent, KwargsObj):
         self._kwargs_to_attributes(kwargs)
 
     @staticmethod
-    def from_comm(pub):
+    def _save_to_unique_filename(pub):
         dirpath = PUBLIC_DIR if pub.is_public else PRIVATE_DIR
 
         if not os.path.exists(dirpath):
@@ -109,6 +109,14 @@ class DB$class_name(Persistent, KwargsObj):
             f.write(
                 base64.b64decode(pub.b64_data)
             )
+
+        return filename
+
+    @staticmethod
+    def from_comm(pub):
+        filename = None
+        if pub.b64_data:
+            filename = DB$class_name._save_to_unique_filename(pub)
 
         return DB$class_name(
             $comm_to_db_fields
