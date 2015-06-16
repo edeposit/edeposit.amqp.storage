@@ -110,11 +110,18 @@ class DBPublication(Persistent, KwargsObj):
         if not isinstance(obj, self.__class__):
             return False
 
-        for key in self.__dict__.keys():
-            if self.__dict__[key] != getattr(obj, key):
-                return False
-
-        return True
+        return (
+            self.title == obj.title and
+            self.author == obj.author and
+            self.pub_year == obj.pub_year and
+            self.isbn == obj.isbn and
+            self.urnnbn == obj.urnnbn and
+            self.uuid == obj.uuid and
+            self.aleph_id == obj.aleph_id and
+            self.producent_id == obj.producent_id and
+            self.is_public == obj.is_public and
+            self.filename == obj.filename
+        )
 
     def __ne__(self, obj):
         return not self.__eq__(obj)

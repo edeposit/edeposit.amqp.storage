@@ -128,11 +128,9 @@ class DB$class_name(Persistent, KwargsObj):
         if not isinstance(obj, self.__class__):
             return False
 
-        for key in self.__dict__.keys():
-            if self.__dict__[key] != getattr(obj, key):
-                return False
-
-        return True
+        return (
+            $eq_fields
+        )
 
     def __ne__(self, obj):
         return not self.__eq__(obj)
@@ -173,13 +171,19 @@ def generate_database():
         for name, x in COMMON_FIELDS + DATABASE_FIELDS
     )
 
-    comm_to_db_fields = "            ".join(
+    spacer3 = 3 * "    "
+    comm_to_db_fields = spacer3.join(
         "%s=pub.%s,\n" % (name, name)
         for name, x in COMMON_FIELDS
     )
 
-    db_to_comm_fields = "            ".join(
+    db_to_comm_fields = spacer3.join(
         "%s=self.%s,\n" % (name, name)
+        for name, x in COMMON_FIELDS
+    )
+
+    eq_fields = (" and\n" + spacer3).join(
+        "self.%s == obj.%s" % (name, name)
         for name, x in COMMON_FIELDS
     )
 
@@ -188,6 +192,7 @@ def generate_database():
         class_name=CLASS_NAME,
         comm_to_db_fields=comm_to_db_fields,
         db_to_comm_fields=db_to_comm_fields,
+        eq_fields=eq_fields,
         docstring_fields=_get_docstring_fields(
             COMMON_FIELDS + DATABASE_FIELDS
         )
