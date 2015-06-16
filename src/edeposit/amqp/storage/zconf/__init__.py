@@ -30,7 +30,7 @@ def use_new_connection():
     _CONNECTION = None
 
 
-def get_zeo_connection(cached=True, on_close_callback=None):
+def get_zeo_connection(cached=True, on_close_callback=use_new_connection):
     """
     Return connection to the database. You can get root of the database from
     this connection.
@@ -78,7 +78,10 @@ def get_zeo_root(cached=True):
     try:
         dbroot = connection.root()
     except ConnectionStateError:
-        return get_zeo_root(cached=False)
+        if cached:
+            return get_zeo_root(cached=False)
+
+        raise
 
     if PROJECT_KEY not in dbroot:
         dbroot[PROJECT_KEY] = OOBTree()
