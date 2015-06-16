@@ -33,10 +33,10 @@ FULL_PUB = random_publication()
 
 
 # Fixtures ====================================================================
-def data_context(fn):
+def data_context(fn, mode="r"):
     path = os.path.join(os.path.dirname(__file__), "data")
 
-    with open(os.path.join(path, fn)) as f:
+    with open(os.path.join(path, fn), mode) as f:
         return f.read()
 
 
@@ -55,7 +55,7 @@ def different_pub():
     return dp
 
 
-# Tests =======================================================================
+# Setup =======================================================================
 def setup_module(module):
     global TMP_DIR
     TMP_DIR = tempfile.mkdtemp()
@@ -87,6 +87,12 @@ def setup_module(module):
     SERV.start()
 
 
+def teardown_module(module):
+    SERV.terminate()
+    shutil.rmtree(TMP_DIR)
+
+
+# Tests =======================================================================
 def test_get_db_connectors():
     connectors = storage_handler._get_db_connectors()
 
@@ -162,8 +168,3 @@ def test_get_private_publications(different_pub):
 
     assert result
     assert set(result) == set([different_pub])
-
-
-def teardown_module(module):
-    SERV.terminate()
-    shutil.rmtree(TMP_DIR)
