@@ -72,18 +72,21 @@ def _put_into_indexes(pub):
     """
     no_of_used_indexes = 0
     for field_name, db_connector in list(_get_db_connectors()):
-        attr = getattr(pub, field_name)
+        attr_value = getattr(pub, field_name)
 
-        if attr is None:  # index only by set attributes
+        if attr_value is None:  # index only by set attributes
             continue
 
-        handler = db_connector.get(attr, OOTreeSet())
-        handler.insert(pub)
-        db_connector[attr] = handler
+        container = db_connector.get(attr_value, None)
+        if container is None:
+            container = OOTreeSet()
+            db_connector[attr_value] = container
+
+        container.insert(pub)
 
         no_of_used_indexes += 1
 
-    # make sure that atleast one attr was used
+    # make sure that atleast one `attr_value` was used
     if no_of_used_indexes <= 0:
         raise UnindexablePublication(
             "You have to use atleast one of the identificators!"
@@ -124,7 +127,7 @@ def _get_subset_matches(query):
         if attr is None:  # don't use unset attributes
             continue
 
-        results = db_connector.get(attr, [])
+        results = db_connector.get(attr, OOTreeSet())
 
         if results:
             yield results
