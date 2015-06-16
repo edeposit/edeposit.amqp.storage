@@ -60,7 +60,7 @@ class DBPublication(Persistent, KwargsObj):
         dirpath = PUBLIC_DIR if pub.is_public else PRIVATE_DIR
 
         if not os.path.exists(dirpath):
-            raise IOError("\%s doesn't exists!" % dirpath)
+            raise IOError("`%s` doesn't exists!" % dirpath)
 
         # get uniq filename
         filename = "/"

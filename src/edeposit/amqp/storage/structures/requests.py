@@ -29,13 +29,13 @@ class SearchRequest(namedtuple("SearchRequest", ["query"])):
 
     @property
     def query(self):
-        return self.query
+        return self.__dict__["query"]
 
     @query.setter
     def query(self, q):
         SearchRequest._check_pub_type(q)
 
-        self.query = q
+        self.__dict__["query"] = q
 
 
 class SaveRequest(namedtuple("SaveRequest", ["pub"])):
@@ -52,10 +52,10 @@ class SaveRequest(namedtuple("SaveRequest", ["pub"])):
 
     @property
     def pub(self):
-        return self.pub
+        return self.__dict__["pub"]
 
     @pub.setter
     def pub(self, q):
         SearchRequest._check_pub_type(q)
 
-        self.pub = q
+        self.__dict__["pub"] = q
