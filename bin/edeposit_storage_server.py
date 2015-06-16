@@ -4,6 +4,8 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
+from __future__ import unicode_literals
+
 import sys
 import os.path
 from os.path import join
@@ -68,15 +70,16 @@ INDEX_TEMPLATE = """<!DOCTYPE html>
         }
         .isbn {
             width: 7em;
-            padding-left: 5em;
             font-weight: bold;
         }
         .urn_nbn {
-            padding-left: 5em;
             font-weight: bold;
         }
         .year {
             font-weight: bold;
+        }
+        .author_content, .year_content {
+            width: 15em;
         }
     </style>
 </head>
