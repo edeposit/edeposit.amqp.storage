@@ -5,6 +5,7 @@
 #
 # Imports =====================================================================
 import base64
+import tempfile
 
 import pytest
 
@@ -31,15 +32,16 @@ def b64_pdf_file():
 
 
 @pytest.fixture
-def pdf_publication(tmpdir):
-    tmp_file = tmpdir.join(EBOOK_FN)
-    tmp_file.write_binary(pdf_file())
+def pdf_publication():
+    with tempfile.NamedTemporaryFile() as tmp_file:
+        tmp_file.write(pdf_file())
+        tmp_file.seek(0)
 
-    pub = random_publication()
-    pub.file_pointer = str(tmp_file)
-    pub.filename = EBOOK_FN
+        pub = random_publication()
+        pub.file_pointer = tmp_file.name
+        pub.filename = EBOOK_FN
 
-    return pub.to_comm()
+        return pub.to_comm()
 
 
 # Setup =======================================================================
