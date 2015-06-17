@@ -52,7 +52,9 @@ def reactToAMQPMessage(message, send_back):
         )
 
     elif _instanceof(message, SearchRequest):
-        results = search_publications(message.query)
+        results = search_publications(
+            DBPublication.from_comm(message.query)
+        )
 
         return SearchResult(
             publications=[DBPublication.to_comm(pub) for pub in results]
