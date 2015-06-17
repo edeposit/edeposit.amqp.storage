@@ -10,6 +10,7 @@ import sys
 import os.path
 from os.path import join
 from os.path import dirname
+from os.path import basename
 from string import Template
 
 from bottle import run
@@ -132,26 +133,34 @@ def render_publication(pub):
         year=pub.pub_year,
         isbn=pub.isbn,
         urn_nbn=pub.urnnbn,
-        url=join("/", DOWNLOAD_KEY, pub.uuid),
+        url=join(
+            "/",
+            DOWNLOAD_KEY,
+            basename(pub.file_pointer),
+            basename(pub.filename)
+        ),
         delimiter=":"
     )
 
 
-@route(join("/", DOWNLOAD_KEY, "<book_fn>"))
-def serve_static(book_fn):
+@route(join("/", DOWNLOAD_KEY, "<local_fn>", "<down_fn>"))
+def serve_static(local_fn, down_fn):
     """
     Serve static files. Make sure that user can't access other files on disk.
     """
-    book_fn = os.path.basename(book_fn)  # remove slashes, leave only filename
-    full_path = join(settings.PUBLIC_DIR, book_fn)
+    # remove slashes, leave only filename
+    down_fn = os.path.basename(down_fn)
+    local_fn = os.path.basename(local_fn)
+
+    full_path = join(settings.PUBLIC_DIR, local_fn)
 
     if not os.path.exists(full_path):
-        abort(404, "'%s' není dostupný ke stažení." % book_fn)
+        abort(404, "'%s' není dostupný ke stažení." % local_fn)
 
     return static_file(
-        book_fn,
+        local_fn,
         root=settings.PUBLIC_DIR,
-        download=True
+        download=down_fn
     )
 
 
