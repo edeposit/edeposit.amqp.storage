@@ -8,16 +8,19 @@ import sys
 from os.path import join, dirname
 
 sys.path.insert(0, join(dirname(__file__), "../src/edeposit/amqp"))
-from storage import storage_handler
+import storage
 
-from structures.test_db_publication import random_publication
+import test_amqp_chain
 
 
 # Variables ===================================================================
 # Functions & classes =========================================================
 def add_publication():
-    pub = random_publication()
-    storage_handler.save_publication(pub)
+    pub = test_amqp_chain.pdf_publication()
+    storage.reactToAMQPMessage(
+        storage.SaveRequest(pub),
+        lambda x: x
+    )
 
     return pub
 
