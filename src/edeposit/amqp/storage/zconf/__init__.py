@@ -4,7 +4,9 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
+import time
 import os.path
+from functools import wraps
 
 from ZODB import DB
 from ZODB.config import storageFromFile
@@ -25,11 +27,37 @@ def use_new_connection():
     """
     Use new connection to ZEO.
     """
+    global _CONNECTION
+
     if _CONNECTION:
         _CONNECTION.sync()
+        _CONNECTION.close()
 
-    global _CONNECTION
     _CONNECTION = None
+
+
+def cached_connection(fn=None, timeout=10):
+    """
+    Decorator to automatically call `use_new_connection` after `timeout` (in
+    seconds).
+    """
+    def cached_connection_decorator(fn):
+        # list is used because can be changed without global definition
+        last_time = [time.time()]
+
+        def cached_connection_wrapper(*args, **kwargs):
+            if time.time() > (last_time[0] + timeout):
+                use_new_connection()
+                last_time[0] = time.time()
+
+            return fn(*args, **kwargs)
+
+        return cached_connection_wrapper
+
+    if fn:  # python decorator with optional parameters bukkake
+        return cached_connection_decorator(fn)
+
+    return cached_connection_decorator
 
 
 def get_zeo_connection(cached=True, on_close_callback=use_new_connection):
