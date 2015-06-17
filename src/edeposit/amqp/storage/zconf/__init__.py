@@ -25,8 +25,10 @@ def use_new_connection():
     """
     Use new connection to ZEO.
     """
+    if _CONNECTION:
+        _CONNECTION.sync()
+
     global _CONNECTION
-    _CONNECTION.sync()
     _CONNECTION = None
 
 

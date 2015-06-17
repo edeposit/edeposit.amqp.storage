@@ -52,7 +52,7 @@ def _check_pub_type(pub, name="pub"):
     """
     if not isinstance(pub, DBPublication):
         raise InvalidType(
-            "`%s` to be instance of DBPublication, not %s!" % (
+            "`%s` have to be instance of DBPublication, not %s!" % (
                 name,
                 pub.__class__.__name__
             )
@@ -70,6 +70,8 @@ def _put_into_indexes(pub):
         UnindexablePublication: When there is no index (property) which can be
                                 used to index `pub` in database.
     """
+    use_new_connection()
+
     no_of_used_indexes = 0
     for field_name, db_connector in list(_get_db_connectors()):
         attr_value = getattr(pub, field_name)
