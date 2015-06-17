@@ -7,7 +7,7 @@
 import structures
 
 from structures import Publication
-from structures import DBPublication
+from structures import DBPublication as _DBPublication
 
 from structures import SaveRequest
 from structures import SearchResult
@@ -48,16 +48,16 @@ def reactToAMQPMessage(message, send_back):
     """
     if _instanceof(message, SaveRequest):
         return save_publication(
-            DBPublication.from_comm(message.pub)
+            _DBPublication.from_comm(message.pub)
         )
 
     elif _instanceof(message, SearchRequest):
         results = search_publications(
-            DBPublication.from_comm(message.query)
+            _DBPublication.from_comm(message.query)
         )
 
         return SearchResult(
-            publications=[DBPublication.to_comm(pub) for pub in results]
+            publications=[_DBPublication.to_comm(pub) for pub in results]
         )
 
     raise ValueError("'%s' is unknown type of request!" % str(type(message)))
