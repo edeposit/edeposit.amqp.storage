@@ -51,18 +51,37 @@ $classes
 """
 
 COMMUNICATION_STRUCTURE = """
-fields = [
+_PUB_FIELDS = [
     $fields
 ]
 
 
-class $class_name(namedtuple('$class_name', fields)):
+class $class_name(namedtuple('$class_name', _PUB_FIELDS)):
     '''
     Communication structure used to sent data to `storage` subsystem over AMQP.
 
     Attributes:
         $docstring_fields
     '''
+    def __new__(self, *args, **kwargs):
+        for field, arg in zip(_PUB_FIELDS, args):
+            kwargs[field] = arg
+
+        for key in _PUB_FIELDS:
+            if key not in kwargs:
+                kwargs[key] = None
+
+        return super($class_name, self).__new__(self, **kwargs)
+
+    def __init__(self, *args, **kwargs):
+        for field, arg in zip(_PUB_FIELDS, args):
+            kwargs[field] = arg
+
+        for key, val in kwargs.iteritems():
+            if key not in _PUB_FIELDS:
+                raise ValueError("Unknown parameter '%s'!" % key)
+
+            self.__dict__[key] = val
 """
 
 DATABASE_IMPORTS = """
