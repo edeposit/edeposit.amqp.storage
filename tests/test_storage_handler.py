@@ -6,14 +6,7 @@
 # Imports =====================================================================
 from __future__ import unicode_literals
 
-import os
 import copy
-import shutil
-import os.path
-import tempfile
-import subprocess
-from string import Template
-from multiprocessing import Process
 
 import pytest
 
@@ -23,23 +16,15 @@ from storage import settings
 from storage import storage_handler
 from storage.structures import DBPublication
 
+import environment_generator
 from structures.test_db_publication import random_publication
 
 
 # Variables ===================================================================
-TMP_DIR = None
-SERV = None
 FULL_PUB = random_publication()
 
 
 # Fixtures ====================================================================
-def data_context(fn, mode="r"):
-    path = os.path.join(os.path.dirname(__file__), "data")
-
-    with open(os.path.join(path, fn), mode) as f:
-        return f.read()
-
-
 @pytest.fixture
 def full_publication():
     return FULL_PUB
@@ -57,39 +42,11 @@ def different_pub():
 
 # Setup =======================================================================
 def setup_module(module):
-    global TMP_DIR
-    TMP_DIR = tempfile.mkdtemp()
-
-    # monkey patch the paths
-    settings.ZCONF_PATH = TMP_DIR
-    zconf.ZCONF_PATH = TMP_DIR
-
-    # write ZEO server config to  temp directory
-    zeo_conf_path = os.path.join(TMP_DIR, "zeo.conf")
-    with open(zeo_conf_path, "w") as f:
-        f.write(
-            Template(data_context("zeo.conf")).substitute(path=TMP_DIR)
-        )
-
-    # write client config to temp directory
-    client_config_path = os.path.join(TMP_DIR, "zeo_client.conf")
-    with open(client_config_path, "w") as f:
-        f.write(data_context("zeo_client.conf"))
-
-    # run the ZEO server
-    def run_zeo():
-        # subprocess.check_call("runzeo -C " + zeo_conf_path, shell=True)
-        import sh  # TODO: remove
-        sh.runzeo(C=zeo_conf_path)
-
-    global SERV
-    SERV = Process(target=run_zeo)
-    SERV.start()
+    environment_generator.generate_environment()
 
 
 def teardown_module(module):
-    SERV.terminate()
-    shutil.rmtree(TMP_DIR)
+    environment_generator.cleanup_environment()
 
 
 # Tests =======================================================================
