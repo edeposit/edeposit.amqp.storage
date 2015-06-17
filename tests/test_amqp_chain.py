@@ -8,8 +8,8 @@ import base64
 
 import pytest
 
-import test_storage_handler
-from test_storage_handler import data_context
+import environment_generator
+from environment_generator import data_context
 from structures.test_db_publication import random_publication
 
 import storage
@@ -44,11 +44,11 @@ def pdf_publication(tmpdir):
 
 # Setup =======================================================================
 def setup_module(module):
-    test_storage_handler.setup_module(module)
+    environment_generator.generate_environment()
 
 
 def teardown_module(module):
-    test_storage_handler.teardown_module(module)
+    environment_generator.cleanup_environment()
 
 
 # Tests =======================================================================
@@ -60,11 +60,15 @@ def test_publication(pdf_publication, b64_pdf_file):
 
 def test_publication_save(pdf_publication):
     storage.reactToAMQPMessage(
-        storage.SaveRequest(pdf_publication)
+        storage.SaveRequest(pdf_publication),
+        lambda x: x
     )
 
     result = storage.reactToAMQPMessage(
-        storage.SearchRequest(storage.Publication(pdf_publication.isbn))
+        storage.SearchRequest(
+            storage.Publication(isbn=pdf_publication.isbn)
+        ),
+        lambda x: x
     )
 
     assert result.publications

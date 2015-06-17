@@ -19,8 +19,8 @@ from storage import settings
 
 
 # Variables ===================================================================
-TMP_DIR = None
 SERV = None
+TMP_DIR = None
 
 
 # Functions & classes =========================================================
