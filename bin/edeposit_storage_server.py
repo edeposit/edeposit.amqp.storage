@@ -24,6 +24,7 @@ sys.path.insert(0, join(dirname(__file__), "../src/edeposit/amqp"))
 from storage.storage_handler import DBPublication
 from storage.storage_handler import search_publications
 
+from storage import zconf
 from storage import settings
 
 
@@ -154,6 +155,7 @@ def serve_static(book_fn):
     )
 
 
+@zconf.cached_connection(timeout=settings.WEB_DB_TIMEOUT)
 def list_publications():
     """
     Return list of all publications in basic graphic HTML render.
