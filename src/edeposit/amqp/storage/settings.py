@@ -9,16 +9,16 @@ Module also has the ability to read user-defined data from two paths:
 - ``$HOME/_SETTINGS_PATH``
 - ``/etc/_SETTINGS_PATH``
 
-See :attr:`._SETTINGS_PATH` for details.
+See :attr:`_SETTINGS_PATH` for details.
 
 Note:
     If the first path is found, other is ignored.
 
-Example of the configuration file (``$HOME/.pAPI/settings.json``)::
+Example of the configuration file (``$HOME/edeposit/storage.json``)::
 
     {
-        "NOTIFICATORS_SMS_USERNAME": "username",
-        "NOTIFICATORS_SMS_PASSWORD": "password"
+        "PRIVATE_INDEX_USERNAME": "username",
+        "PRIVATE_INDEX_PASSWORD": "password"
     }
 
 Attributes
@@ -51,11 +51,11 @@ WEB_DB_TIMEOUT = 30  #: How often should web refresh connection to DB.
 
 
 # User configuration reader (don't edit this) =================================
-_ALLOWED = [str, unicode, int, float, long, bool]
-_SETTINGS_PATH = "edeposit/storage.json"  #: appended to default search paths
+_ALLOWED = [str, unicode, int, float, long, bool]  #: Allowed types.
+_SETTINGS_PATH = "edeposit/storage.json"  #: Appended to default search paths.
 
 
-def get_all_constants():
+def _get_all_constants():
     """
     Get list of all uppercase, non-private globals (doesn't start with ``_``).
 
@@ -73,7 +73,7 @@ def get_all_constants():
     ]
 
 
-def substitute_globals(config_dict):
+def _substitute_globals(config_dict):
     """
     Set global variables to values defined in `config_dict`.
 
@@ -86,7 +86,7 @@ def substitute_globals(config_dict):
         :attr:`_ALLOWED` (str, int, ..) or starts with ``_`` are silently
         ignored.
     """
-    constants = get_all_constants()
+    constants = _get_all_constants()
 
     if type(config_dict) != dict:
         return
@@ -96,7 +96,7 @@ def substitute_globals(config_dict):
             globals()[key] = val
 
 
-def read_from_paths():
+def _read_from_paths():
     """
     Try to read data from configuration paths ($HOME/_SETTINGS_PATH,
     /etc/_SETTINGS_PATH).
@@ -113,9 +113,9 @@ def read_from_paths():
 
     if read_path:
         with open(read_path) as f:
-            substitute_globals(
+            _substitute_globals(
                 json.loads(f.read())
             )
 
 
-read_from_paths()
+_read_from_paths()

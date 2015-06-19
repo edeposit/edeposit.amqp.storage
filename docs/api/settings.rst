@@ -1,7 +1,9 @@
-storage.settings module
-=======================
+settings submodule
+==================
 
 .. automodule:: storage.settings
     :members:
     :undoc-members:
-    :show-inheritance:
+
+.. autodata:: _SETTINGS_PATH
+.. autodata:: _ALLOWED
