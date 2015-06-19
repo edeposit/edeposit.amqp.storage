@@ -19,7 +19,7 @@ from ..settings import PROJECT_KEY
 
 
 # Variables ===================================================================
-_CONNECTION = None  #: cache for all calls to :meth:`get_zeo_connection`
+_CONNECTION = None  #: Cache for calls to :meth:`get_zeo_connection`.
 
 
 # Functions & classes =========================================================
@@ -69,6 +69,7 @@ def get_zeo_connection(cached=True, on_close_callback=use_new_connection):
         Don't try to put one object into multiple connections. It won't work.
 
     Args:
+        cached (bool, default True): Use cached connection to database.
         on_close_callback (fn pointer, default None): Function which should be
                           used when the connection is closed.
 
@@ -97,7 +98,7 @@ def get_zeo_root(cached=True):
     Return :attr:`.PROJECT_KEY` from the root of the database.
 
     Args:
-        cached (bool, default True): Cache object. This will prevent nasty
+        cached (bool, default True): Cache connection. This will prevent nasty
                problems with putting same object into multiple connections.
 
     Returns:
