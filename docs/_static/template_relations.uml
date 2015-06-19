@@ -1,0 +1,123 @@
+package edeposit.amqp.storage {
+    package structures {
+        class struct_init as "_​_init__.py" <<M, Green>> {
+            Imports all structures to be
+            accessible at package level.
+            ---
+            $templater:module:structures/__init__
+        }
+        class publication as "publication.py" <<M, Green>> {
+            Stucture for use
+            in AMQP communication.
+            ---
+            $templater:module:structures/publication
+        }
+        class db_publication as "db_publication.py" <<M, Green>> {
+            Structure for use in
+            database.
+            ---
+            $templater:module:structures/db_publication
+        }
+        class requests as "requests.py" <<M, Green>> {
+            AMQP requests.
+            ---
+            $templater:module:structures/requests
+        }
+        class responses as "responses.py" <<M, Green>> {
+            AMQP resposes.
+            ---
+            $templater:module:structures/responses
+        }
+        class publication_generator as "publication_generator.py" <<S, Blue>> {
+            Script used to generate both
+            Publication and DBPublication
+            structures.
+            ---
+            $templater:module:structures/publication_generator
+        }
+    }
+    publication -d-> struct_init
+    db_publication -d-> struct_init
+    requests -d-> struct_init
+    responses -d-> struct_init
+
+    publication_generator .d.> publication: generates
+    publication_generator .d.> db_publication: generates
+
+
+    package zconf {
+        class zinit as "_​_init__.py" <<M, Green>> {
+            ZODB connector.
+            ---
+            $templater:module:zconf/__init__
+        }
+        class zeo as "zeo.conf" <<F, Red>> {
+            Default ZODB / ZEO
+            configuration file.
+        }
+        class zeo_client as "zeo_client.conf" <<F, Red>> {
+            Default config for
+            the ZEO client.
+        }
+    }
+    zeo -d-> zinit
+    zeo_client -d-> zinit
+
+
+    class init as "_​_init__.py" <<M, Green>> {
+        AMQP connector.
+
+        Also all communication structures are imported
+        here.
+        ---
+        class Publication
+        class SaveRequest
+        class SearchResult
+        class SearchRequest
+        $templater:module:__init__
+    }
+    class storage_handler as "storage_handler.py" <<M, Green>> {
+        Saves DBPublication to
+        database, maintains
+        search indexes and so
+        on.
+        ---
+        $templater:module:storage_handler
+    }
+    class settings as "settings.py" <<M, Green>> {
+        Settings for the package - web
+        address and so on.
+        ---
+        .ZCONF_PATH
+        .PROJECT_KEY
+        .PRIVATE_INDEX
+        .PRIVATE_INDEX_USERNAME
+        .PRIVATE_INDEX_PASSWORD
+        .PUBLIC_DIR
+        .PRIVATE_DIR
+        .WEB_ADDR
+        .WEB_PORT
+        .WEB_SERVER
+        .WEB_DB_TIMEOUT
+    }
+    struct_init -d-> init
+    zinit -d-> storage_handler
+
+    settings -r-> storage_handler
+    settings -d-> init
+    storage_handler -d-> init
+}
+
+package bin {
+    class runzeo as "edeposit_storage_runzeo.sh" <<S, Blue>> {
+        Used to run ZEO server (database
+        server).
+    }
+    class server as "edeposit_storage_server.py" <<S, Blue>> {
+        Web interface for the publicly
+        accessible publications in database.
+    }
+}
+init -d-> server
+settings -d-> server
+settings -d-> runzeo
