@@ -3,7 +3,7 @@ edeposit.amqp.storage
 
 Long term storage subsystem for the E-deposit_ project.
 
-This project allows to store and retreive publications over AMQP_ and also to optionally access accessible publications via HTTP using builtin webserver in bottle.py_.
+This project allows to store and retreive publications over AMQP_ and also to optionally access accessible publications via HTTP using builtin webserver written in bottle.py_.
 
 .. _AMQP: https://www.amqp.org/
 .. _bottle.py: http://bottlepy.org
