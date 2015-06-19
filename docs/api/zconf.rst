@@ -1,5 +1,5 @@
-zconf subpackage
-================
+zconf submodule
+===============
 
 ZEO_ and ZODB_ configuration and access functions.
 
