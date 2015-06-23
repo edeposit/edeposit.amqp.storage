@@ -1,7 +1,7 @@
-storage.structures.requests module
-==================================
+requests submodule
+==================
+
+Structures used for AMQP communication requests.
 
 .. automodule:: storage.structures.requests
     :members:
-    :undoc-members:
-    :show-inheritance:

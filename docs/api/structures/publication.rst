@@ -1,5 +1,7 @@
-storage.structures.publication module
-=====================================
+publication structure
+=====================
+
+Communication structure used by AMQP.
 
 .. automodule:: storage.structures.publication
     :members:

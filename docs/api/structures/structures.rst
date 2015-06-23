@@ -1,21 +1,13 @@
-storage.structures package
-==========================
+structures
+==========
+.. toctree::
+    :maxdepth: 1
 
-Submodules
-----------
+    /api/structures/publication.rst
+    /api/structures/db_publication.rst
 
 .. toctree::
 
-   storage.structures.db_publication
-   storage.structures.publication
-   storage.structures.publication_generator
-   storage.structures.requests
-   storage.structures.responses
+    /api/structures/requests.rst
+    /api/structures/responses.rst
 
-Module contents
----------------
-
-.. automodule:: storage.structures
-    :members:
-    :undoc-members:
-    :show-inheritance:

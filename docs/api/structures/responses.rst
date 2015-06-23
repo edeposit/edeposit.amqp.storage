@@ -1,7 +1,7 @@
-storage.structures.responses module
-===================================
+responses submodule
+===================
+
+Structures used for AMQP responses.
 
 .. automodule:: storage.structures.responses
     :members:
-    :undoc-members:
-    :show-inheritance:
