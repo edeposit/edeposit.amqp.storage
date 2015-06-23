@@ -1,5 +1,5 @@
-storage package
-===============
+storage
+=======
 
 .. automodule:: storage
     :members:

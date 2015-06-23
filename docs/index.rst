@@ -50,14 +50,6 @@ API
 
     /api/structures/publication_generator.rst
 
-Usage example
--------------
-
-.. toctree::
-    :maxdepth: 2
-
-    /example/example.rst
-
 Installation
 ------------
 
