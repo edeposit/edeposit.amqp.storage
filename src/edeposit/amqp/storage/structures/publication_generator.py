@@ -133,6 +133,15 @@ class DB$class_name(Persistent, KwargsObj):
 
     @staticmethod
     def from_comm(pub):
+        '''
+        Convert communication namedtuple to this class.
+
+        Args:
+            pub (obj): :class:`.$class_name` instance which will be converted.
+
+        Returns:
+            obj: :class:`DB$class_name` instance.
+        '''
         filename = None
         if pub.b64_data:
             filename = DB$class_name._save_to_unique_filename(pub)
@@ -143,6 +152,12 @@ class DB$class_name(Persistent, KwargsObj):
         )
 
     def to_comm(self):
+        '''
+        Convert `self` to :class:`.$class_name`.
+
+        Returns:
+            obj: :class:`.$class_name` instance.
+        '''
         with open(self.file_pointer) as f:
             data = base64.b64encode(f.read())
 

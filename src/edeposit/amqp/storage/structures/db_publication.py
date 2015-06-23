@@ -76,6 +76,15 @@ class DBPublication(Persistent, KwargsObj):
 
     @staticmethod
     def from_comm(pub):
+        '''
+        Convert communication namedtuple to this class.
+
+        Args:
+            pub (obj): :class:`.Publication` instance which will be converted.
+
+        Returns:
+            obj: :class:`DBPublication` instance.
+        '''
         filename = None
         if pub.b64_data:
             filename = DBPublication._save_to_unique_filename(pub)
@@ -96,6 +105,12 @@ class DBPublication(Persistent, KwargsObj):
         )
 
     def to_comm(self):
+        '''
+        Convert `self` to :class:`.Publication`.
+
+        Returns:
+            obj: :class:`.Publication` instance.
+        '''
         with open(self.file_pointer) as f:
             data = base64.b64encode(f.read())
 
