@@ -101,7 +101,7 @@ def _read_from_paths():
     Try to read data from configuration paths ($HOME/_SETTINGS_PATH,
     /etc/_SETTINGS_PATH).
     """
-    home = os.environ.get("HOME", None)
+    home = os.environ.get("HOME", "/")
     home_path = os.path.join(home, _SETTINGS_PATH)
     etc_path = os.path.join("/etc", _SETTINGS_PATH)
 
