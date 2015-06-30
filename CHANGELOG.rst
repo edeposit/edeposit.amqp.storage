@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.2.3
+-----
+    - `runzeo.sh` fixed and simplified.
+
 0.2.2
 -----
     - Added requirement to `zodbpickle`, which isn't installed automatically on suse for some strange reasons.
