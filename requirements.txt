@@ -1,5 +1,6 @@
 ZEO
 ZODB3
+zodbpickle
 bottle
 kwargs_obj
 paste
