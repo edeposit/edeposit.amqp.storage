@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.2
+-----
+    - Added requirement to `zodbpickle`, which isn't installed automatically on suse for some strange reasons.
+    - Fixed paths in `runzeo.sh` script.
+
 0.2.1
 -----
     - Small bugfix in settings.py.
