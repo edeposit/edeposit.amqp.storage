@@ -11,3 +11,4 @@ recursive-exclude * *.py[co]
 recursive-include docs *.rst *.py Makefile make.bat
 
 recursive-include bin *
+recursive-include src/edeposit/amqp/storage/zconf *.conf

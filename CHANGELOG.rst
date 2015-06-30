@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.2.4
+-----
+    - Fixed MANIFEST.in to include default config files.
+
 0.2.3
 -----
     - `runzeo.sh` fixed and simplified.
