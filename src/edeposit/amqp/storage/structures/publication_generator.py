@@ -166,7 +166,7 @@ class DB$class_name(Persistent, KwargsObj):
         return $class_name(
             $db_to_comm_fields
             b64_data=data,
-            url=compose_full_url(self),
+            url=compose_full_url(self, uuid_url=True),
         )
 
     def __eq__(self, obj):

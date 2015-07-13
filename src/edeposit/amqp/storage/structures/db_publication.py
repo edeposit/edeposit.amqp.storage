@@ -128,7 +128,7 @@ class DBPublication(Persistent, KwargsObj):
             filename=self.filename,
 
             b64_data=data,
-            url=compose_full_url(self),
+            url=compose_full_url(self, uuid_url=True),
         )
 
     def __eq__(self, obj):

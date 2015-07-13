@@ -10,6 +10,7 @@ from os.path import basename
 from settings import WEB_ADDR
 from settings import WEB_PORT
 from settings import DOWNLOAD_KEY
+from settings import UUID_DOWNLOAD_KEY
 
 
 # Variables ===================================================================
@@ -23,12 +24,13 @@ class PrivatePublicationError(UserWarning):
     """
 
 
-def compose_url(pub):
+def compose_url(pub, uuid_url=False):
     """
     Compose absolute url for given `pub`.
 
     Args:
         pub (obj): :class:`.DBPublication` instance.
+        uuid_url (bool, default False): Compose URL using UUID.
 
     Returns:
         str: Absolute url-path of the publication, without server's address \
@@ -40,6 +42,13 @@ def compose_url(pub):
     if not pub.is_public:
         raise PrivatePublicationError("Publication is private!")
 
+    if uuid_url:
+        return join(
+            "/",
+            UUID_DOWNLOAD_KEY,
+            basename(pub.uuid)
+        )
+
     return join(
         "/",
         DOWNLOAD_KEY,
@@ -48,12 +57,13 @@ def compose_url(pub):
     )
 
 
-def compose_full_url(pub):
+def compose_full_url(pub, uuid_url=False):
     """
     Compose full url for given `pub`, with protocol, server's address and port.
 
     Args:
         pub (obj): :class:`.DBPublication` instance.
+        uuid_url (bool, default False): Compose URL using UUID.
 
     Returns:
         str: Absolute url-path of the publication, without server's address \
@@ -62,7 +72,9 @@ def compose_full_url(pub):
     Raises:
         PrivatePublicationError: When the `pub` is private publication.
     """
-    if WEB_PORT == 80:
-        return "%s://%s%s" % (_PROTOCOL, WEB_ADDR, compose_url(pub))
+    url = compose_url(pub, uuid_url)
 
-    return "%s://%s:%d%s" % (_PROTOCOL, WEB_ADDR, WEB_PORT, compose_url(pub))
+    if WEB_PORT == 80:
+        return "%s://%s%s" % (_PROTOCOL, WEB_ADDR, url)
+
+    return "%s://%s:%d%s" % (_PROTOCOL, WEB_ADDR, WEB_PORT, url)

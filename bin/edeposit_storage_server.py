@@ -131,7 +131,7 @@ def render_publication(pub):
         year=pub.pub_year,
         isbn=pub.isbn,
         urn_nbn=pub.urnnbn,
-        url=web_tools.compose_url(pub),
+        url=web_tools.compose_url(pub, uuid_url=True),
         delimiter=":"
     )
 
