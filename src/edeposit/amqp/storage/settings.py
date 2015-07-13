@@ -50,6 +50,7 @@ WEB_SERVER = 'wsgiref'  #: Use `paste` for threading.
 WEB_DB_TIMEOUT = 30  #: How often should web refresh connection to DB.
 
 DOWNLOAD_KEY = "download"  #: Used as part of the url. Don't change this later.
+UUID_DOWNLOAD_KEY = "UUID"  #: #: Used as part of the url. Don't change this.
 
 
 # User configuration reader (don't edit this) =================================

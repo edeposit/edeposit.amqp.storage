@@ -157,6 +157,34 @@ def serve_static(local_fn, down_fn):
     )
 
 
+@route(join("/", settings.UUID_DOWNLOAD_KEY, "<uuid>"))
+def fetch_by_uuid(uuid):
+    """
+    Serve publication by UUID.
+    """
+    pubs = [
+        pub
+        for pub in search_publications(DBPublication(uuid=uuid))
+        if pub.is_public
+    ]
+
+    if not pubs:
+        abort(404, "Dokument s UUID '%s' není dostupný." % (uuid))
+
+    if len(pubs) > 1:
+        abort(500, "Inkonzistence databáze - vráceno vícero UUID.")
+
+    pub = pubs[0]
+    down_fn = os.path.basename(pub.filename)
+    local_fn = os.path.basename(pub.file_pointer)
+
+    return static_file(
+        local_fn,
+        root=settings.PUBLIC_DIR,
+        download=down_fn
+    )
+
+
 @zconf.cached_connection(timeout=settings.WEB_DB_TIMEOUT)
 def list_publications():
     """
