@@ -25,6 +25,7 @@ _PUB_FIELDS = [
     "is_public",
     "filename",
     "b64_data",
+    "url",
 ]
 
 
@@ -44,6 +45,7 @@ class Publication(namedtuple('Publication', _PUB_FIELDS)):
         is_public (bool): Is the file public?
         filename (str): Original filename.
         b64_data (str): Base64 encoded data ebook file.
+        url (str): URL in case that publication is public.
     '''
     def __new__(self, *args, **kwargs):
         for field, arg in zip(_PUB_FIELDS, args):

@@ -25,6 +25,7 @@ COMMON_FIELDS = [
 
 COMMUNICATION_FIELDS = [
     ["b64_data", "(str): Base64 encoded data ebook file."],
+    ["url", "(str): URL in case that publication is public."],
 ]
 
 DATABASE_FIELDS = [
