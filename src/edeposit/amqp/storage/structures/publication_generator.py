@@ -95,6 +95,7 @@ from persistent import Persistent
 
 from ..settings import PUBLIC_DIR
 from ..settings import PRIVATE_DIR
+from ..web_tools import compose_full_url
 
 from publication import Publication
 
@@ -164,7 +165,8 @@ class DB$class_name(Persistent, KwargsObj):
 
         return $class_name(
             $db_to_comm_fields
-            b64_data=data
+            b64_data=data,
+            url=compose_full_url(self),
         )
 
     def __eq__(self, obj):
