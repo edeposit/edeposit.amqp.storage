@@ -1,6 +1,7 @@
 ZEO
 ZODB3
 zodbpickle
+zope.event
 bottle
 kwargs_obj
 paste
