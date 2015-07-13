@@ -10,7 +10,6 @@ import sys
 import os.path
 from os.path import join
 from os.path import dirname
-from os.path import basename
 from string import Template
 
 from bottle import run
@@ -27,6 +26,7 @@ from storage.storage_handler import search_publications
 
 from storage import zconf
 from storage import settings
+from storage import web_tools
 
 
 # Variables ===================================================================
@@ -118,8 +118,6 @@ PUB_TEMPLATE = """<div class="publication">
 </table>
 </div>"""
 
-DOWNLOAD_KEY = "download"  #: Used as part of the url
-
 
 # Functions & classes =========================================================
 def render_publication(pub):
@@ -133,17 +131,12 @@ def render_publication(pub):
         year=pub.pub_year,
         isbn=pub.isbn,
         urn_nbn=pub.urnnbn,
-        url=join(
-            "/",
-            DOWNLOAD_KEY,
-            basename(pub.file_pointer),
-            basename(pub.filename)
-        ),
+        url=web_tools.compose_url(pub),
         delimiter=":"
     )
 
 
-@route(join("/", DOWNLOAD_KEY, "<local_fn>", "<down_fn>"))
+@route(join("/", settings.DOWNLOAD_KEY, "<local_fn>", "<down_fn>"))
 def serve_static(local_fn, down_fn):
     """
     Serve static files. Make sure that user can't access other files on disk.
