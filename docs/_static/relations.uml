@@ -93,6 +93,14 @@ package edeposit.amqp.storage {
         class InvalidType
         class UnindexablePublication
     }
+    class web_tools as "web_tools.py" <<M, Green>> {
+        Shared functions for url
+        composition.
+        ---
+        compose_url(pub, uuid_url)
+        compose_full_url(pub, uuid_url)
+        class PrivatePublicationError
+    }
     class settings as "settings.py" <<M, Green>> {
         Settings for the package - web
         address and so on.
@@ -112,7 +120,7 @@ package edeposit.amqp.storage {
     struct_init -d-> init
     zinit -d-> storage_handler
 
-    settings -r-> storage_handler
+    settings -r> storage_handler
     settings -d-> init
     storage_handler -d-> init
 }
@@ -128,5 +136,7 @@ package bin {
     }
 }
 init -d-> server
+web_tools -r> init
+web_tools --> server
 settings -d-> server
 settings -d-> runzeo

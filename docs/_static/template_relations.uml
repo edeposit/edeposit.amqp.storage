@@ -84,6 +84,12 @@ package edeposit.amqp.storage {
         ---
         $templater:module:storage_handler
     }
+    class web_tools as "web_tools.py" <<M, Green>> {
+        Shared functions for url
+        composition.
+        ---
+        $templater:module:web_tools
+    }
     class settings as "settings.py" <<M, Green>> {
         Settings for the package - web
         address and so on.
@@ -103,7 +109,7 @@ package edeposit.amqp.storage {
     struct_init -d-> init
     zinit -d-> storage_handler
 
-    settings -r-> storage_handler
+    settings -r> storage_handler
     settings -d-> init
     storage_handler -d-> init
 }
@@ -119,5 +125,7 @@ package bin {
     }
 }
 init -d-> server
+web_tools -r> init
+web_tools --> server
 settings -d-> server
 settings -d-> runzeo

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.0
+-----
+    - Added support for UUID URL.
+    - Added retreiving of the URL of the public documents.
+
 0.2.4
 -----
     - Fixed MANIFEST.in to include default config files.
