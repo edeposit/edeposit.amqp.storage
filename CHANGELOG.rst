@@ -5,6 +5,7 @@ Changelog
 -----
     - Added support for UUID URL.
     - Added retreiving of the URL of the public documents.
+    - Added example of the configuration files.
 
 0.2.4
 -----
