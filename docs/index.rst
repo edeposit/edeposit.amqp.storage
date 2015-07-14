@@ -28,6 +28,7 @@ API
 
     /api/api.rst
     /api/storage_handler.rst
+    /api/web_tools.rst
     /api/zconf.rst
     /api/settings.rst
 
