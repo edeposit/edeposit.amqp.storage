@@ -45,6 +45,7 @@ def cached_connection(fn=None, timeout=10):
         # list is used because can be changed without global definition
         last_time = [time.time()]
 
+        @wraps(fn)
         def cached_connection_wrapper(*args, **kwargs):
             if time.time() > (last_time[0] + timeout):
                 use_new_connection()
