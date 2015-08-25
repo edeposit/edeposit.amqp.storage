@@ -105,15 +105,17 @@ class DBPublication(Persistent, KwargsObj):
             file_pointer=filename
         )
 
-    def to_comm(self):
+    def to_comm(self, light_request=False):
         '''
         Convert `self` to :class:`.Publication`.
 
         Returns:
             obj: :class:`.Publication` instance.
         '''
-        with open(self.file_pointer) as f:
-            data = base64.b64encode(f.read())
+        data = None
+        if not light_request:
+            with open(self.file_pointer) as f:
+                data = base64.b64encode(f.read())
 
         return Publication(
             title=self.title,
@@ -129,6 +131,7 @@ class DBPublication(Persistent, KwargsObj):
 
             b64_data=data,
             url=compose_full_url(self, uuid_url=True),
+            file_pointer=self.file_pointer,
         )
 
     def __eq__(self, obj):

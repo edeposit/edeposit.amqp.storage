@@ -26,6 +26,7 @@ COMMON_FIELDS = [
 COMMUNICATION_FIELDS = [
     ["b64_data", "(str): Base64 encoded data ebook file."],
     ["url", "(str): URL in case that publication is public."],
+    ["file_pointer", "(str): Pointer to the file on the file server."],
 ]
 
 DATABASE_FIELDS = [
@@ -153,20 +154,23 @@ class DB$class_name(Persistent, KwargsObj):
             file_pointer=filename
         )
 
-    def to_comm(self):
+    def to_comm(self, light_request=False):
         '''
         Convert `self` to :class:`.$class_name`.
 
         Returns:
             obj: :class:`.$class_name` instance.
         '''
-        with open(self.file_pointer) as f:
-            data = base64.b64encode(f.read())
+        data = None
+        if not light_request:
+            with open(self.file_pointer) as f:
+                data = base64.b64encode(f.read())
 
         return $class_name(
             $db_to_comm_fields
             b64_data=data,
             url=compose_full_url(self, uuid_url=True),
+            file_pointer=self.file_pointer,
         )
 
     def __eq__(self, obj):
@@ -220,6 +224,7 @@ def generate_database():
     comm_to_db_fields = spacer3.join(
         "%s=pub.%s,\n" % (name, name)
         for name, x in COMMON_FIELDS
+        if name != "file_pointer"
     )
 
     db_to_comm_fields = spacer3.join(

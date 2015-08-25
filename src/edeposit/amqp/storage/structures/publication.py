@@ -26,6 +26,7 @@ _PUB_FIELDS = [
     "filename",
     "b64_data",
     "url",
+    "file_pointer",
 ]
 
 
@@ -46,6 +47,7 @@ class Publication(namedtuple('Publication', _PUB_FIELDS)):
         filename (str): Original filename.
         b64_data (str): Base64 encoded data ebook file.
         url (str): URL in case that publication is public.
+        file_pointer (str): Pointer to the file on the file server.
     '''
     def __new__(self, *args, **kwargs):
         for field, arg in zip(_PUB_FIELDS, args):
