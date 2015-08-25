@@ -21,12 +21,16 @@ class SearchRequest(namedtuple("SearchRequest", ["query", "light_request"])):
                       This is used when you need just the metadata info.
     """
     def __new__(self, query, light_request=False):
-        SearchRequest._check_pub_type(query)
         return super(SearchRequest, self).__new__(self, query, light_request)
+
+    def __init__(self, query, light_request=False):
+        SearchRequest._check_pub_type(query)
+
+        self.query = query
+        self.__dict__["light_request"] = light_request
 
     @staticmethod
     def _check_pub_type(q):
-        return
         assert isinstance(q, Publication), "Publication instance is expected!"
 
     @property
