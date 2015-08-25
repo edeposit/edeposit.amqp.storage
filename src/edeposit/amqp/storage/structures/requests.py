@@ -10,21 +10,23 @@ from publication import Publication
 
 
 # Functions & classes =========================================================
-class SearchRequest(namedtuple("SearchRequest", ["query"])):
+class SearchRequest(namedtuple("SearchRequest", ["query", "light_request"])):
     """
     Retreive publication from archive using `query` - instance of
     :class:`.Publication`. Any property of the is used to retreive data.
 
     Attributes:
         query (obj): Instance of the :class:`.Publication`.
+        light_request (bool, default False): If true, don't return the data.
+                      This is used when you need just the metadata info.
     """
-    def __init__(self, query):
+    def __new__(self, query, light_request=False):
         SearchRequest._check_pub_type(query)
-
-        self.query = query
+        return super(SearchRequest, self).__new__(self, query, light_request)
 
     @staticmethod
     def _check_pub_type(q):
+        return
         assert isinstance(q, Publication), "Publication instance is expected!"
 
     @property

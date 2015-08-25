@@ -57,7 +57,10 @@ def reactToAMQPMessage(message, send_back):
         )
 
         return SearchResult(
-            publications=[_DBPublication.to_comm(pub) for pub in results]
+            publications=[
+                pub.to_comm(light_request=message.light_request)
+                for pub in results
+            ]
         )
 
     raise ValueError("'%s' is unknown type of request!" % str(type(message)))
