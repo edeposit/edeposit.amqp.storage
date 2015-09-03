@@ -5,3 +5,4 @@ zope.event
 bottle
 kwargs_obj
 paste
+BalancedDiscStorage
