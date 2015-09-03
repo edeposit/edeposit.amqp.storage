@@ -63,7 +63,7 @@ Installation of this project is little bit more complicated. Please read install
 
 Source code
 +++++++++++
-Project is released under MIT license. Source code can be found at GitHub:
+Project is released under the MIT license. Source code can be found at GitHub:
 
 - https://github.com/edeposit/edeposit.amqp.storage
 
