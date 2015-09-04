@@ -57,7 +57,12 @@ def teardown_module(module):
 def test_publication(pdf_publication, b64_pdf_file):
     assert pdf_publication
     assert pdf_publication.filename == EBOOK_FN
-    assert pdf_publication.b64_data == b64_pdf_file
+
+    # remove all whitespaces
+    pub_data = "".join(pdf_publication.b64_data.split())
+    b64_pdf_file_data = "".join(b64_pdf_file.split())
+
+    assert pub_data == b64_pdf_file_data
 
 
 def test_publication_save(pdf_publication):
