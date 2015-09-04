@@ -120,8 +120,13 @@ class DBPublication(Persistent, KwargsObj):
         '''
         data = None
         if not light_request:
-            with open(self.file_pointer) as f:
-                data = base64.b64encode(f.read())
+            with open(self.file_pointer) as unpacked_file:
+                with tempfile.TemporaryFile() as b64_file:
+                    base64.encode(unpacked_file, b64_file)
+                    b64_file.flush()
+
+                    b64_file.seek(0)
+                    data = b64_file.read()
 
         return Publication(
             title=self.title,
