@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.4.0
+-----
+    - `BalancedDiscStorage <http://github.com/Bystroushaak/BalancedDiscStorage>`_ was put into place.
+    - Serialization/deserialization of base64 content is now made using files, so it shouldn't take so much memory (copying of the string sometimes taked 3 times more than necessary).
+    - File pointer is now transmitted back with metadata.
+
 0.3.0
 -----
     - Added support for UUID URL.
