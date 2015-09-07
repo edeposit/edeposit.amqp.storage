@@ -13,6 +13,7 @@ from kwargs_obj import KwargsObj
 from persistent import Persistent
 from BalancedDiscStorage import BalancedDiscStorage
 
+from ..settings import PROJECT_KEY
 from ..settings import PUBLIC_DIR
 from ..settings import PRIVATE_DIR
 from ..web_tools import compose_full_url
@@ -87,6 +88,22 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
 
             file_pointer=filename
         )
+
+    @property
+    def indexes(self):
+        """
+        Returns:
+            list: List of strings, which may be used as indexes in DB.
+        """
+        return [
+% for field in DATABASE_FIELDS:
+            "{{field.name}}",
+% end
+        ]
+
+    @property
+    def project_key(self):
+        return PROJECT_KEY
 
     def to_comm(self, light_request=False):
         '''
