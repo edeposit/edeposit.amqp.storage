@@ -94,13 +94,15 @@ def get_zeo_connection(cached=True, on_close_callback=use_new_connection):
     return connection
 
 
-def get_zeo_root(cached=True):
+def get_zeo_root(cached=True, project_key=PROJECT_KEY):
     """
-    Return :attr:`.PROJECT_KEY` from the root of the database.
+    Return :attr:`project_key` from the root of the database.
 
     Args:
         cached (bool, default True): Cache connection. This will prevent nasty
                problems with putting same object into multiple connections.
+        project_key (str, default from settings: See :attr:`.PROJECT_KEY` for
+                    details.
 
     Returns:
         OOBTree: Project key from the root of the database.
@@ -115,15 +117,15 @@ def get_zeo_root(cached=True):
 
         raise
 
-    if PROJECT_KEY not in dbroot:
-        dbroot[PROJECT_KEY] = OOBTree()
+    if project_key not in dbroot:
+        dbroot[project_key] = OOBTree()
 
-    return dbroot[PROJECT_KEY]
+    return dbroot[project_key]
 
 
-def get_zeo_key(key, new_type=OOBTree, cached=True):
+def get_zeo_key(key, new_type=OOBTree, cached=True, project_key=PROJECT_KEY):
     """
-    Get key from the PROJECT_KEY root. Use `new_type` as the new type of the
+    Get key from the `project_key` root. Use `new_type` as the new type of the
     key, if not found.
 
     Args:
@@ -133,11 +135,13 @@ def get_zeo_key(key, new_type=OOBTree, cached=True):
         cached (bool, default True): Use cached connection - good for writing,
                but don't use this for reading, or you will get unupdated view
                to database.
+        project_key (str, default from settings: See :attr:`.PROJECT_KEY` for
+                    details.
 
     Returns:
         obj: Object at `key`. `new_type` instance if not found.
     """
-    root = get_zeo_root(cached=cached)
+    root = get_zeo_root(cached=cached, project_key=project_key)
 
     if not root.get(key, None):
         root[key] = new_type()
