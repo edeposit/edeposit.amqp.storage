@@ -11,7 +11,7 @@ from zconf import get_zeo_key
 from zconf import use_new_connection
 
 from structures import DBPublication
-from structures.publication_generator import COMMON_FIELDS
+from structures.templates.shared import DATABASE_FIELDS
 
 
 # Exceptions ==================================================================
@@ -35,8 +35,8 @@ def _get_db_connectors(cached=True):
     Returns:
         list: List of OOBTree's for each item in :attr:`.COMMON_FIELDS`.
     """
-    for field_name, docstring in COMMON_FIELDS:
-        yield field_name, get_zeo_key(field_name, cached=cached)
+    for field in DATABASE_FIELDS:
+        yield field.name, get_zeo_key(field.name, cached=cached)
 
 
 def _check_pub_type(pub, name="pub"):
