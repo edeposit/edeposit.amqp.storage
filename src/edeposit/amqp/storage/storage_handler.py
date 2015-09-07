@@ -39,21 +39,24 @@ def _get_db_connectors(cached=True):
         yield field.name, get_zeo_key(field.name, cached=cached)
 
 
-def _check_pub_type(pub, name="pub"):
+def _assert_obj_type(pub, name="pub", obj_type=DBPublication):
     """
-    Make sure, that `pub` is instance of the :class:`.DBPublication`.
+    Make sure, that `pub` is instance of the `obj_type`.
 
     Args:
         pub (obj): Instance which will be checked.
-        name (str): Name of the instance. Used in exception.
+        name (str): Name of the instance. Used in exception. Default `pub`.
+        obj_type (class): Class of which the `pub` should be instance. Default
+                 :class:`.DBPublication`.
 
     Raises:
         InvalidType: When the `pub` is not instance of :class:`.DBPublication`.
     """
-    if not isinstance(pub, DBPublication):
+    if not isinstance(pub, obj_type):
         raise InvalidType(
-            "`%s` have to be instance of DBPublication, not %s!" % (
+            "`%s` have to be instance of %s, not %s!" % (
                 name,
+                obj_type.__name__,
                 pub.__class__.__name__
             )
         )
@@ -107,7 +110,7 @@ def save_publication(pub):
         UnindexablePublication: When there is no index (property) which can be
                                 used to index `pub` in database.
     """
-    _check_pub_type(pub)
+    _assert_obj_type(pub)
 
     with transaction.manager:
         _put_into_indexes(pub)
@@ -156,7 +159,7 @@ def search_publications(query):
         InvalidType: When the `query` is not instance of \
                      :class:`.DBPublication`.
     """
-    _check_pub_type(query, "query")
+    _assert_obj_type(query, "query")
 
     # AND operator between results
     final_result = None

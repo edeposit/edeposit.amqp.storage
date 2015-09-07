@@ -58,14 +58,14 @@ def test_get_db_connectors():
 
 def test_check_pub_type():
     with pytest.raises(storage_handler.InvalidType):
-        storage_handler._check_pub_type(object)
+        storage_handler._assert_obj_type(object)
 
     with pytest.raises(storage_handler.InvalidType):
-        storage_handler._check_pub_type(
+        storage_handler._assert_obj_type(
             storage.structures.publication.Publication(*range(11))
         )
 
-    storage_handler._check_pub_type(DBPublication())
+    storage_handler._assert_obj_type(DBPublication())
 
 
 def test_save_publication(full_publication):
