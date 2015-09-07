@@ -8,11 +8,13 @@
 
 # Classes =====================================================================
 class Field(object):
-    def __init__(self, name, docstring, is_comm_field, is_db_field):
+    def __init__(self, name, docstring, is_comm_field, is_db_field,
+                 is_saveable=True):
         self.name = name
         self.docstring = docstring
         self.is_comm_field = is_comm_field
         self.is_db_field = is_db_field
+        self.is_saveable = is_saveable
 
     def __repr__(self):
         return "Field(name)" % self.name
@@ -90,33 +92,24 @@ FIELDS = [
         docstring="(str): Base64 encoded data ebook file.",
         is_comm_field=True,
         is_db_field=False,
+        is_saveable=False,
     ),
     Field(
         name="url",
         docstring="(str): URL in case that publication is public.",
         is_comm_field=True,
         is_db_field=False,
-    ),
-    Field(
-        name="file_pointer",
-        docstring="(str): Pointer to the file on the file server.",
-        is_comm_field=True,
-        is_db_field=False,
+        is_saveable=False,
     ),
 
     # DB fields
     Field(
         name="file_pointer",
         docstring="(str): Pointer to the file on the file server.",
-        is_comm_field=False,
+        is_comm_field=True,
         is_db_field=True,
+        is_saveable=False,
     ),
-]
-
-COMMON_FIELDS = [
-    field
-    for field in FIELDS
-    if field.is_comm_field and field.is_db_field
 ]
 
 COMMUNICATION_FIELDS = [
@@ -125,14 +118,14 @@ COMMUNICATION_FIELDS = [
     if field.is_comm_field
 ]
 
+SAVEABLE_FILES = [
+    field
+    for field in FIELDS
+    if field.is_saveable
+]
+
 DATABASE_FIELDS = [
     field
     for field in FIELDS
     if field.is_db_field
-]
-
-ONLY_DB_FIELDS = [
-    field
-    for field in FIELDS
-    if field.is_db_field and not field.is_comm_field
 ]
