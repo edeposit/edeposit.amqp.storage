@@ -118,7 +118,7 @@ COMMUNICATION_FIELDS = [
     if field.is_comm_field
 ]
 
-SAVEABLE_FILES = [
+SAVEABLE_FIELDS = [
     field
     for field in FIELDS
     if field.is_saveable

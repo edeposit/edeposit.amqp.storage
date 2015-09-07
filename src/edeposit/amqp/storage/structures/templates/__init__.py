@@ -8,6 +8,7 @@ import os.path
 from bottle import template
 
 import shared
+from shared import SAVEABLE_FIELDS
 
 
 # Functions ===================================================================
@@ -17,7 +18,7 @@ def _apply_template(my_template):
         CLASS_NAME=shared.CLASS_NAME,
         COMMUNICATION_FIELDS=shared.COMMUNICATION_FIELDS,
         DATABASE_FIELDS=shared.DATABASE_FIELDS,
-        SAVEABLE_FILES=shared.SAVEABLE_FILES,
+        SAVEABLE_FIELDS=shared.SAVEABLE_FIELDS,
     )
 
 

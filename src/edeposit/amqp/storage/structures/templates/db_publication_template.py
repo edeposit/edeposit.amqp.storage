@@ -81,7 +81,7 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
             filename = DB{{CLASS_NAME}}._save_to_unique_filename(pub)
 
         return DB{{CLASS_NAME}}(
-% for field in SAVEABLE_FILES:
+% for field in SAVEABLE_FIELDS:
             {{field.name}}=pub.{{field.name}},
 % end
 
@@ -106,7 +106,7 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
                     data = b64_file.read()
 
         return Publication(
-% for field in SAVEABLE_FILES:
+% for field in SAVEABLE_FIELDS:
             {{field.name}}=self.{{field.name}},
 % end
 
@@ -120,10 +120,10 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
             return False
 
         return (
-% for field in SAVEABLE_FILES[:-1]:
+% for field in SAVEABLE_FIELDS[:-1]:
             self.{{field.name}} == obj.{{field.name}} and
 % end
-            self.{{SAVEABLE_FILES[-1].name}} == obj.{{SAVEABLE_FILES[-1].name}}
+            self.{{SAVEABLE_FIELDS[-1].name}} == obj.{{SAVEABLE_FIELDS[-1].name}}
         )
 
     def __ne__(self, obj):
