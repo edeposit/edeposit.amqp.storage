@@ -7,7 +7,10 @@
 import structures
 
 from structures import Publication
-from structures import DBPublication as _DBPublication
+from structures import DBPublication
+
+from structures import Archive
+from structures import DBArchive
 
 from structures import SaveRequest
 from structures import SearchResult
@@ -15,6 +18,9 @@ from structures import SearchRequest
 
 from publication_storage import save_publication
 from publication_storage import search_publications
+
+from archive_storage import save_archive
+from archive_storage import search_archives
 
 
 # Functions & classes =========================================================
@@ -47,13 +53,27 @@ def reactToAMQPMessage(message, send_back):
         ValueError: if bad type of `message` structure is given.
     """
     if _instanceof(message, SaveRequest):
-        return save_publication(
-            _DBPublication.from_comm(message.pub)
+        save_fn = save_publication
+        class_ref = DBPublication
+
+        if _instanceof(message.pub, DBArchive):
+            save_fn = save_archive
+            class_ref = DBArchive
+
+        return save_fn(
+            class_ref.from_comm(message.pub)
         )
 
     elif _instanceof(message, SearchRequest):
-        results = search_publications(
-            _DBPublication.from_comm(message.query)
+        search_fn = search_publications
+        class_ref = DBPublication
+
+        if _instanceof(message.query, DBArchive):
+            search_fn = search_archives
+            class_ref = DBArchive
+
+        results = search_fn(
+            class_ref.from_comm(message.query)
         )
 
         return SearchResult(
