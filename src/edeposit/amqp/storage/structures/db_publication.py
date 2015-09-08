@@ -136,6 +136,15 @@ class DBPublication(Persistent, KwargsObj):
     def project_key(self):
         return PROJECT_KEY
 
+    def read_as_base64(self, fn):
+        with open(fn) as unpacked_file:
+            with tempfile.TemporaryFile() as b64_file:
+                base64.encode(unpacked_file, b64_file)
+                b64_file.flush()
+
+                b64_file.seek(0)
+                return b64_file.read()
+
     def to_comm(self, light_request=False):
         '''
         Convert `self` to :class:`.Publication`.
@@ -145,13 +154,7 @@ class DBPublication(Persistent, KwargsObj):
         '''
         data = None
         if not light_request:
-            with open(self.file_pointer) as unpacked_file:
-                with tempfile.TemporaryFile() as b64_file:
-                    base64.encode(unpacked_file, b64_file)
-                    b64_file.flush()
-
-                    b64_file.seek(0)
-                    data = b64_file.read()
+            data = self.read_as_base64(self.file_pointer)
 
         return Publication(
             title=self.title,
