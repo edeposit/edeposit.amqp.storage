@@ -7,6 +7,8 @@
 # Imports =====================================================================
 import os
 import base64
+import zipfile
+import os.path
 import tempfile
 
 from kwargs_obj import KwargsObj
@@ -17,6 +19,9 @@ from ..settings import PROJECT_KEY
 from ..settings import PUBLIC_DIR
 from ..settings import PRIVATE_DIR
 from ..web_tools import compose_full_url
+
+from shared import path_to_zip
+from shared import read_as_base64
 
 from publication import Publication
 
@@ -136,15 +141,6 @@ class DBPublication(Persistent, KwargsObj):
     def project_key(self):
         return PROJECT_KEY
 
-    def read_as_base64(self, fn):
-        with open(fn) as unpacked_file:
-            with tempfile.TemporaryFile() as b64_file:
-                base64.encode(unpacked_file, b64_file)
-                b64_file.flush()
-
-                b64_file.seek(0)
-                return b64_file.read()
-
     def to_comm(self, light_request=False):
         '''
         Convert `self` to :class:`.Publication`.
@@ -154,7 +150,7 @@ class DBPublication(Persistent, KwargsObj):
         '''
         data = None
         if not light_request:
-            data = self.read_as_base64(self.file_pointer)
+            data = read_as_base64(self.file_pointer)
 
         return Publication(
             title=self.title,
