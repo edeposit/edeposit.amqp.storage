@@ -18,7 +18,7 @@ from ..settings import PUBLIC_DIR
 from ..settings import PRIVATE_DIR
 from ..web_tools import compose_full_url
 
-from publication import Publication
+from {{CLASS_NAME.lower()}} import {{CLASS_NAME}}
 
 
 # Functions and classes =======================================================
@@ -28,7 +28,7 @@ from publication import Publication
 
 class DB{{CLASS_NAME}}(Persistent, KwargsObj):
     '''
-    Database structure used to store basic metadata about Publications.
+    Database structure used to store basic metadata about {{CLASS_NAME}}s.
 
     Attributes:
 % for field in DATABASE_FIELDS:
@@ -72,10 +72,10 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
         Convert communication namedtuple to this class.
 
         Args:
-            pub (obj): :class:`.Publication` instance which will be converted.
+            pub (obj): :class:`.{{CLASS_NAME}}` instance which will be converted.
 
         Returns:
-            obj: :class:`DBPublication` instance.
+            obj: :class:`DB{{CLASS_NAME}}` instance.
         '''
         filename = None
         if pub.b64_data:
@@ -107,10 +107,10 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
 
     def to_comm(self, light_request=False):
         '''
-        Convert `self` to :class:`.Publication`.
+        Convert `self` to :class:`.{{CLASS_NAME}}`.
 
         Returns:
-            obj: :class:`.Publication` instance.
+            obj: :class:`.{{CLASS_NAME}}` instance.
         '''
         data = None
         if not light_request:
@@ -122,7 +122,7 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
                     b64_file.seek(0)
                     data = b64_file.read()
 
-        return Publication(
+        return {{CLASS_NAME}}(
 % for field in SAVEABLE_FIELDS:
             {{field.name}}=self.{{field.name}},
 % end
