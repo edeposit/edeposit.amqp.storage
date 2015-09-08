@@ -15,7 +15,7 @@ from ZODB.POSException import ConnectionStateError
 from BTrees.OOBTree import OOBTree
 
 from ..settings import ZCONF_PATH
-from ..settings import PROJECT_KEY
+from ..settings import PUB_PROJECT_KEY as PROJECT_KEY
 
 
 # Variables ===================================================================
@@ -94,15 +94,14 @@ def get_zeo_connection(cached=True, on_close_callback=use_new_connection):
     return connection
 
 
-def get_zeo_root(cached=True, project_key=PROJECT_KEY):
+def get_zeo_root(project_key, cached=True):
     """
     Return :attr:`project_key` from the root of the database.
 
     Args:
+        project_key (str): Project key for the storage.
         cached (bool, default True): Cache connection. This will prevent nasty
                problems with putting same object into multiple connections.
-        project_key (str, default from settings: See :attr:`.PROJECT_KEY` for
-                    details.
 
     Returns:
         OOBTree: Project key from the root of the database.
@@ -113,7 +112,7 @@ def get_zeo_root(cached=True, project_key=PROJECT_KEY):
         dbroot = connection.root()
     except ConnectionStateError:
         if cached:
-            return get_zeo_root(cached=False)
+            return get_zeo_root(project_key=project_key, cached=False)
 
         raise
 
@@ -141,7 +140,7 @@ def get_zeo_key(key, new_type=OOBTree, cached=True, project_key=PROJECT_KEY):
     Returns:
         obj: Object at `key`. `new_type` instance if not found.
     """
-    root = get_zeo_root(cached=cached, project_key=project_key)
+    root = get_zeo_root(project_key=project_key, cached=cached)
 
     if not root.get(key, None):
         root[key] = new_type()
