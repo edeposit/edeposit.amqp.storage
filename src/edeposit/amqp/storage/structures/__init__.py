@@ -7,6 +7,9 @@
 from publication import Publication
 from db_publication import DBPublication
 
+from archive import Archive
+from db_archive import DBArchive
+
 # AMQP connections
 from requests import SaveRequest
 from requests import SearchRequest
