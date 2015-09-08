@@ -13,7 +13,11 @@ import tempfile
 
 from kwargs_obj import KwargsObj
 from persistent import Persistent
+% if CLASS_NAME == "Publication":
 from BalancedDiscStorage import BalancedDiscStorage
+% elif CLASS_NAME == "Archive":
+from BalancedDiscStorage import BalancedDiscStorageZ
+% end
 
 % if CLASS_NAME == "Publication":
 from ..settings import PUB_PROJECT_KEY as PROJECT_KEY
@@ -61,7 +65,11 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
         if not os.path.exists(dirpath):
             raise IOError("`%s` doesn't exists!" % dirpath)
 
+% if CLASS_NAME == "Publication":
         bds = BalancedDiscStorage(dirpath)
+% elif CLASS_NAME == "Archive":
+        bdsz = BalancedDiscStorageZ(dirpath)
+% end
 
         # this is optimization for big files, which take big chunks of memory,
         # if copied multiple times as string
@@ -76,7 +84,11 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
                 unpacked_file.flush()
 
                 unpacked_file.seek(0)
+% if CLASS_NAME == "Publication":
                 return bds.add_file(unpacked_file)
+% elif CLASS_NAME == "Archive":
+                return bdsz.add_archive_as_dir(unpacked_file)
+% end
 
     @staticmethod
     def from_comm(pub):

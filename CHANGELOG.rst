@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.5.0
+-----
+    - ZIP Archives are now supported. They should result into creation of directory on disc.
+    - Generator for generating structures rewritten to Bottle's templating engine.
+    - Storage subsystem made universal.
+    - Added Publication frontend over universal storage.
+    - Added support for archives.
+
 0.4.0
 -----
     - `BalancedDiscStorage <http://github.com/Bystroushaak/BalancedDiscStorage>`_ was put into place.

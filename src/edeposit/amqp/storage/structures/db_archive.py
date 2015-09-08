@@ -13,7 +13,7 @@ import tempfile
 
 from kwargs_obj import KwargsObj
 from persistent import Persistent
-from BalancedDiscStorage import BalancedDiscStorage
+from BalancedDiscStorage import BalancedDiscStorageZ
 
 from ..settings import ARCH_PROJECT_KEY as PROJECT_KEY
 from ..settings import ARCHIVE_DIR as PUBLIC_DIR
@@ -57,7 +57,7 @@ class DBArchive(Persistent, KwargsObj):
         if not os.path.exists(dirpath):
             raise IOError("`%s` doesn't exists!" % dirpath)
 
-        bds = BalancedDiscStorage(dirpath)
+        bdsz = BalancedDiscStorageZ(dirpath)
 
         # this is optimization for big files, which take big chunks of memory,
         # if copied multiple times as string
@@ -72,7 +72,7 @@ class DBArchive(Persistent, KwargsObj):
                 unpacked_file.flush()
 
                 unpacked_file.seek(0)
-                return bds.add_file(unpacked_file)
+                return bdsz.add_archive_as_dir(unpacked_file)
 
     @staticmethod
     def from_comm(pub):
