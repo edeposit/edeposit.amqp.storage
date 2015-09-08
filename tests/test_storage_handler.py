@@ -17,13 +17,7 @@ from storage import storage_handler
 from storage.structures import DBPublication
 
 import environment_generator
-from structures.test_db_publication import random_publication
-
-
-# Variables ===================================================================
-
-
-# Fixtures ====================================================================
+from test_publication_storage import full_publication
 
 
 # Setup =======================================================================
@@ -40,4 +34,3 @@ def test_get_db_connectors(full_publication):
     connectors = storage_handler._get_db_connectors(full_publication)
 
     assert len(list(connectors)) > 1
-
