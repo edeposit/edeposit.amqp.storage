@@ -78,11 +78,17 @@ def _check_obj_properties(pub, name="pub"):
     Raises:
         InvalidType: When the `pub` is not instance of `obj_type`.
     """
-    if not hasattr(pub, "indexes") or not pub.indexes:
+    if not hasattr(pub, "indexes"):
         raise InvalidType("`%s` doesn't have .indexes property!" % name)
 
-    if not hasattr(pub, "root_key") or not pub.root_key:
-        raise InvalidType("`%s` doesn't have .root_key property!" % name)
+    if not pub.indexes:
+        raise InvalidType("`%s.indexes` is not set!" % name)
+
+    if not hasattr(pub, "project_key"):
+        raise InvalidType("`%s` doesn't have .project_key property!" % name)
+
+    if not pub.project_key:
+        raise InvalidType("`%s.project_key` is not set!" % name)
 
 
 def _put_into_indexes(obj):
