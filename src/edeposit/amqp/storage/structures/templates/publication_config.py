@@ -4,7 +4,10 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
+from bottle import template
+
 from field import Field
+from shared import read_file
 
 
 # Variables ===================================================================
@@ -116,3 +119,25 @@ DATABASE_FIELDS = [
     for field in FIELDS
     if field.is_db_field
 ]
+
+
+def _apply_publication_template(my_template):
+    return template(
+        my_template,
+        CLASS_NAME=CLASS_NAME,
+        COMMUNICATION_FIELDS=COMMUNICATION_FIELDS,
+        DATABASE_FIELDS=DATABASE_FIELDS,
+        SAVEABLE_FIELDS=SAVEABLE_FIELDS,
+    )
+
+
+def get_db_publication():
+    return _apply_publication_template(
+        read_file("db_template.pyt")
+    )
+
+
+def get_publication():
+    return _apply_publication_template(
+        read_file("comm_template.pyt")
+    )
