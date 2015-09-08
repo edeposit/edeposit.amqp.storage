@@ -13,8 +13,8 @@ from structures import SaveRequest
 from structures import SearchResult
 from structures import SearchRequest
 
-from storage_handler import save_publication
-from storage_handler import search_publications
+from publication_storage import save_publication
+from publication_storage import search_publications
 
 
 # Functions & classes =========================================================
