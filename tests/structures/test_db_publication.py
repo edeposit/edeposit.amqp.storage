@@ -17,8 +17,10 @@ from BTrees.OOBTree import OOTreeSet
 import pytest
 from faker import Factory
 
-from storage.structures import Publication
-from storage.structures import DBPublication
+import tempfile
+import storage
+from storage import settings
+from ..environment_generator import TMP_DIR
 
 
 # Variables ===================================================================
@@ -42,7 +44,21 @@ def b64_pdf_file():
 
 
 @pytest.fixture
-def random_publication():
+def random_publication(monkeypatch):
+    monkeypatch.setattr(
+        storage.structures.db_publication,
+        "PUBLIC_DIR",
+        tempfile.mkdtemp(dir=TMP_DIR)
+    )
+    monkeypatch.setattr(
+        storage.structures.db_publication,
+        "PRIVATE_DIR",
+        tempfile.mkdtemp(dir=TMP_DIR)
+    )
+    
+    from storage.structures.db_publication import Publication
+    from storage.structures.db_publication import DBPublication
+
     pub = Publication(
         title=FAKER.text(20),
         author=FAKER.name(),
@@ -73,10 +89,10 @@ def test_op_eq(random_publication):
     assert random_publication != rand_copy
 
 
-def test_in_operator():
-    rp1 = random_publication()
-    rp2 = random_publication()
-    rp3 = random_publication()
+def test_in_operator(monkeypatch):
+    rp1 = random_publication(monkeypatch)
+    rp2 = random_publication(monkeypatch)
+    rp3 = random_publication(monkeypatch)
 
     assert rp1 != rp2
 
@@ -88,11 +104,11 @@ def test_in_operator():
     assert rp3 not in cont
 
 
-def test_OOTreeSet():
+def test_OOTreeSet(monkeypatch):
     a = OOTreeSet()
-    rp1 = random_publication()
-    rp2 = random_publication()
-    rp3 = random_publication()
+    rp1 = random_publication(monkeypatch)
+    rp2 = random_publication(monkeypatch)
+    rp3 = random_publication(monkeypatch)
 
     a.insert(rp1)
 

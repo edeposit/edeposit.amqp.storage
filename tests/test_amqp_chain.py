@@ -32,12 +32,12 @@ def b64_pdf_file():
 
 
 @pytest.fixture
-def pdf_publication():
+def pdf_publication(random_publication):
     with tempfile.NamedTemporaryFile() as tmp_file:
         tmp_file.write(pdf_file())
         tmp_file.seek(0)
 
-        pub = random_publication()
+        pub = random_publication
         pub.file_pointer = tmp_file.name
         pub.filename = EBOOK_FN
 

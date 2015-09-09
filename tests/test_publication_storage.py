@@ -22,18 +22,22 @@ from structures.test_db_publication import random_publication
 
 
 # Variables ===================================================================
-FULL_PUB = random_publication()
+FULL_PUB = None
 
 
 # Fixtures ====================================================================
 @pytest.fixture
-def full_publication():
+def full_publication(random_publication):
+    if not FULL_PUB:
+        global FULL_PUB
+        FULL_PUB = random_publication
+
     return FULL_PUB
 
 
 @pytest.fixture
-def different_pub():
-    dp = copy.deepcopy(full_publication())
+def different_pub(full_publication):
+    dp = copy.deepcopy(full_publication)
     dp.title = "other title"
     dp.author = "other author"
     dp.is_public = False

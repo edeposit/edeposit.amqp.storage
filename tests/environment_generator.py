@@ -7,8 +7,8 @@
 import shutil
 import os.path
 import tempfile
-
 import subprocess
+
 import sh  # TODO: remove
 
 from string import Template

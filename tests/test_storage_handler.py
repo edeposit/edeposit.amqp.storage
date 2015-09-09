@@ -17,6 +17,7 @@ from storage import storage_handler
 from storage.structures import DBPublication
 
 import environment_generator
+from structures.test_db_publication import random_publication
 from test_publication_storage import full_publication
 
 
