@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 
 import copy
+import os.path
 
 import pytest
 
@@ -63,7 +64,9 @@ def test_check_pub_type():
 
 
 def test_save_publication(full_publication):
-    publication_storage.save_publication(full_publication)
+    path = publication_storage.save_publication(full_publication)
+
+    assert os.path.exists(path)
 
 
 def test_search_publication(full_publication):
@@ -119,3 +122,5 @@ def test_get_private_publications(different_pub):
 
     assert result
     assert set(result) == set([different_pub])
+
+    assert os.path.exists(result[0].file_pointer)

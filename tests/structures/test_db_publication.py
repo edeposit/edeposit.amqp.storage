@@ -7,14 +7,17 @@
 from __future__ import unicode_literals
 
 import uuid
-import random
 import copy
+import base64
+import random
+import os.path
 
 from BTrees.OOBTree import OOTreeSet
 
 import pytest
 from faker import Factory
 
+from storage.structures import Publication
 from storage.structures import DBPublication
 
 
@@ -24,8 +27,23 @@ FAKER = Factory.create('cs_CZ')
 
 # Fixtures ====================================================================
 @pytest.fixture
+def pdf_file():
+    fn = os.path.join(os.path.dirname(__file__), "../data/ebook.pdf")
+
+    with open(fn) as f:
+        return f.read()
+
+
+@pytest.fixture
+def b64_pdf_file():
+    return base64.b64encode(
+        pdf_file()
+    )
+
+
+@pytest.fixture
 def random_publication():
-    return DBPublication(
+    pub = Publication(
         title=FAKER.text(20),
         author=FAKER.name(),
         pub_year="%04d" % random.randint(1990, 2015),
@@ -33,9 +51,11 @@ def random_publication():
         urnnbn="urn:nbn:cz:edep002-00%04d" % random.randint(0, 999),
         uuid=str(uuid.uuid4()),
         is_public=True,
+        b64_data=b64_pdf_file(),
         filename="/home/xex.pdf",
-        file_pointer="/tmp/uuid287378",
     )
+
+    return DBPublication.from_comm(pub)
 
 
 # Tests =======================================================================
