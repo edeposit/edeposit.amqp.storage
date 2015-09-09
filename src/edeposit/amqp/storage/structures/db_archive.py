@@ -94,7 +94,7 @@ class DBArchive(Persistent, KwargsObj):
             uuid=pub.uuid,
             aleph_id=pub.aleph_id,
 
-            file_pointer=filename
+            dir_pointer=filename
         )
 
     @property

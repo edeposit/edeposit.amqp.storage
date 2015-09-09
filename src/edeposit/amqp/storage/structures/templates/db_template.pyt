@@ -110,7 +110,11 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
             {{field.name}}=pub.{{field.name}},
 % end
 
+% if CLASS_NAME == "Publication":
             file_pointer=filename
+% elif CLASS_NAME == "Archive":
+            dir_pointer=filename
+% end
         )
 
     @property
