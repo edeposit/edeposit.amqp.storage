@@ -20,13 +20,12 @@ from BalancedDiscStorage import BalancedDiscStorageZ
 % end
 
 % if CLASS_NAME == "Publication":
-from ..settings import PUB_PROJECT_KEY as PROJECT_KEY
 from ..settings import PUBLIC_DIR
 from ..settings import PRIVATE_DIR
+from ..settings import PUB_PROJECT_KEY as PROJECT_KEY
 % elif CLASS_NAME == "Archive":
+from ..settings import ARCHIVE_DIR
 from ..settings import ARCH_PROJECT_KEY as PROJECT_KEY
-from ..settings import ARCHIVE_DIR as PUBLIC_DIR
-from ..settings import ARCHIVE_DIR as PRIVATE_DIR
 % end
 
 from ..web_tools import compose_full_url
@@ -60,7 +59,11 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
 
     @staticmethod
     def _save_to_unique_filename(pub):
+% if CLASS_NAME == "Publication":
         dirpath = PUBLIC_DIR if pub.is_public else PRIVATE_DIR
+% elif CLASS_NAME == "Archive":
+        dirpath = ARCHIVE_DIR
+% end
 
         if not os.path.exists(dirpath):
             raise IOError("`%s` doesn't exists!" % dirpath)

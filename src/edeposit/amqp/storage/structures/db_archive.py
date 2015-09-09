@@ -15,9 +15,8 @@ from kwargs_obj import KwargsObj
 from persistent import Persistent
 from BalancedDiscStorage import BalancedDiscStorageZ
 
+from ..settings import ARCHIVE_DIR
 from ..settings import ARCH_PROJECT_KEY as PROJECT_KEY
-from ..settings import ARCHIVE_DIR as PUBLIC_DIR
-from ..settings import ARCHIVE_DIR as PRIVATE_DIR
 
 from ..web_tools import compose_full_url
 
@@ -52,7 +51,7 @@ class DBArchive(Persistent, KwargsObj):
 
     @staticmethod
     def _save_to_unique_filename(pub):
-        dirpath = PUBLIC_DIR if pub.is_public else PRIVATE_DIR
+        dirpath = ARCHIVE_DIR
 
         if not os.path.exists(dirpath):
             raise IOError("`%s` doesn't exists!" % dirpath)
