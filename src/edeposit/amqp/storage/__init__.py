@@ -56,12 +56,12 @@ def reactToAMQPMessage(message, send_back):
         save_fn = save_publication
         class_ref = DBPublication
 
-        if _instanceof(message.pub, Archive):
+        if _instanceof(message.record, Archive):
             save_fn = save_archive
             class_ref = DBArchive
 
         return save_fn(
-            class_ref.from_comm(message.pub)
+            class_ref.from_comm(message.record)
         )
 
     elif _instanceof(message, SearchRequest):
@@ -77,9 +77,9 @@ def reactToAMQPMessage(message, send_back):
         )
 
         return SearchResult(
-            publications=[
-                pub.to_comm(light_request=message.light_request)
-                for pub in results
+            records=[
+                record.to_comm(light_request=message.light_request)
+                for record in results
             ]
         )
 

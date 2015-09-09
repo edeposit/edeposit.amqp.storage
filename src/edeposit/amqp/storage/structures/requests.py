@@ -14,10 +14,11 @@ from publication import Publication
 class SearchRequest(namedtuple("SearchRequest", ["query", "light_request"])):
     """
     Retreive publication from archive using `query` - instance of
-    :class:`.Publication`. Any property of the is used to retreive data.
+    :class:`.Publication` or :class:`.Archive`. Any property of the is used to
+    retreive data.
 
     Attributes:
-        query (obj): Instance of the :class:`.Publication`.
+        query (obj): Instance of :class:`.Publication` or :class:`.Archive`.
         light_request (bool, default False): If true, don't return the data.
                       This is used when you need just the metadata info.
     """
@@ -25,13 +26,13 @@ class SearchRequest(namedtuple("SearchRequest", ["query", "light_request"])):
         return super(SearchRequest, self).__new__(self, query, light_request)
 
     def __init__(self, query, light_request=False):
-        SearchRequest._check_pub_type(query)
+        SearchRequest._check_record_type(query)
 
         self.query = query
         self.__dict__["light_request"] = light_request
 
     @staticmethod
-    def _check_pub_type(q):
+    def _check_record_type(q):
         msg = "Publication instance is expected!"
         assert isinstance(q, Publication) or isinstance(q, Archive), msg
 
@@ -41,29 +42,30 @@ class SearchRequest(namedtuple("SearchRequest", ["query", "light_request"])):
 
     @query.setter
     def query(self, q):
-        SearchRequest._check_pub_type(q)
+        SearchRequest._check_record_type(q)
 
         self.__dict__["query"] = q
 
 
-class SaveRequest(namedtuple("SaveRequest", ["pub"])):
+class SaveRequest(namedtuple("SaveRequest", ["record"])):
     """
-    Save :class:`.Publication` to the storage.
+    Save `record` to the storage.
 
     Attributes:
-        pub (obj): Instance of the :class:`.Publication`.
+        record (obj): Instance of the :class:`.Publication` or
+        :class:`.Archive`.
     """
-    def __init__(self, pub):
-        SearchRequest._check_pub_type(pub)
+    def __init__(self, record):
+        SearchRequest._check_record_type(record)
 
-        self.pub = pub
+        self.record = record
 
     @property
-    def pub(self):
-        return self.__dict__["pub"]
+    def record(self):
+        return self.__dict__["record"]
 
-    @pub.setter
-    def pub(self, q):
-        SearchRequest._check_pub_type(q)
+    @record.setter
+    def record(self, q):
+        SearchRequest._check_record_type(q)
 
-        self.__dict__["pub"] = q
+        self.__dict__["record"] = q

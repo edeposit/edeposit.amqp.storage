@@ -8,6 +8,8 @@ Changelog
     - Storage subsystem made universal.
     - Added Publication frontend over universal storage.
     - Added support for archives.
+    - ``SearchResult.publications`` renamed to ``SearchResult.records``.
+    - ``SaveRequest.pub`` renamed to ``SaveRequest.record``.
 
 0.4.0
 -----

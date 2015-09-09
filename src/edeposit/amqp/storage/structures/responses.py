@@ -8,10 +8,10 @@ from collections import namedtuple
 
 
 # Functions & classes =========================================================
-class SearchResult(namedtuple("SearchResult", ["publications"])):
+class SearchResult(namedtuple("SearchResult", ["records"])):
     """
     Response to :class:`.SearchRequest`.
 
     Attributes:
-        publications (list): List of matching :class:`.Publication` objects.
+        records (list): List of matching :class:`.Publication` objects.
     """
