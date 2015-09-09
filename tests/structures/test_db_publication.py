@@ -11,15 +11,15 @@ import copy
 import base64
 import random
 import os.path
+import tempfile
 
 from BTrees.OOBTree import OOTreeSet
 
 import pytest
 from faker import Factory
 
-import tempfile
 import storage
-from storage import settings
+
 from ..environment_generator import TMP_DIR
 
 
