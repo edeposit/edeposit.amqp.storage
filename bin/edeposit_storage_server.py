@@ -21,8 +21,8 @@ from bottle import auth_basic
 
 sys.path.insert(0, join(dirname(__file__), "../src/edeposit/amqp"))
 
-from storage.storage_handler import DBPublication
-from storage.storage_handler import search_publications
+from storage import DBPublication
+from storage.publication_storage import search_publications
 
 from storage import zconf
 from storage import settings
@@ -119,6 +119,13 @@ PUB_TEMPLATE = """<div class="publication">
 </div>"""
 
 
+PRIVATE_ACCESS_MSG = """Dokument `%s` s UUID `%s` bohužel není veřejně přístupný.
+
+Obraťte se prosím na Národní knihovnu pro fyzické zpřístupnění na čtecím \
+terminálu.
+"""
+
+
 # Functions & classes =========================================================
 def render_publication(pub):
     """
@@ -136,25 +143,25 @@ def render_publication(pub):
     )
 
 
-@route(join("/", settings.DOWNLOAD_KEY, "<local_fn>", "<down_fn>"))
-def serve_static(local_fn, down_fn):
-    """
-    Serve static files. Make sure that user can't access other files on disk.
-    """
-    # remove slashes, leave only filename
-    down_fn = os.path.basename(down_fn)
-    local_fn = os.path.basename(local_fn)
+# @route(join("/", settings.DOWNLOAD_KEY, "<local_fn>", "<down_fn>"))
+# def serve_static(local_fn, down_fn):
+#     """
+#     Serve static files. Make sure that user can't access other files on disk.
+#     """
+#     # remove slashes, leave only filename
+#     down_fn = os.path.basename(down_fn)
+#     local_fn = os.path.basename(local_fn)
 
-    full_path = join(settings.PUBLIC_DIR, local_fn)
+#     full_path = join(settings.PUBLIC_DIR, local_fn)
 
-    if not os.path.exists(full_path):
-        abort(404, "'%s' není dostupný ke stažení." % local_fn)
+#     if not os.path.exists(full_path):
+#         abort(404, "'%s' není dostupný ke stažení." % local_fn)
 
-    return static_file(
-        local_fn,
-        root=settings.PUBLIC_DIR,
-        download=down_fn
-    )
+#     return static_file(
+#         local_fn,
+#         root=settings.PUBLIC_DIR,
+#         download=down_fn
+#     )
 
 
 @route(join("/", settings.UUID_DOWNLOAD_KEY, "<uuid>"))
@@ -162,21 +169,35 @@ def fetch_by_uuid(uuid):
     """
     Serve publication by UUID.
     """
-    pubs = [
+    # fetch all - private and public - publications
+    all_pubs =  [
         pub
         for pub in search_publications(DBPublication(uuid=uuid))
+    ]
+
+    if not all_pubs:
+        abort(404, "Dokument s UUID '%s' není dostupný." % (uuid))
+
+    public_pubs = [
+        pub
+        for pub in all_pubs
         if pub.is_public
     ]
 
-    if not pubs:
-        abort(404, "Dokument s UUID '%s' není dostupný." % (uuid))
+    if not public_pubs:
+        name = all_pubs[0].title
+        abort(403, PRIVATE_ACCESS_MSG % (name, uuid))
 
-    if len(pubs) > 1:
+    if len(public_pubs) > 1:
         abort(500, "Inkonzistence databáze - vráceno vícero UUID.")
 
-    pub = pubs[0]
+    pub = public_pubs[0]
+
+    if settings.PUBLIC_DIR not in pub.file_pointer:
+        abort(500, "Pokus o neoprávněný přístup!")
+    
     down_fn = os.path.basename(pub.filename)
-    local_fn = os.path.basename(pub.file_pointer)
+    local_fn = pub.file_pointer.replace(settings.PUBLIC_DIR, "")
 
     return static_file(
         local_fn,
@@ -239,6 +260,6 @@ if __name__ == '__main__':
         server=settings.WEB_SERVER,
         host=settings.WEB_ADDR,
         port=settings.WEB_PORT,
-        debug=True,
+        debug=False,
         reloader=True
     )
