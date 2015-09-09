@@ -30,6 +30,8 @@ def save_archive(archive):
 
     store_object(archive)
 
+    return archive.dir_pointer
+
 
 def search_archives(query):
     """

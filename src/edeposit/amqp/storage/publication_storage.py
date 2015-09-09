@@ -51,6 +51,8 @@ def save_publication(pub):
 
     store_object(pub)
 
+    return pub.file_pointer
+
 
 def search_publications(query):
     """
