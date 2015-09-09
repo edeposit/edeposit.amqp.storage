@@ -56,7 +56,7 @@ def reactToAMQPMessage(message, send_back):
         save_fn = save_publication
         class_ref = DBPublication
 
-        if _instanceof(message.pub, DBArchive):
+        if _instanceof(message.pub, Archive):
             save_fn = save_archive
             class_ref = DBArchive
 
@@ -68,7 +68,7 @@ def reactToAMQPMessage(message, send_back):
         search_fn = search_publications
         class_ref = DBPublication
 
-        if _instanceof(message.query, DBArchive):
+        if _instanceof(message.query, Archive):
             search_fn = search_archives
             class_ref = DBArchive
 

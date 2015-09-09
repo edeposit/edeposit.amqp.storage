@@ -6,6 +6,7 @@
 # Imports =====================================================================
 from collections import namedtuple
 
+from archive import Archive
 from publication import Publication
 
 
@@ -31,7 +32,8 @@ class SearchRequest(namedtuple("SearchRequest", ["query", "light_request"])):
 
     @staticmethod
     def _check_pub_type(q):
-        assert isinstance(q, Publication), "Publication instance is expected!"
+        msg = "Publication instance is expected!"
+        assert isinstance(q, Publication) or isinstance(q, Archive), msg
 
     @property
     def query(self):
