@@ -21,6 +21,9 @@ def save_archive(archive):
     Attr:
         archive (obj): Instance of the :class:`.DBArchive`.
 
+    Returns:
+        obj: :class:`.DBArchive` without data.
+
     Raises:
         InvalidType: When the `archive` is not instance of :class:`.DBArchive`.
         UnindexablePublication: When there is no index (property) which can be
@@ -30,7 +33,7 @@ def save_archive(archive):
 
     store_object(archive)
 
-    return archive.dir_pointer
+    return archive.to_comm(light_request=True)
 
 
 def search_archives(query):

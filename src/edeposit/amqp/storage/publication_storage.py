@@ -42,6 +42,9 @@ def save_publication(pub):
     Attr:
         pub (obj): Instance of the :class:`.DBPublication`.
 
+    Returns:
+        obj: :class:`.DBPublication` without data.
+
     Raises:
         InvalidType: When the `pub` is not instance of :class:`.DBPublication`.
         UnindexablePublication: When there is no index (property) which can be
@@ -51,7 +54,7 @@ def save_publication(pub):
 
     store_object(pub)
 
-    return pub.file_pointer
+    return pub.to_comm(light_request=True)
 
 
 def search_publications(query):
