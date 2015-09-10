@@ -10,6 +10,7 @@ Changelog
     - Added support for archives.
     - ``SearchResult.publications`` renamed to ``SearchResult.records``.
     - ``SaveRequest.pub`` renamed to ``SaveRequest.record``.
+    - AMQP structure ``SaveRequest`` now returns proper ``Archive``/``Publication`` structure with just now saved metadata, without data.
 
 0.4.0
 -----
