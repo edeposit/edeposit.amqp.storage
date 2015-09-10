@@ -1,7 +1,7 @@
-db_publication structure
-========================
+DBPublication structure
+=======================
 
-Structure used in ZODB (database).
+Structure used in ZODB (database) for storing publications.
 
 .. automodule:: storage.structures.db_publication
     :members:

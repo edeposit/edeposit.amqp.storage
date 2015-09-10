@@ -1,4 +1,4 @@
-storage
+Storage
 =======
 
 .. automodule:: storage

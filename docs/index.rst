@@ -32,19 +32,35 @@ API
     /api/zconf.rst
     /api/settings.rst
 
-:doc:`/api/structures/structures`:
+:doc:`/api/structures/structures`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+AMQP:
+
+.. toctree::
+    :maxdepth: 1
+
+    /api/structures/responses.rst
+    /api/structures/requests.rst
 
 .. toctree::
     :maxdepth: 1
 
     /api/structures/publication.rst
-    /api/structures/db_publication.rst
+    /api/structures/archive.rst
+
+Database:
 
 .. toctree::
     :maxdepth: 1
 
-    /api/structures/requests.rst
-    /api/structures/responses.rst
+    /api/structures/db_publication.rst
+    /api/structures/db_archive.rst
+
+.. toctree::
+    :maxdepth: 1
+
+Generators:
 
 .. toctree::
     :maxdepth: 1
