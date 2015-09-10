@@ -130,7 +130,7 @@ def test_archive_save(random_archive_comm):
     path = storage.reactToAMQPMessage(
         storage.SaveRequest(random_archive_comm),
         lambda x: x
-    )
+    ).dir_pointer
 
     assert os.path.exists(path)
     assert os.path.isdir(path)

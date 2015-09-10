@@ -68,7 +68,7 @@ def test_check_pub_type():
 
 
 def test_save_publication(full_publication):
-    path = publication_storage.save_publication(full_publication)
+    path = publication_storage.save_publication(full_publication).file_pointer
 
     assert os.path.exists(path)
 
