@@ -26,6 +26,12 @@ API
 .. toctree::
     :maxdepth: 1
 
+    /api/archive_storage.rst
+    /api/publication_storage.rst
+
+.. toctree::
+    :maxdepth: 1
+
     /api/api.rst
     /api/storage_handler.rst
     /api/web_tools.rst
