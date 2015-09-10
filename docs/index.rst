@@ -71,7 +71,7 @@ Generators:
 .. toctree::
     :maxdepth: 1
 
-    /api/structures/publication_generator.rst
+    /api/structures/structures_generator.rst
 
 Installation
 ------------
