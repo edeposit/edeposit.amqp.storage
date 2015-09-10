@@ -12,11 +12,23 @@ package edeposit.amqp.storage {
             ---
             $templater:module:structures/publication
         }
+        class archive as "archive.py" <<M, Green>> {
+            Stucture for use
+            in AMQP communication.
+            ---
+            $templater:module:structures/archive
+        }
         class db_publication as "db_publication.py" <<M, Green>> {
             Structure for use in
-            database.
+            ZODB.
             ---
             $templater:module:structures/db_publication
+        }
+        class db_archive as "db_archive.py" <<M, Green>> {
+            Structure for use in
+            ZODB.
+            ---
+            $templater:module:structures/db_archive
         }
         class requests as "requests.py" <<M, Green>> {
             AMQP requests.
@@ -28,12 +40,12 @@ package edeposit.amqp.storage {
             ---
             $templater:module:structures/responses
         }
-        class publication_generator as "publication_generator.py" <<S, Blue>> {
+        class structures_generator as "structures_generator.py" <<S, Blue>> {
             Script used to generate both
             Publication and DBPublication
             structures.
             ---
-            $templater:module:structures/publication_generator
+            $templater:module:structures/structures_generator
         }
     }
     publication -d-> struct_init
@@ -41,8 +53,10 @@ package edeposit.amqp.storage {
     requests -d-> struct_init
     responses -d-> struct_init
 
-    publication_generator .d.> publication: generates
-    publication_generator .d.> db_publication: generates
+    structures_generator .d.> archive: generates
+    structures_generator .d.> publication: generates
+    structures_generator .d.> db_archive: generates
+    structures_generator .d.> db_publication: generates
 
 
     package zconf {
@@ -77,12 +91,26 @@ package edeposit.amqp.storage {
         $templater:module:__init__
     }
     class storage_handler as "storage_handler.py" <<M, Green>> {
-        Saves DBPublication to
+        Saves objects to
         database, maintains
         search indexes and so
         on.
         ---
         $templater:module:storage_handler
+    }
+    class archive_storage as "archive_storage.py" <<M, Green>> {
+        Saves DBArchive to
+        the database using
+        storage_handler.
+        ---
+        $templater:module:archive_storage
+    }
+    class publication_storage as "publication_storage.py" <<M, Green>> {
+        Saves DBPublication to
+        the database using
+        storage_handler.
+        ---
+        $templater:module:publication_storage
     }
     class web_tools as "web_tools.py" <<M, Green>> {
         Shared functions for url
@@ -111,7 +139,12 @@ package edeposit.amqp.storage {
 
     settings -r> storage_handler
     settings -d-> init
-    storage_handler -d-> init
+
+    storage_handler -d-> archive_storage: wraps
+    storage_handler -d-> publication_storage: wraps
+
+    archive_storage -d-> init
+    publication_storage -d-> init
 }
 
 package bin {

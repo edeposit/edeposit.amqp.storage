@@ -11,11 +11,23 @@ package edeposit.amqp.storage {
             ---
             class Publication
         }
+        class archive as "archive.py" <<M, Green>> {
+            Stucture for use
+            in AMQP communication.
+            ---
+            class Archive
+        }
         class db_publication as "db_publication.py" <<M, Green>> {
             Structure for use in
-            database.
+            ZODB.
             ---
             class DBPublication
+        }
+        class db_archive as "db_archive.py" <<M, Green>> {
+            Structure for use in
+            ZODB.
+            ---
+            class DBArchive
         }
         class requests as "requests.py" <<M, Green>> {
             AMQP requests.
@@ -28,14 +40,11 @@ package edeposit.amqp.storage {
             ---
             class SearchResult
         }
-        class publication_generator as "publication_generator.py" <<S, Blue>> {
+        class structures_generator as "structures_generator.py" <<S, Blue>> {
             Script used to generate both
             Publication and DBPublication
             structures.
             ---
-            generate_communication()
-            generate_database()
-            generate_structures()
         }
     }
     publication -d-> struct_init
@@ -43,8 +52,10 @@ package edeposit.amqp.storage {
     requests -d-> struct_init
     responses -d-> struct_init
 
-    publication_generator .d.> publication: generates
-    publication_generator .d.> db_publication: generates
+    structures_generator .d.> archive: generates
+    structures_generator .d.> publication: generates
+    structures_generator .d.> db_archive: generates
+    structures_generator .d.> db_publication: generates
 
 
     package zconf {
@@ -54,8 +65,8 @@ package edeposit.amqp.storage {
             use_new_connection()
             cached_connection(fn, timeout)
             get_zeo_connection(cached, on_close_callback)
-            get_zeo_root(cached)
-            get_zeo_key(key, new_type, cached)
+            get_zeo_root(project_key, cached)
+            get_zeo_key(key, new_type, cached, project_key)
         }
         class zeo as "zeo.conf" <<F, Red>> {
             Default ZODB / ZEO
@@ -83,15 +94,31 @@ package edeposit.amqp.storage {
             reactToAMQPMessage(message, send_back)
     }
     class storage_handler as "storage_handler.py" <<M, Green>> {
-        Saves DBPublication to
+        Saves objects to
         database, maintains
         search indexes and so
         on.
         ---
+        store_object(obj)
+        search_objects(query)
+        class InvalidType
+        class UnindexableObject
+    }
+    class archive_storage as "archive_storage.py" <<M, Green>> {
+        Saves DBArchive to
+        the database using
+        storage_handler.
+        ---
+        save_archive(archive)
+        search_archives(query)
+    }
+    class publication_storage as "publication_storage.py" <<M, Green>> {
+        Saves DBPublication to
+        the database using
+        storage_handler.
+        ---
         save_publication(pub)
         search_publications(query)
-        class InvalidType
-        class UnindexablePublication
     }
     class web_tools as "web_tools.py" <<M, Green>> {
         Shared functions for url
@@ -122,7 +149,12 @@ package edeposit.amqp.storage {
 
     settings -r> storage_handler
     settings -d-> init
-    storage_handler -d-> init
+
+    storage_handler -d-> archive_storage: wraps
+    storage_handler -d-> publication_storage: wraps
+
+    archive_storage -d-> init
+    publication_storage -d-> init
 }
 
 package bin {
