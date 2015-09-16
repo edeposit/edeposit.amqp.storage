@@ -19,16 +19,22 @@ from bottle import static_file
 
 from bottle import auth_basic
 
-import edeposit.amqp.storage as storage
-
 sys.path.insert(0, join(dirname(__file__), "../src/edeposit/amqp"))
 
-from storage import DBPublication
-from storage.publication_storage import search_publications
+try:
+    from storage import DBPublication
+    from storage.publication_storage import search_publications
 
-from storage import zconf
-from storage import settings
-from storage import web_tools
+    from storage import zconf
+    from storage import settings
+    from storage import web_tools
+except ImportError:
+    from edeposit.amqp.storage import DBPublication
+    from edeposit.amqp.storage.publication_storage import search_publications
+
+    from edeposit.amqp.storage import zconf
+    from edeposit.amqp.storage import settings
+    from edeposit.amqp.storage import web_tools
 
 
 # Variables ===================================================================

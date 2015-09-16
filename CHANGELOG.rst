@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.5.2
+-----
+    - Fixed import bugs in ``edeposit_storage_server.py``.
+
 0.5.1
 -----
     - Fixed bug in ``edeposit_storage_server.py``.
