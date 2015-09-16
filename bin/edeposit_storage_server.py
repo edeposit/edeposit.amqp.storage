@@ -19,6 +19,8 @@ from bottle import static_file
 
 from bottle import auth_basic
 
+import edeposit.amqp.storage as storage
+
 sys.path.insert(0, join(dirname(__file__), "../src/edeposit/amqp"))
 
 from storage import DBPublication

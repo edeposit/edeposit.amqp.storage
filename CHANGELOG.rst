@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.5.1
+-----
+    - Fixed bug in ``edeposit_storage_server.py``.
+
 0.5.0
 -----
     - ZIP Archives are now supported. They should result into creation of directory on disc.
