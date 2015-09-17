@@ -83,6 +83,17 @@ Installation of this project is little bit more complicated. Please read install
 
     /installation/installation_notes.rst
 
+AMQP protocol
+-------------
+
+Here is the list of ``Request -> Response`` pairs describing responses to AMQP communication::
+
+    SaveRequest.Archive -> Archive
+    SaveRequest.Publication -> Publication
+
+    SearchRequest -> SearchResult
+
+
 Source code
 +++++++++++
 Project is released under the MIT license. Source code can be found at GitHub:
