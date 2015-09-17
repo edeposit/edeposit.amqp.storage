@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.5.3
+-----
+    - #40: URL is now available even for private publications.
+
 0.5.2
 -----
     - Fixed import bugs in ``edeposit_storage_server.py``.

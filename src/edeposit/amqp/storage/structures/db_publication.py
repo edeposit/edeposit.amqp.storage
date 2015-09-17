@@ -153,7 +153,7 @@ class DBPublication(Persistent, KwargsObj):
         if not light_request:
             data = read_as_base64(self.file_pointer)
 
-        url = compose_full_url(self, uuid_url=True) if self.is_public else None
+        url = compose_full_url(self, uuid_url=True)
 
         return Publication(
             title=self.title,
