@@ -39,9 +39,6 @@ def compose_url(pub, uuid_url=False):
     Raises:
         PrivatePublicationError: When the `pub` is private publication.
     """
-    if not pub.is_public:
-        raise PrivatePublicationError("Publication is private!")
-
     if uuid_url:
         return join(
             "/",
