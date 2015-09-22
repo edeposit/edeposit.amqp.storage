@@ -194,7 +194,7 @@ def fetch_by_uuid(uuid):
 
     if not public_pubs:
         name = all_pubs[0].title
-        abort(403, PRIVATE_ACCESS_MSG % (name, uuid))
+        abort(403, PRIVATE_ACCESS_MSG % (name.decode("utf-8"), uuid))
 
     if len(public_pubs) > 1:
         abort(500, "Inkonzistence databáze - vráceno vícero UUID.")

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.5.4
+-----
+    - Quick unicode conversion fix.
+
 0.5.3
 -----
     - #40: URL is now available even for private publications.
