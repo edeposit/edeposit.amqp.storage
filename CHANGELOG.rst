@@ -1,24 +1,12 @@
 Changelog
 =========
 
-0.5.4
+0.5.5
 -----
-    - Quick unicode conversion fix.
+    - Added graceful exit to ``/bin/edeposit_storage_runzeo.sh`` which is required by supervisord.
 
-0.5.3
------
-    - #40: URL is now available even for private publications.
-
-0.5.2
------
-    - Fixed import bugs in ``edeposit_storage_server.py``.
-
-0.5.1
------
-    - Fixed bug in ``edeposit_storage_server.py``.
-
-0.5.0
------
+0.5.0 - 0.5.4
+-------------
     - ZIP Archives are now supported. They should result into creation of directory on disc.
     - Generator for generating structures rewritten to Bottle's templating engine.
     - Storage subsystem made universal.
@@ -27,6 +15,10 @@ Changelog
     - ``SearchResult.publications`` renamed to ``SearchResult.records``.
     - ``SaveRequest.pub`` renamed to ``SaveRequest.record``.
     - AMQP structure ``SaveRequest`` now returns proper ``Archive``/``Publication`` structure with just now saved metadata, without data.
+    - Fixed bug in ``edeposit_storage_server.py``.
+    - Fixed import bugs in ``edeposit_storage_server.py``.
+    - #40: URL is now available even for private publications.
+    - Quick unicode conversion fix.
 
 0.4.0
 -----
