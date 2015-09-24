@@ -129,8 +129,8 @@ PUB_TEMPLATE = """<div class="publication">
 
 PRIVATE_ACCESS_MSG = """Dokument `%s` s UUID `%s` bohužel není veřejně přístupný.
 
-Obraťte se prosím na Národní knihovnu pro fyzické zpřístupnění na čtecím \
-terminálu.
+Tato publikace je zpřístupněna pouze na terminálech v prostorech Národní \
+knihovny ČR.
 """
 
 
