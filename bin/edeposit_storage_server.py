@@ -14,8 +14,11 @@ from string import Template
 
 from bottle import run
 from bottle import abort
+from bottle import error
 from bottle import route
+from bottle import HTTPError
 from bottle import static_file
+from bottle import SimpleTemplate
 
 from bottle import auth_basic
 
@@ -127,10 +130,33 @@ PUB_TEMPLATE = """<div class="publication">
 </div>"""
 
 
-PRIVATE_ACCESS_MSG = """Dokument `%s` s UUID `%s` bohužel není veřejně přístupný.
+PRIVATE_ACCESS_MSG = """<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html>
+<head>
+    <title>Veřejně nepřístupný dokument</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css">
+      html {background-color: #eee; font-family: sans;}
+      body {background-color: #fff; border: 1px solid #ddd;
+            padding: 15px; margin: 15px;}
+      div {background-color: #eee; border: 1px solid #ddd; padding-left: 10px;}
+    </style>
+</head>
+<body>
+    <h1>Chyba: Veřejně nepřístupný dokument</h1>
+    <div>
+    <p>
+      Dokument <em>`{{name}}`</em> s UUID <tt>`{{uuid}}`</tt> bohužel není
+      veřejně přístupný.
+    </p>
 
-Tato publikace je zpřístupněna pouze na terminálech v prostorech Národní \
-knihovny ČR.
+    <p>
+      Tato publikace je zpřístupněna pouze na terminálech v prostorech
+      <a href="http://www.nkp.cz/">Národní knihovny ČR</a>.
+    </p>
+    </div>
+</body>
+</html>
 """
 
 
@@ -151,25 +177,17 @@ def render_publication(pub):
     )
 
 
-# @route(join("/", settings.DOWNLOAD_KEY, "<local_fn>", "<down_fn>"))
-# def serve_static(local_fn, down_fn):
-#     """
-#     Serve static files. Make sure that user can't access other files on disk.
-#     """
-#     # remove slashes, leave only filename
-#     down_fn = os.path.basename(down_fn)
-#     local_fn = os.path.basename(local_fn)
+@error(403)
+def error403(error):
+    tb = error.traceback
 
-#     full_path = join(settings.PUBLIC_DIR, local_fn)
+    if isinstance(tb, dict) and "name" in tb and "uuid" in tb:
+        return SimpleTemplate(PRIVATE_ACCESS_MSG).render(
+            name=error.traceback["name"],
+            uuid=error.traceback["uuid"]
+        )
 
-#     if not os.path.exists(full_path):
-#         abort(404, "'%s' není dostupný ke stažení." % local_fn)
-
-#     return static_file(
-#         local_fn,
-#         root=settings.PUBLIC_DIR,
-#         download=down_fn
-#     )
+    return "Access denied!"
 
 
 @route(join("/", settings.UUID_DOWNLOAD_KEY, "<uuid>"))
@@ -195,7 +213,11 @@ def fetch_by_uuid(uuid):
 
     if not public_pubs:
         name = all_pubs[0].title
-        abort(403, PRIVATE_ACCESS_MSG % (name.decode("utf-8"), uuid))
+        raise HTTPError(
+            403,
+            body="Forbidden!",
+            traceback={"name": name.decode("utf-8"), "uuid": uuid}
+        )
 
     if len(public_pubs) > 1:
         abort(500, "Inkonzistence databáze - vráceno vícero UUID.")
@@ -204,7 +226,7 @@ def fetch_by_uuid(uuid):
 
     if settings.PUBLIC_DIR not in pub.file_pointer:
         abort(500, "Pokus o neoprávněný přístup!")
-    
+
     down_fn = os.path.basename(pub.filename)
     local_fn = pub.file_pointer.replace(settings.PUBLIC_DIR, "")
 
