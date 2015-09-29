@@ -51,9 +51,11 @@ def _publication(public=True):
 
 
 def add_publication():
-    pub = _publication(True)
+    pub = _publication(False)
 
-    print storage.reactToAMQPMessage(
+    print "storing", pub.uuid
+
+    pub = storage.reactToAMQPMessage(
         storage.SaveRequest(pub),
         lambda x: x
     )
@@ -68,3 +70,5 @@ if __name__ == '__main__':
     print "Added\t", pub.title
     print "UUID\t", pub.uuid
     print "URL\t", pub.url
+    print
+    print pub
