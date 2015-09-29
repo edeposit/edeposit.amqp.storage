@@ -4,6 +4,10 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
+import os.path
+from settings import HNAS_INDICATOR
+from settings import HNAS_IND_ALLOWED
+
 import structures
 
 from structures import Publication
@@ -23,12 +27,33 @@ from archive_storage import save_archive
 from archive_storage import search_archives
 
 
+# Exceptions ==================================================================
+class HNASNotMountedException(Exception):
+    """
+    Exception raised in case, that HNAS is not mounted.
+    """
+
+
 # Functions & classes =========================================================
 def _instanceof(instance, cls):
     """
     Check type of `instance` by matching ``.__name__`` with `cls.__name__`.
     """
     return type(instance).__name__ == cls.__name__
+
+
+def _hnas_protection():
+    """
+    If :attr:`.HNAS_IND_ALLOWED` is ``True``, raise exception in case that
+    :attr:`.HNAS_INDICATOR` file was not found.
+
+    Raises:
+        HNASNotMountedException: In case that the HNAS is not mounted.
+    """
+    if HNAS_IND_ALLOWED and not os.path.exists(HNAS_INDICATOR):
+        raise HNASNotMountedException(
+            "Indicator file `%s` not found!" % HNAS_INDICATOR
+        )
 
 
 # Main function ===============================================================
@@ -52,6 +77,8 @@ def reactToAMQPMessage(message, send_back):
     Raises:
         ValueError: if bad type of `message` structure is given.
     """
+    _hnas_protection()
+
     if _instanceof(message, SaveRequest):
         save_fn = save_publication
         class_ref = DBPublication

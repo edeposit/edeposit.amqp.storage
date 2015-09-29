@@ -50,7 +50,7 @@ ARCHIVE_DIR = ""  #: Path to the directory, where the archives will be stored.
 #: Path to the file saved on HNAS, which is used to indicate that HNAS is
 #: mounted.
 HNAS_INDICATOR = ""
-HNAS_IND_ALLOWED = True  #: Should the HNAS indicator be used or not?
+HNAS_IND_ALLOWED = False  #: Should the HNAS indicator be used or not?
 
 WEB_ADDR = "localhost"  #: Address where the webserver should listen.
 WEB_PORT = 8080  #: Port for the webserver.
