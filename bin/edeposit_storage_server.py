@@ -173,6 +173,7 @@ def render_publication(pub):
 
 
 @route(join("/", settings.UUID_DOWNLOAD_KEY, "<uuid>"))
+@zconf.cached_connection(timeout=settings.WEB_DB_TIMEOUT)
 def fetch_by_uuid(uuid):
     """
     Serve publication by UUID.
