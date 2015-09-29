@@ -45,7 +45,12 @@ PRIVATE_INDEX_PASSWORD = ""  #: Password for private index. You HAVE TO set it.
 PUBLIC_DIR = ""  #: Path to the directory for public publications.
 PRIVATE_DIR = ""  #: Path to the private directory, for non-downloadabe pubs.
 
-ARCHIVE_DIR = ""  #: Path to the directory, where the archives will be stored
+ARCHIVE_DIR = ""  #: Path to the directory, where the archives will be stored.
+
+#: Path to the file saved on HNAS, which is used to indicate that HNAS is
+#: mounted.
+HNAS_INDICATOR = ""
+HNAS_IND_ALLOWED = True  #: Should the HNAS indicator be used or not?
 
 WEB_ADDR = "localhost"  #: Address where the webserver should listen.
 WEB_PORT = 8080  #: Port for the webserver.
