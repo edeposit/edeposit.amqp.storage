@@ -10,7 +10,6 @@ import sys
 import os.path
 from os.path import join
 from os.path import dirname
-from string import Template
 
 from bottle import run
 from bottle import abort
@@ -100,34 +99,36 @@ INDEX_TEMPLATE = """<!DOCTYPE html>
 <h1>Seznam veřejně přístupných publikací projektu E-deposit</h1>
 
 <div id="content">
-$publications
+% for pub in publications:
+  <div class="publication">
+    <table>
+      <tr>
+        <td colspan='4' class="title_link">
+          <a href="{{compose_url(pub, uuid_url=True)}}">{{pub.title}}</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="author">Autor{{delimiter}}</td>
+        <td class="author_content">{{pub.author}}</td>
+
+        <td class="isbn">ISBN{{delimiter}}</td>
+        <td class="isbn_content">{{pub.isbn}}</td>
+      </tr>
+      <tr>
+        <td class="year">Rok vydání{{delimiter}}</td>
+        <td class="year_content">{{pub.pub_year}}</td>
+
+        <td class="urn_nbn">URN:NBN{{delimiter}}</td>
+        <td class="urn_nbn_content">{{pub.urnnbn}}</td>
+      </tr>
+    </table>
+  </div>
+% end
 </div>
 
 </body>
 </html>
 """
-
-PUB_TEMPLATE = """<div class="publication">
-<table>
-    <tr>
-        <td colspan='4' class="title_link"><a href="$url">$title</a></td>
-    </tr>
-    <tr>
-        <td class="author">Autor$delimiter</td>
-        <td class="author_content">$author</td>
-
-        <td class="isbn">ISBN$delimiter</td>
-        <td class="isbn_content">$isbn</td>
-    </tr>
-    <tr>
-        <td class="year">Rok vydání$delimiter</td>
-        <td class="year_content">$year</td>
-
-        <td class="urn_nbn">URN:NBN$delimiter</td>
-        <td class="urn_nbn_content">$urn_nbn</td>
-    </tr>
-</table>
-</div>"""
 
 
 PRIVATE_ACCESS_MSG = """<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
@@ -161,22 +162,6 @@ PRIVATE_ACCESS_MSG = """<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 
 
 # Functions & classes =========================================================
-def render_publication(pub):
-    """
-    Render `pub` (:class:`.DBPublication` instance) to HTML using
-    :attr:`PUB_TEMPLATE`.
-    """
-    return Template(PUB_TEMPLATE).substitute(
-        title=pub.title,
-        author=pub.author,
-        year=pub.pub_year,
-        isbn=pub.isbn,
-        urn_nbn=pub.urnnbn,
-        url=web_tools.compose_url(pub, uuid_url=True),
-        delimiter=":"
-    )
-
-
 @error(403)
 def error403(error):
     tb = error.traceback
@@ -197,7 +182,7 @@ def fetch_by_uuid(uuid):
     Serve publication by UUID.
     """
     # fetch all - private and public - publications
-    all_pubs =  [
+    all_pubs = [
         pub
         for pub in search_publications(DBPublication(uuid=uuid))
     ]
@@ -246,13 +231,10 @@ def list_publications():
         DBPublication(is_public=True)
     )
 
-    publications = "\n".join(
-        render_publication(pub)
-        for pub in publications
-    )
-
-    return Template(INDEX_TEMPLATE).substitute(
-        publications=publications
+    return SimpleTemplate(INDEX_TEMPLATE).render(
+        publications=publications,
+        compose_url=web_tools.compose_url,
+        delimiter=":",
     )
 
 

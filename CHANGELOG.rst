@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.5.6
+-----
+    - Added custom 403 message.
+    - Fixed bug in database connection caching.
+    - Bottle's ``SimpleTemplate`` is now used instead of python's ``string.Template``.
+
 0.5.5
 -----
     - Added graceful exit to ``/bin/edeposit_storage_runzeo.sh`` which is required by supervisord.
