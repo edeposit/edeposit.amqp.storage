@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.5.7
+-----
+    - Fixed bug in cached connection.
+
 0.5.6
 -----
     - Added custom 403 message.

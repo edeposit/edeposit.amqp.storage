@@ -175,16 +175,23 @@ def error403(error):
     return "Access denied!"
 
 
-@route(join("/", settings.UUID_DOWNLOAD_KEY, "<uuid>"))
 @zconf.cached_connection(timeout=settings.WEB_DB_TIMEOUT)
+def search_publications_closure(*args, **kwargs):
+    """
+    Use cached connection.
+    """
+    return search_publications(*args, **kwargs)
+
+
+@route(join("/", settings.UUID_DOWNLOAD_KEY, "<uuid>"))
 def fetch_by_uuid(uuid):
     """
-    Serve publication by UUID.
+    Serve publications by UUID.
     """
     # fetch all - private and public - publications
     all_pubs = [
         pub
-        for pub in search_publications(DBPublication(uuid=uuid))
+        for pub in search_publications_closure(DBPublication(uuid=uuid))
     ]
 
     if not all_pubs:
