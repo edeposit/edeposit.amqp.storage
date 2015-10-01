@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.5.8
+-----
+    - Another attempt to solve problems with cached connections.
+
 0.5.7
 -----
     - Fixed bug in cached connection.

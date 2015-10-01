@@ -31,9 +31,8 @@ def use_new_connection():
 
     if _CONNECTION:
         _CONNECTION.sync()
-        _CONNECTION.close()
-
-    _CONNECTION = None
+    else:
+        _CONNECTION = None
 
 
 def cached_connection(fn=None, timeout=10):
