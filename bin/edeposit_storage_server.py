@@ -280,6 +280,6 @@ if __name__ == '__main__':
         server=settings.WEB_SERVER,
         host=settings.WEB_ADDR,
         port=settings.WEB_PORT,
-        debug=False,
-        reloader=True
+        debug=settings.WEB_DEBUG,
+        reloader=settings.WEB_RELOADER,
     )

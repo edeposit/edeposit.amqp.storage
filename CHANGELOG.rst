@@ -1,25 +1,15 @@
 Changelog
 =========
 
+0.5.9
+-----
+    - Added settings.WEB_DEBUG, settings.WEB_RELOADER.
+
 0.5.8
 -----
     - Another attempt to solve problems with cached connections.
 
-0.5.7
------
-    - Fixed bug in cached connection.
-
-0.5.6
------
-    - Added custom 403 message.
-    - Fixed bug in database connection caching.
-    - Bottle's ``SimpleTemplate`` is now used instead of python's ``string.Template``.
-
-0.5.5
------
-    - Added graceful exit to ``/bin/edeposit_storage_runzeo.sh`` which is required by supervisord.
-
-0.5.0 - 0.5.4
+0.5.0 - 0.5.7
 -------------
     - ZIP Archives are now supported. They should result into creation of directory on disc.
     - Generator for generating structures rewritten to Bottle's templating engine.
@@ -33,6 +23,11 @@ Changelog
     - Fixed import bugs in ``edeposit_storage_server.py``.
     - #40: URL is now available even for private publications.
     - Quick unicode conversion fix.
+    - Added graceful exit to ``/bin/edeposit_storage_runzeo.sh`` which is required by supervisord.
+    - Added custom 403 message.
+    - Fixed bug in database connection caching.
+    - Bottle's ``SimpleTemplate`` is now used instead of python's ``string.Template``.
+    - Fixed bug in cached connection.
 
 0.4.0
 -----
@@ -46,26 +41,14 @@ Changelog
     - Added retreiving of the URL of the public documents.
     - Added example of the configuration files.
 
-0.2.4
------
-    - Fixed MANIFEST.in to include default config files.
-
-0.2.3
------
-    - `runzeo.sh` fixed and simplified.
-
-0.2.2
------
+0.2.0 - 0.2.4
+-------------
+    - First working version.
+    - Small bugfix in settings.py.
     - Added requirement to `zodbpickle`, which isn't installed automatically on suse for some strange reasons.
     - Fixed paths in `runzeo.sh` script.
-
-0.2.1
------
-    - Small bugfix in settings.py.
-
-0.2.0
------
-    - First working version.
+    - `runzeo.sh` fixed and simplified.
+    - Fixed MANIFEST.in to include default config files.
 
 0.1.0
 -----

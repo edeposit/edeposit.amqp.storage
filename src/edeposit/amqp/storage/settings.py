@@ -56,6 +56,8 @@ WEB_ADDR = "localhost"  #: Address where the webserver should listen.
 WEB_PORT = 8080  #: Port for the webserver.
 WEB_SERVER = 'wsgiref'  #: Use `paste` for threading.
 WEB_DB_TIMEOUT = 30  #: How often should web refresh connection to DB.
+WEB_DEBUG = False
+WEB_RELOADER = False
 
 DOWNLOAD_KEY = "download"  #: Used as part of the url. Don't change this later.
 UUID_DOWNLOAD_KEY = "UUID"  #: #: Used as part of the url. Don't change this.
