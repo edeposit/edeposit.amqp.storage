@@ -132,16 +132,20 @@ Example
 
     ./run_tests.sh 
     ============================= test session starts ==============================
-    platform linux2 -- Python 2.7.6 -- py-1.4.26 -- pytest-2.6.4
-    plugins: cov
-    collected 15 items 
+    platform linux2 -- Python 2.7.6, pytest-2.8.2, py-1.4.30, pluggy-0.3.1
+    rootdir: /home/bystrousak/Plocha/Dropbox/c0d3z/prace/edeposit.amqp.storage, inifile: 
+    plugins: cov-1.8.1
+    collected 23 items
 
-    tests/test_amqp_chain.py ..
-    tests/test_storage_handler.py .........
-    tests/structures/test_db_publication.py ...
+    tests/test_amqp_chain.py .....
+    tests/test_publication_storage.py ........
+    tests/test_storage_handler.py .
+    tests/structures/test_db_archive.py ...
+    tests/structures/test_db_publication.py ....
     tests/structures/test_publication.py .
+    tests/structures/test_requests.py .
 
-    ========================== 15 passed in 11.20 seconds ==========================
+    ========================== 23 passed in 5.99 seconds ===========================
 
 
 Indices and tables
