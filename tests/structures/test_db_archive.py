@@ -20,7 +20,7 @@ import storage
 from storage.structures.db_archive import Archive
 from storage.structures.db_archive import DBArchive
 
-from ..environment_generator import TMP_DIR
+from zeo_connector_defaults import tmp_context_name
 
 
 # Variables ===================================================================
@@ -47,7 +47,7 @@ def random_archive_comm(monkeypatch):
     monkeypatch.setattr(
         storage.structures.db_archive,
         "ARCHIVE_DIR",
-        tempfile.mkdtemp(dir=TMP_DIR)
+        tempfile.mkdtemp(dir=tmp_context_name())
     )
 
     return Archive(

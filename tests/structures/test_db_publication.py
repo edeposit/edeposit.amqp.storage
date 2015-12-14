@@ -22,7 +22,7 @@ import storage
 from storage.structures.db_publication import Publication
 from storage.structures.db_publication import DBPublication
 
-from ..environment_generator import TMP_DIR
+from zeo_connector_defaults import tmp_context_name
 
 
 # Variables ===================================================================
@@ -50,12 +50,12 @@ def random_publication_comm(monkeypatch):
     monkeypatch.setattr(
         storage.structures.db_publication,
         "PUBLIC_DIR",
-        tempfile.mkdtemp(dir=TMP_DIR)
+        tempfile.mkdtemp(dir=tmp_context_name())
     )
     monkeypatch.setattr(
         storage.structures.db_publication,
         "PRIVATE_DIR",
-        tempfile.mkdtemp(dir=TMP_DIR)
+        tempfile.mkdtemp(dir=tmp_context_name())
     )
 
     return Publication(

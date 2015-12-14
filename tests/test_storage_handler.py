@@ -16,7 +16,8 @@ from storage import settings
 from storage import storage_handler
 from storage.structures import DBPublication
 
-import environment_generator
+from zeo_connector_defaults import generate_environment
+from zeo_connector_defaults import cleanup_environment
 
 # for fixture - pytest bug
 from structures.test_db_publication import random_publication
@@ -27,11 +28,11 @@ from test_publication_storage import full_publication
 
 # Setup =======================================================================
 def setup_module(module):
-    environment_generator.generate_environment()
+    generate_environment()
 
 
 def teardown_module(module):
-    environment_generator.cleanup_environment()
+    cleanup_environment()
 
 
 # Tests =======================================================================

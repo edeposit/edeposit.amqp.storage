@@ -17,7 +17,9 @@ from storage import settings
 from storage import publication_storage
 from storage.structures import DBPublication
 
-import environment_generator
+from zeo_connector_defaults import generate_environment
+from zeo_connector_defaults import cleanup_environment
+
 from structures.test_db_publication import random_publication
 
 
@@ -47,11 +49,11 @@ def different_pub(full_publication):
 
 # Setup =======================================================================
 def setup_module(module):
-    environment_generator.generate_environment()
+    generate_environment()
 
 
 def teardown_module(module):
-    environment_generator.cleanup_environment()
+    cleanup_environment()
 
 
 # Tests =======================================================================

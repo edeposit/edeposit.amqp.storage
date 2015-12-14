@@ -10,8 +10,9 @@ import tempfile
 
 import pytest
 
-import environment_generator
-from environment_generator import data_context
+from zeo_connector_defaults import generate_environment
+from zeo_connector_defaults import cleanup_environment
+
 from structures.test_db_archive import random_archive_comm
 from structures.test_db_publication import random_publication
 
@@ -20,6 +21,14 @@ import storage
 
 # Variables ===================================================================
 EBOOK_FN = "ebook.pdf"
+
+
+# Functions ===================================================================
+def data_context(fn, mode="r"):
+    path = os.path.join(os.path.dirname(__file__), "data")
+
+    with open(os.path.join(path, fn), mode) as f:
+        return f.read()
 
 
 # Fixtures ====================================================================
@@ -48,11 +57,11 @@ def pdf_publication(random_publication):
 
 # Setup =======================================================================
 def setup_module(module):
-    environment_generator.generate_environment()
+    generate_environment()
 
 
 def teardown_module(module):
-    environment_generator.cleanup_environment()
+    cleanup_environment()
 
 
 # Tests =======================================================================
