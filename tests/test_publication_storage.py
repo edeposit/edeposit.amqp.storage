@@ -49,7 +49,7 @@ def test_check_pub_type(zeo):
 
     with pytest.raises(publication_storage.InvalidType):
         publication_storage._assert_obj_type(
-            storage.structures.publication.Publication(*range(11))
+            storage.structures.Publication(*range(11))
         )
 
     publication_storage._assert_obj_type(DBPublication())

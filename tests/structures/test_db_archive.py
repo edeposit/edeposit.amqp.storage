@@ -17,8 +17,8 @@ import pytest
 from faker import Factory
 
 import storage
-from storage.structures.db_archive import Archive
-from storage.structures.db_archive import DBArchive
+from storage.structures import Archive
+from storage.structures import DBArchive
 
 from zeo_connector_defaults import tmp_context_name
 
@@ -45,7 +45,7 @@ def b64_zip_file():
 @pytest.fixture
 def random_archive_comm(monkeypatch):
     monkeypatch.setattr(
-        storage.structures.db_archive,
+        storage.structures.db.db_archive,
         "ARCHIVE_DIR",
         tempfile.mkdtemp(dir=tmp_context_name())
     )

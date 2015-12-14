@@ -19,8 +19,8 @@ import pytest
 from faker import Factory
 
 import storage
-from storage.structures.db_publication import Publication
-from storage.structures.db_publication import DBPublication
+from storage.structures import Publication
+from storage.structures import DBPublication
 
 from zeo_connector_defaults import tmp_context_name
 
@@ -48,12 +48,12 @@ def b64_pdf_file():
 @pytest.fixture
 def random_publication_comm(monkeypatch):
     monkeypatch.setattr(
-        storage.structures.db_publication,
+        storage.structures.db.db_publication,
         "PUBLIC_DIR",
         tempfile.mkdtemp(dir=tmp_context_name())
     )
     monkeypatch.setattr(
-        storage.structures.db_publication,
+        storage.structures.db.db_publication,
         "PRIVATE_DIR",
         tempfile.mkdtemp(dir=tmp_context_name())
     )
