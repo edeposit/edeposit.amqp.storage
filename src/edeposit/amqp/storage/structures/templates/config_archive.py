@@ -6,8 +6,8 @@
 # Imports =====================================================================
 from bottle import template
 
-from field import Field
-from shared import read_file
+from tools import Field
+from tools import read_file
 
 
 # Variables ===================================================================
@@ -83,11 +83,11 @@ def _apply_archive_template(my_template):
 
 def get_db_archive():
     return _apply_archive_template(
-        read_file("db_template.pyt")
+        read_file("templates/db_template.pyt")
     )
 
 
 def get_archive():
     return _apply_archive_template(
-        read_file("comm_template.pyt")
+        read_file("templates/comm_template.pyt")
     )
