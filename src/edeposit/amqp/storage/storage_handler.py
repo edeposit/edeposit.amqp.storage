@@ -100,7 +100,7 @@ def _put_into_indexes(obj):
 
     Raises:
         UnindexableObject: When there is no index (property) which can be
-                                used to index `obj` in database.
+            used to index `obj` in database.
     """
     use_new_connection()
 
