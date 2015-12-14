@@ -75,6 +75,12 @@ FIELDS = [
         is_comm_field=True,
         is_db_field=True,
     ),
+    Field(
+        name="path",
+        docstring="(str): Path in the tree (used for periodicals).",
+        is_comm_field=True,
+        is_db_field=True,
+    ),
 
     # comm fields
     Field(

@@ -47,6 +47,7 @@ class DBPublication(Persistent, KwargsObj):
         producent_id (str): ID used for producent.
         is_public (bool): Is the file public?
         filename (str): Original filename.
+        path (str): Path in the tree (used for periodicals).
         file_pointer (str): Pointer to the file on the file server.
     '''
     def __init__(self, **kwargs):
@@ -60,6 +61,7 @@ class DBPublication(Persistent, KwargsObj):
         self.producent_id = None
         self.is_public = None
         self.filename = None
+        self.path = None
         self.file_pointer = None
 
         self._kwargs_to_attributes(kwargs)
@@ -114,6 +116,7 @@ class DBPublication(Persistent, KwargsObj):
             producent_id=pub.producent_id,
             is_public=pub.is_public,
             filename=pub.filename,
+            path=pub.path,
 
             file_pointer=filename
         )
@@ -135,6 +138,7 @@ class DBPublication(Persistent, KwargsObj):
             "producent_id",
             "is_public",
             "filename",
+            "path",
             "file_pointer",
         ]
 
@@ -166,6 +170,7 @@ class DBPublication(Persistent, KwargsObj):
             producent_id=self.producent_id,
             is_public=self.is_public,
             filename=self.filename,
+            path=self.path,
 
             b64_data=data,
             url=url,
@@ -186,7 +191,8 @@ class DBPublication(Persistent, KwargsObj):
             self.aleph_id == obj.aleph_id and
             self.producent_id == obj.producent_id and
             self.is_public == obj.is_public and
-            self.filename == obj.filename
+            self.filename == obj.filename and
+            self.path == obj.path
         )
 
     def __ne__(self, obj):
