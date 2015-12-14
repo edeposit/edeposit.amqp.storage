@@ -10,8 +10,7 @@ import tempfile
 
 import pytest
 
-from zeo_connector_defaults import generate_environment
-from zeo_connector_defaults import cleanup_environment
+from zeo_connector_defaults import tmp_context_name
 
 from structures.test_db_archive import random_archive_comm
 from structures.test_db_publication import random_publication
@@ -55,17 +54,8 @@ def pdf_publication(random_publication):
         return pub.to_comm()
 
 
-# Setup =======================================================================
-def setup_module(module):
-    generate_environment()
-
-
-def teardown_module(module):
-    cleanup_environment()
-
-
 # Tests =======================================================================
-def test_publication(pdf_publication, b64_pdf_file):
+def test_publication(zeo, pdf_publication, b64_pdf_file):
     assert pdf_publication
     assert pdf_publication.filename == EBOOK_FN
 
@@ -76,7 +66,14 @@ def test_publication(pdf_publication, b64_pdf_file):
     assert pub_data == b64_pdf_file_data
 
 
-def test_publication_save(pdf_publication):
+def test_publication_save(zeo, alt_settings_path, pdf_publication):
+    # set alternative path for settings file
+    os.environ["SETTINGS_PATH"] = alt_settings_path
+
+    # this has to be here, because of env for settings
+    reload(storage.settings)
+    reload(storage.zconf)
+
     storage.reactToAMQPMessage(
         storage.SaveRequest(pdf_publication),
         lambda x: x

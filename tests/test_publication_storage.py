@@ -12,13 +12,8 @@ import os.path
 import pytest
 
 import storage
-from storage import zconf
-from storage import settings
 from storage import publication_storage
 from storage.structures import DBPublication
-
-from zeo_connector_defaults import generate_environment
-from zeo_connector_defaults import cleanup_environment
 
 from structures.test_db_publication import random_publication
 
@@ -47,17 +42,8 @@ def different_pub(full_publication):
     return dp
 
 
-# Setup =======================================================================
-def setup_module(module):
-    generate_environment()
-
-
-def teardown_module(module):
-    cleanup_environment()
-
-
 # Tests =======================================================================
-def test_check_pub_type():
+def test_check_pub_type(zeo):
     with pytest.raises(publication_storage.InvalidType):
         publication_storage._assert_obj_type(object)
 
@@ -118,7 +104,7 @@ def test_get_public_publications(full_publication):
     )
 
     assert result
-    assert set(result) == set([full_publication])
+    assert full_publication in set(result)
 
 
 def test_get_private_publications(different_pub):
