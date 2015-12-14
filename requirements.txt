@@ -6,3 +6,4 @@ bottle
 kwargs_obj
 paste
 BalancedDiscStorage
+zeo_connector_defaults
