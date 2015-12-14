@@ -4,14 +4,13 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
-from publication import Publication
-from db_publication import DBPublication
-
-from archive import Archive
-from db_archive import DBArchive
+# Database structures
+from db.db_archive import DBArchive
+from db.db_publication import DBPublication
 
 # AMQP connections
-from requests import SaveRequest
-from requests import SearchRequest
-
-from responses import SearchResult
+from comm.requests import SaveRequest
+from comm.requests import SearchRequest
+from comm.archive import Archive
+from comm.publication import Publication
+from comm.responses import SearchResult

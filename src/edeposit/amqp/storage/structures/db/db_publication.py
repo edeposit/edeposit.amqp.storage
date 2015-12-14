@@ -15,16 +15,16 @@ from kwargs_obj import KwargsObj
 from persistent import Persistent
 from BalancedDiscStorage import BalancedDiscStorage
 
-from ..settings import PUBLIC_DIR
-from ..settings import PRIVATE_DIR
-from ..settings import PUB_PROJECT_KEY as PROJECT_KEY
+from storage.settings import PUBLIC_DIR
+from storage.settings import PRIVATE_DIR
+from storage.settings import PUB_PROJECT_KEY as PROJECT_KEY
 
-from ..web_tools import compose_full_url
+from storage.web_tools import compose_full_url
 
 from shared import path_to_zip
 from shared import read_as_base64
 
-from publication import Publication
+from storage.structures.comm.publication import Publication
 
 
 # Functions and classes =======================================================
