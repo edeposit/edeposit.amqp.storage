@@ -36,9 +36,12 @@ import os.path
 
 
 # Module configuration ========================================================
+_DIR_PATH = os.path.abspath(os.path.dirname(__file__))
 
 #: Path to the directory with zeo.conf and zeo_client.conf.
-ZCONF_PATH = os.path.join(os.path.dirname(__file__), "zconf")
+ZCONF_PATH = os.path.join(_DIR_PATH, "zconf")
+ZEO_SERVER_PATH = os.path.join(_DIR_PATH, "zconf/zeo.conf")  #:
+ZEO_CLIENT_PATH = os.path.join(_DIR_PATH, "zconf/zeo_client.conf")  #:
 
 PUB_PROJECT_KEY = "pub_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
 ARCH_PROJECT_KEY = "archive_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
