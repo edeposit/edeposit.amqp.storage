@@ -6,9 +6,14 @@
 # Imports =====================================================================
 from structures import DBPublication
 
-from storage_handler import InvalidType
-from storage_handler import store_object
-from storage_handler import search_objects
+from upgraded_storage_handler import InvalidType
+from upgraded_storage_handler import StorageHandler
+
+import settings
+
+
+# Variables ===================================================================
+STORAGE_HANDLER = StorageHandler(settings.PUB_PROJECT_KEY)
 
 
 # Functions & classes =========================================================
@@ -52,7 +57,7 @@ def save_publication(pub):
     """
     _assert_obj_type(pub)
 
-    store_object(pub)
+    STORAGE_HANDLER.store_object(pub)
 
     return pub.to_comm(light_request=True)
 
@@ -80,4 +85,4 @@ def search_publications(query):
     """
     _assert_obj_type(query, "query")
 
-    return search_objects(query)
+    return STORAGE_HANDLER.search_objects(query)

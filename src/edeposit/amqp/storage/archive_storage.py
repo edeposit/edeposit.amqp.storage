@@ -6,11 +6,14 @@
 # Imports =====================================================================
 from structures import DBArchive
 
-from storage_handler import InvalidType
-from storage_handler import store_object
-from storage_handler import search_objects
+from upgraded_storage_handler import StorageHandler
 
+import settings
 from publication_storage import _assert_obj_type
+
+
+# Variables ===================================================================
+STORAGE_HANDLER = StorageHandler(settings.ARCH_PROJECT_KEY)
 
 
 # Functions & classes =========================================================
@@ -31,7 +34,7 @@ def save_archive(archive):
     """
     _assert_obj_type(archive, obj_type=DBArchive)
 
-    store_object(archive)
+    STORAGE_HANDLER.store_object(archive)
 
     return archive.to_comm(light_request=True)
 
@@ -58,4 +61,4 @@ def search_archives(query):
     """
     _assert_obj_type(query, name="query", obj_type=DBArchive)
 
-    return search_objects(query)
+    return STORAGE_HANDLER.search_objects(query)
