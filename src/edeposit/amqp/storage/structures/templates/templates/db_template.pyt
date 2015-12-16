@@ -93,8 +93,8 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
                 return bdsz.add_archive_as_dir(unpacked_file)
 % end
 
-    @staticmethod
-    def from_comm(pub):
+    @classmethod
+    def from_comm(cls, pub):
         '''
         Convert communication namedtuple to this class.
 
@@ -106,9 +106,9 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
         '''
         filename = None
         if pub.b64_data:
-            filename = DB{{CLASS_NAME}}._save_to_unique_filename(pub)
+            filename = cls._save_to_unique_filename(pub)
 
-        return DB{{CLASS_NAME}}(
+        return cls(
 % for field in SAVEABLE_FIELDS:
             {{field.name}}=pub.{{field.name}},
 % end

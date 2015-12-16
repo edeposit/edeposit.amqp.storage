@@ -90,8 +90,8 @@ class DBPublication(Persistent, KwargsObj):
                 unpacked_file.seek(0)
                 return bds.add_file(unpacked_file)
 
-    @staticmethod
-    def from_comm(pub):
+    @classmethod
+    def from_comm(cls, pub):
         '''
         Convert communication namedtuple to this class.
 
@@ -103,9 +103,9 @@ class DBPublication(Persistent, KwargsObj):
         '''
         filename = None
         if pub.b64_data:
-            filename = DBPublication._save_to_unique_filename(pub)
+            filename = cls._save_to_unique_filename(pub)
 
-        return DBPublication(
+        return cls(
             title=pub.title,
             author=pub.author,
             pub_year=pub.pub_year,

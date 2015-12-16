@@ -73,8 +73,8 @@ class DBArchive(Persistent, KwargsObj):
                 unpacked_file.seek(0)
                 return bdsz.add_archive_as_dir(unpacked_file)
 
-    @staticmethod
-    def from_comm(pub):
+    @classmethod
+    def from_comm(cls, pub):
         '''
         Convert communication namedtuple to this class.
 
@@ -86,9 +86,9 @@ class DBArchive(Persistent, KwargsObj):
         '''
         filename = None
         if pub.b64_data:
-            filename = DBArchive._save_to_unique_filename(pub)
+            filename = cls._save_to_unique_filename(pub)
 
-        return DBArchive(
+        return cls(
             isbn=pub.isbn,
             uuid=pub.uuid,
             aleph_id=pub.aleph_id,
