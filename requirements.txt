@@ -1,11 +1,11 @@
 ZEO
+mime
 ZODB3
 paste
 bottle
 zodbpickle
 zope.event
 kwargs_obj
-python-magic
 zeo_connector
 BalancedDiscStorage
 zeo_connector_defaults
