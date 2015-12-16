@@ -51,7 +51,7 @@ def _publication(public=True):
 
 
 def add_publication():
-    pub = _publication(False)
+    pub = _publication(True)
 
     print "storing", pub.uuid
 

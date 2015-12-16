@@ -27,14 +27,12 @@ try:
     from storage import DBPublication
     from storage.publication_storage import search_publications
 
-    from storage import zconf
     from storage import settings
     from storage import web_tools
 except ImportError:
     from edeposit.amqp.storage import DBPublication
     from edeposit.amqp.storage.publication_storage import search_publications
 
-    from edeposit.amqp.storage import zconf
     from edeposit.amqp.storage import settings
     from edeposit.amqp.storage import web_tools
 
@@ -175,14 +173,6 @@ def error403(error):
     return "Access denied!"
 
 
-@zconf.cached_connection(timeout=settings.WEB_DB_TIMEOUT)
-def search_publications_closure(*args, **kwargs):
-    """
-    Use cached connection.
-    """
-    return search_publications(*args, **kwargs)
-
-
 @route(join("/", settings.UUID_DOWNLOAD_KEY, "<uuid>"))
 def fetch_by_uuid(uuid):
     """
@@ -191,7 +181,7 @@ def fetch_by_uuid(uuid):
     # fetch all - private and public - publications
     all_pubs = [
         pub
-        for pub in search_publications_closure(DBPublication(uuid=uuid))
+        for pub in search_publications(DBPublication(uuid=uuid))
     ]
 
     if not all_pubs:
@@ -229,7 +219,6 @@ def fetch_by_uuid(uuid):
     )
 
 
-@zconf.cached_connection(timeout=settings.WEB_DB_TIMEOUT)
 def list_publications():
     """
     Return list of all publications in basic graphic HTML render.
