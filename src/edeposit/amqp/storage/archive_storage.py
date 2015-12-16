@@ -13,10 +13,19 @@ from publication_storage import _assert_obj_type
 
 
 # Variables ===================================================================
-STORAGE_HANDLER = StorageHandler(settings.ARCH_PROJECT_KEY)
+_STORAGE_HANDLER = None
 
 
 # Functions & classes =========================================================
+def _get_handler():
+    global _STORAGE_HANDLER
+
+    if _STORAGE_HANDLER is None:
+        _STORAGE_HANDLER = StorageHandler(settings.ARCH_PROJECT_KEY)
+
+    return _STORAGE_HANDLER
+
+
 def save_archive(archive):
     """
     Save `archive` into database and into proper indexes.
@@ -34,7 +43,7 @@ def save_archive(archive):
     """
     _assert_obj_type(archive, obj_type=DBArchive)
 
-    STORAGE_HANDLER.store_object(archive)
+    _get_handler().store_object(archive)
 
     return archive.to_comm(light_request=True)
 
@@ -61,4 +70,4 @@ def search_archives(query):
     """
     _assert_obj_type(query, name="query", obj_type=DBArchive)
 
-    return STORAGE_HANDLER.search_objects(query)
+    return _get_handler().search_objects(query)

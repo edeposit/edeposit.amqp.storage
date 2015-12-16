@@ -13,10 +13,19 @@ import settings
 
 
 # Variables ===================================================================
-STORAGE_HANDLER = StorageHandler(settings.PUB_PROJECT_KEY)
+_STORAGE_HANDLER = None
 
 
 # Functions & classes =========================================================
+def _get_handler():
+    global _STORAGE_HANDLER
+
+    if _STORAGE_HANDLER is None:
+        _STORAGE_HANDLER = StorageHandler(settings.PUB_PROJECT_KEY)
+
+    return _STORAGE_HANDLER
+
+
 def _assert_obj_type(pub, name="pub", obj_type=DBPublication):
     """
     Make sure, that `pub` is instance of the `obj_type`.
@@ -57,7 +66,7 @@ def save_publication(pub):
     """
     _assert_obj_type(pub)
 
-    STORAGE_HANDLER.store_object(pub)
+    _get_handler().store_object(pub)
 
     return pub.to_comm(light_request=True)
 
@@ -85,4 +94,4 @@ def search_publications(query):
     """
     _assert_obj_type(query, "query")
 
-    return STORAGE_HANDLER.search_objects(query)
+    return _get_handler().search_objects(query)
