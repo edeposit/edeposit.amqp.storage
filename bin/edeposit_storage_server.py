@@ -19,6 +19,7 @@ from bottle import HTTPError
 from bottle import static_file
 from bottle import SimpleTemplate
 
+import mime
 from bottle import auth_basic
 
 sys.path.insert(0, join(dirname(__file__), "../src/edeposit/amqp"))
@@ -212,11 +213,26 @@ def fetch_by_uuid(uuid):
     down_fn = os.path.basename(pub.filename)
     local_fn = pub.file_pointer.replace(settings.PUBLIC_DIR, "")
 
-    return static_file(
+    mime_type = mime.Types.of(down_fn)[0].content_type
+    if mime_type == "inode/symlink":
+        mime_type = "auto"
+
+    response = static_file(
         local_fn,
         root=settings.PUBLIC_DIR,
-        download=down_fn
+        download=down_fn,
+        mimetype=mime_type,
     )
+
+    # Bottle doesn't allow you to specify custom filename AND to say, that you
+    # want to have this file for view in browser instead of download. This
+    # happens because it uses `download` parameter as both bool flag and
+    # alternative filename. - this hack allows it.
+    if mime_type == "application/pdf":
+        disposition = 'inline; filename="%s"' % down_fn
+        response.headers[str("Content-Disposition")] = str(disposition)
+
+    return response
 
 
 def list_publications():
