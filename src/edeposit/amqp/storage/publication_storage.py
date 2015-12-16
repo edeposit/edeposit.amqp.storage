@@ -6,8 +6,8 @@
 # Imports =====================================================================
 from structures import DBPublication
 
-from upgraded_storage_handler import InvalidType
-from upgraded_storage_handler import StorageHandler
+from storage_handler import InvalidType
+from storage_handler import StorageHandler
 
 import settings
 

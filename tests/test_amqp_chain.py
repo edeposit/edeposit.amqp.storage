@@ -72,7 +72,7 @@ def test_publication_save(alt_settings_path, zeo, pdf_publication):
 
     # this has to be here, because of env for settings
     reload(storage.settings)
-    reload(storage.upgraded_storage_handler)
+    reload(storage.storage_handler)
     reload(storage.archive_storage)
     reload(storage.publication_storage)
     reload(storage)

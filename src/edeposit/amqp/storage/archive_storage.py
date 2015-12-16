@@ -6,7 +6,7 @@
 # Imports =====================================================================
 from structures import DBArchive
 
-from upgraded_storage_handler import StorageHandler
+from storage_handler import StorageHandler
 
 import settings
 from publication_storage import _assert_obj_type
