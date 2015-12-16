@@ -45,6 +45,8 @@ ALT_SETTINGS_PATH = None
 def _create_alt_settings():
     alt_settings = {
         "ZCONF_PATH": tmp_context_name(),
+        "ZEO_SERVER_PATH": tmp_context_name("zeo.conf"),
+        "ZEO_CLIENT_PATH": tmp_context_name("zeo_client.conf"),
         "PUBLIC_DIR": tmp_context_name(),
         "PRIVATE_DIR": tmp_context_name(),
         "ARCHIVE_DIR": tmp_context_name(),

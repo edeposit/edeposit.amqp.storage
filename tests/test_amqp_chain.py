@@ -66,13 +66,16 @@ def test_publication(zeo, pdf_publication, b64_pdf_file):
     assert pub_data == b64_pdf_file_data
 
 
-def test_publication_save(zeo, alt_settings_path, pdf_publication):
+def test_publication_save(alt_settings_path, zeo, pdf_publication):
     # set alternative path for settings file
     os.environ["SETTINGS_PATH"] = alt_settings_path
 
     # this has to be here, because of env for settings
     reload(storage.settings)
-    reload(storage.zconf)
+    reload(storage.upgraded_storage_handler)
+    reload(storage.archive_storage)
+    reload(storage.publication_storage)
+    reload(storage)
 
     storage.reactToAMQPMessage(
         storage.SaveRequest(pdf_publication),
