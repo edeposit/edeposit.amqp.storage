@@ -4,15 +4,12 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
-from bottle import template
-
 from tools import Field
 from tools import read_file
+from tools import apply_template
 
 
 # Variables ===================================================================
-CLASS_NAME = "Archive"
-
 FIELDS = [
     Field(
         name="isbn",
@@ -52,42 +49,19 @@ FIELDS = [
     ),
 ]
 
-COMMUNICATION_FIELDS = [
-    field
-    for field in FIELDS
-    if field.is_comm_field
-]
 
-SAVEABLE_FIELDS = [
-    field
-    for field in FIELDS
-    if field.is_saveable
-]
-
-DATABASE_FIELDS = [
-    field
-    for field in FIELDS
-    if field.is_db_field
-]
-
-
-def _apply_archive_template(my_template):
-    return template(
-        my_template,
-        CLASS_NAME=CLASS_NAME,
-        COMMUNICATION_FIELDS=COMMUNICATION_FIELDS,
-        DATABASE_FIELDS=DATABASE_FIELDS,
-        SAVEABLE_FIELDS=SAVEABLE_FIELDS,
-    )
-
-
+# Functions ===================================================================
 def get_db_archive():
-    return _apply_archive_template(
-        read_file("templates/db_template.pyt")
+    return apply_template(
+        my_template=read_file("templates/db_template.pyt"),
+        fields=FIELDS,
+        class_name="Archive",
     )
 
 
 def get_archive():
-    return _apply_archive_template(
-        read_file("templates/comm_template.pyt")
+    return apply_template(
+        my_template=read_file("templates/comm_template.pyt"),
+        fields=FIELDS,
+        class_name="Archive",
     )
