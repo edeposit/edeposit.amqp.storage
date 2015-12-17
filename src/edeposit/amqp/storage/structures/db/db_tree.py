@@ -7,7 +7,6 @@
 # Imports =====================================================================
 import os
 import base64
-import zipfile
 import os.path
 import tempfile
 
@@ -15,9 +14,6 @@ from kwargs_obj import KwargsObj
 from persistent import Persistent
 
 
-from storage.web_tools import compose_full_url
-
-from shared import path_to_zip
 from shared import read_as_base64
 
 from storage.structures.comm.tree import Tree

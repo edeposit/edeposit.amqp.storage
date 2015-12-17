@@ -7,7 +7,6 @@
 # Imports =====================================================================
 import os
 import base64
-import zipfile
 import os.path
 import tempfile
 
@@ -21,7 +20,6 @@ from storage.settings import PUB_PROJECT_KEY as PROJECT_KEY
 
 from storage.web_tools import compose_full_url
 
-from shared import path_to_zip
 from shared import read_as_base64
 
 from storage.structures.comm.publication import Publication

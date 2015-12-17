@@ -7,7 +7,6 @@
 # Imports =====================================================================
 import os
 import base64
-import zipfile
 import os.path
 import tempfile
 
@@ -23,14 +22,16 @@ from BalancedDiscStorage import BalancedDiscStorageZ
 from storage.settings import PUBLIC_DIR
 from storage.settings import PRIVATE_DIR
 from storage.settings import PUB_PROJECT_KEY as PROJECT_KEY
+
+from storage.web_tools import compose_full_url
 % elif CLASS_NAME == "Archive":
 from storage.settings import ARCHIVE_DIR
 from storage.settings import ARCH_PROJECT_KEY as PROJECT_KEY
 % end
 
-from storage.web_tools import compose_full_url
-
+% if CLASS_NAME == "Archive":
 from shared import path_to_zip
+% end
 from shared import read_as_base64
 
 from storage.structures.comm.{{CLASS_NAME.lower()}} import {{CLASS_NAME}}

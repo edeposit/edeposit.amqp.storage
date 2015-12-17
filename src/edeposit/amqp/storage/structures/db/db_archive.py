@@ -7,7 +7,6 @@
 # Imports =====================================================================
 import os
 import base64
-import zipfile
 import os.path
 import tempfile
 
@@ -17,8 +16,6 @@ from BalancedDiscStorage import BalancedDiscStorageZ
 
 from storage.settings import ARCHIVE_DIR
 from storage.settings import ARCH_PROJECT_KEY as PROJECT_KEY
-
-from storage.web_tools import compose_full_url
 
 from shared import path_to_zip
 from shared import read_as_base64
