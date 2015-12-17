@@ -1,15 +1,16 @@
 Changelog
 =========
 
-0.5.9
+1.0.0
 -----
-    - Added settings.WEB_DEBUG, settings.WEB_RELOADER.
+    - File organization structure significantly upgraded.
+    - Removed database handling in `zconf` submodule.
+    - ZEO is now handled using https://github.com/Bystroushaak/zeo_connector
+    - Added automatic temporary test environment generator.
+    - Fixed #46 - bug in Mime handling.
+    - Thanks to `zeo_connector`, cacheing is no longer needed, so everything should work instatly.
 
-0.5.8
------
-    - Another attempt to solve problems with cached connections.
-
-0.5.0 - 0.5.7
+0.5.0 - 0.5.9
 -------------
     - ZIP Archives are now supported. They should result into creation of directory on disc.
     - Generator for generating structures rewritten to Bottle's templating engine.
@@ -28,6 +29,8 @@ Changelog
     - Fixed bug in database connection caching.
     - Bottle's ``SimpleTemplate`` is now used instead of python's ``string.Template``.
     - Fixed bug in cached connection.
+    - Another attempt to solve problems with cached connections.
+    - Added settings.WEB_DEBUG, settings.WEB_RELOADER.
 
 0.4.0
 -----
