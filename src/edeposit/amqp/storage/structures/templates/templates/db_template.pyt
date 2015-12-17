@@ -27,6 +27,8 @@ from storage.web_tools import compose_full_url
 % elif CLASS_NAME == "Archive":
 from storage.settings import ARCHIVE_DIR
 from storage.settings import ARCH_PROJECT_KEY as PROJECT_KEY
+% elif CLASS_NAME == "Tree":
+from storage.settings import TREE_PROJECT_KEY as PROJECT_KEY
 % end
 
 % if CLASS_NAME == "Archive":
@@ -52,28 +54,29 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
 % end
     '''
     def __init__(self, **kwargs):
-% for field in DATABASE_FIELDS:
+% for field in DATABASE_FIELDS:  # ********************************************
         self.{{field.name}} = None
-% end
+% end  # //////////////////////////////////////////////////////////////////////
 
         self._kwargs_to_attributes(kwargs)
 
+% if CLASS_NAME in ["Publication", "Archive"]:  # *****************************
     @staticmethod
     def _save_to_unique_filename(pub):
-% if CLASS_NAME == "Publication":
+% if CLASS_NAME == "Publication":  # ******************************************
         dirpath = PUBLIC_DIR if pub.is_public else PRIVATE_DIR
-% elif CLASS_NAME == "Archive":
+% elif CLASS_NAME == "Archive":  # ********************************************
         dirpath = ARCHIVE_DIR
-% end
+% end  # //////////////////////////////////////////////////////////////////////
 
         if not os.path.exists(dirpath):
             raise IOError("`%s` doesn't exists!" % dirpath)
 
-% if CLASS_NAME == "Publication":
+% if CLASS_NAME == "Publication":  # ******************************************
         bds = BalancedDiscStorage(dirpath)
-% elif CLASS_NAME == "Archive":
+% elif CLASS_NAME == "Archive":  # ********************************************
         bdsz = BalancedDiscStorageZ(dirpath)
-% end
+% end  # //////////////////////////////////////////////////////////////////////
 
         # this is optimization for big files, which take big chunks of memory,
         # if copied multiple times as string
@@ -88,12 +91,13 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
                 unpacked_file.flush()
 
                 unpacked_file.seek(0)
-% if CLASS_NAME == "Publication":
+% if CLASS_NAME == "Publication":  # ******************************************
                 return bds.add_file(unpacked_file)
-% elif CLASS_NAME == "Archive":
+% elif CLASS_NAME == "Archive":  # ********************************************
                 return bdsz.add_archive_as_dir(unpacked_file)
-% end
+% end  # //////////////////////////////////////////////////////////////////////
 
+% end  # //////////////////////////////////////////////////////////////////////
     @classmethod
     def from_comm(cls, pub):
         '''
@@ -105,20 +109,22 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
         Returns:
             obj: :class:`DB{{CLASS_NAME}}` instance.
         '''
+% if CLASS_NAME in ["Publication", "Archive"]:  # *****************************
         filename = None
         if pub.b64_data:
             filename = cls._save_to_unique_filename(pub)
 
+% end  # **********************************************************************
         return cls(
-% for field in SAVEABLE_FIELDS:
+% for field in SAVEABLE_FIELDS:  # ********************************************
             {{field.name}}=pub.{{field.name}},
-% end
+% end  # //////////////////////////////////////////////////////////////////////
 
-% if CLASS_NAME == "Publication":
+% if CLASS_NAME == "Publication": # *******************************************
             file_pointer=filename
-% elif CLASS_NAME == "Archive":
+% elif CLASS_NAME == "Archive":  # ********************************************
             dir_pointer=filename
-% end
+% end  # //////////////////////////////////////////////////////////////////////
         )
 
     @property
@@ -128,9 +134,9 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
             list: List of strings, which may be used as indexes in DB.
         """
         return [
-% for field in DATABASE_FIELDS:
+% for field in DATABASE_FIELDS:  # ********************************************
             "{{field.name}}",
-% end
+% end  # //////////////////////////////////////////////////////////////////////
         ]
 
     @property
@@ -144,7 +150,7 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
         Returns:
             obj: :class:`.{{CLASS_NAME}}` instance.
         '''
-% if CLASS_NAME == "Publication":  # ==========================================
+% if CLASS_NAME == "Publication":  # ******************************************
         data = None
         if not light_request:
             data = read_as_base64(self.file_pointer)
@@ -152,15 +158,15 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
         url = compose_full_url(self, uuid_url=True)
 
         return {{CLASS_NAME}}(
-    % for field in SAVEABLE_FIELDS:
+    % for field in SAVEABLE_FIELDS:  # ****************************************
             {{field.name}}=self.{{field.name}},
-    % end
+    % end  # //////////////////////////////////////////////////////////////////
 
             b64_data=data,
             url=url,
             file_pointer=self.file_pointer,
         )
-% elif CLASS_NAME == "Archive":  # ============================================
+% elif CLASS_NAME == "Archive":  # ********************************************
         data = None
         if not light_request:
             tmp_fn = path_to_zip(self.dir_pointer)
@@ -168,23 +174,23 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
             os.unlink(tmp_fn)
 
         return {{CLASS_NAME}}(
-    % for field in SAVEABLE_FIELDS:
+    % for field in SAVEABLE_FIELDS:  # ****************************************
             {{field.name}}=self.{{field.name}},
-    % end
+    % end  # //////////////////////////////////////////////////////////////////
 
             b64_data=data,
             dir_pointer=self.dir_pointer,
         )
-% end  # ======================================================================
+% end  # //////////////////////////////////////////////////////////////////////
 
     def __eq__(self, obj):
         if not isinstance(obj, self.__class__):
             return False
 
         return (
-% for field in SAVEABLE_FIELDS[:-1]:
+% for field in SAVEABLE_FIELDS[:-1]:  # ***************************************
             self.{{field.name}} == obj.{{field.name}} and
-% end
+% end  # //////////////////////////////////////////////////////////////////////
             self.{{SAVEABLE_FIELDS[-1].name}} == obj.{{SAVEABLE_FIELDS[-1].name}}
         )
 
