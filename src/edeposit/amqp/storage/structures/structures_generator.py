@@ -20,9 +20,3 @@ if __name__ == '__main__':
 
     with open("db/db_archive.py", "wt") as f:
         f.write(templates.get_db_archive())
-
-    with open("comm/tree.py", "wt") as f:
-        f.write(templates.get_tree())
-
-    with open("db/db_tree.py", "wt") as f:
-        f.write(templates.get_db_tree())
