@@ -119,10 +119,11 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
 % for field in SAVEABLE_FIELDS:  # ********************************************
             {{field.name}}=pub.{{field.name}},
 % end  # //////////////////////////////////////////////////////////////////////
-
 % if CLASS_NAME == "Publication": # *******************************************
+
             file_pointer=filename
 % elif CLASS_NAME == "Archive":  # ********************************************
+
             dir_pointer=filename
 % end  # //////////////////////////////////////////////////////////////////////
         )
