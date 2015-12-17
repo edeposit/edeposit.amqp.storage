@@ -13,6 +13,7 @@ import tempfile
 from kwargs_obj import KwargsObj
 from persistent import Persistent
 
+from storage.settings import TREE_PROJECT_KEY as PROJECT_KEY
 
 from shared import read_as_base64
 
@@ -44,27 +45,6 @@ class DBTree(Persistent, KwargsObj):
 
         self._kwargs_to_attributes(kwargs)
 
-    @staticmethod
-    def _save_to_unique_filename(pub):
-
-        if not os.path.exists(dirpath):
-            raise IOError("`%s` doesn't exists!" % dirpath)
-
-
-        # this is optimization for big files, which take big chunks of memory,
-        # if copied multiple times as string
-        with tempfile.TemporaryFile() as b64_file:
-            b64_file.write(pub.b64_data)
-            b64_file.flush()
-
-            # unpack base64 data
-            b64_file.seek(0)
-            with tempfile.TemporaryFile() as unpacked_file:
-                base64.decode(b64_file, unpacked_file)
-                unpacked_file.flush()
-
-                unpacked_file.seek(0)
-
     @classmethod
     def from_comm(cls, pub):
         '''
@@ -76,10 +56,6 @@ class DBTree(Persistent, KwargsObj):
         Returns:
             obj: :class:`DBTree` instance.
         '''
-        filename = None
-        if pub.b64_data:
-            filename = cls._save_to_unique_filename(pub)
-
         return cls(
             name=pub.name,
             tree_list=pub.tree_list,
