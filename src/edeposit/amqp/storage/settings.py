@@ -45,6 +45,7 @@ ZEO_CLIENT_PATH = os.path.join(_DIR_PATH, "zconf/zeo_client.conf")  #:
 
 PUB_PROJECT_KEY = "pub_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
 ARCH_PROJECT_KEY = "archive_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
+TREE_PROJECT_KEY = "tree_storage"  #: This is used in ZODB. DON'T CHANGE THIS.
 
 PRIVATE_INDEX = False  #: Should the index be private?
 PRIVATE_INDEX_USERNAME = "edeposit"  #: Username for private index.
