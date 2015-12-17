@@ -24,6 +24,7 @@ _PUB_FIELDS = [
     "producent_id",
     "is_public",
     "filename",
+    "is_periodical",
     "path",
     "b64_data",
     "url",
@@ -46,6 +47,7 @@ class Publication(namedtuple('Publication', _PUB_FIELDS)):
         producent_id (str): ID used for producent.
         is_public (bool): Is the file public?
         filename (str): Original filename.
+        is_periodical (bool): Is the publication periodical?
         path (str): Path in the tree (used for periodicals).
         b64_data (str): Base64 encoded data ebook file.
         url (str): URL in case that publication is public.

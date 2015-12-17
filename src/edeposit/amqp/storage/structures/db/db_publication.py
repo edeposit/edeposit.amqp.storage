@@ -45,6 +45,7 @@ class DBPublication(Persistent, KwargsObj):
         producent_id (str): ID used for producent.
         is_public (bool): Is the file public?
         filename (str): Original filename.
+        is_periodical (bool): Is the publication periodical?
         path (str): Path in the tree (used for periodicals).
         file_pointer (str): Pointer to the file on the file server.
     '''
@@ -59,6 +60,7 @@ class DBPublication(Persistent, KwargsObj):
         self.producent_id = None
         self.is_public = None
         self.filename = None
+        self.is_periodical = None
         self.path = None
         self.file_pointer = None
 
@@ -114,6 +116,7 @@ class DBPublication(Persistent, KwargsObj):
             producent_id=pub.producent_id,
             is_public=pub.is_public,
             filename=pub.filename,
+            is_periodical=pub.is_periodical,
             path=pub.path,
 
             file_pointer=filename
@@ -136,6 +139,7 @@ class DBPublication(Persistent, KwargsObj):
             "producent_id",
             "is_public",
             "filename",
+            "is_periodical",
             "path",
             "file_pointer",
         ]
@@ -168,6 +172,7 @@ class DBPublication(Persistent, KwargsObj):
             producent_id=self.producent_id,
             is_public=self.is_public,
             filename=self.filename,
+            is_periodical=self.is_periodical,
             path=self.path,
 
             b64_data=data,
@@ -190,6 +195,7 @@ class DBPublication(Persistent, KwargsObj):
             self.producent_id == obj.producent_id and
             self.is_public == obj.is_public and
             self.filename == obj.filename and
+            self.is_periodical == obj.is_periodical and
             self.path == obj.path
         )
 
