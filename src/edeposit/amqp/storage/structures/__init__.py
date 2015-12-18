@@ -14,3 +14,4 @@ from comm.requests import SearchRequest
 from comm.archive import Archive
 from comm.publication import Publication
 from comm.responses import SearchResult
+from comm.tree import Tree

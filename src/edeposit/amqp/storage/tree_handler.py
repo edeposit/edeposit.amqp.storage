@@ -44,7 +44,7 @@ class TreeHandler(DatabaseHandler):
         self.path_db_key = "path_db"
         self.path_db = self._get_key_or_create(self.path_db_key)
 
-        # sub_tree.path -> parent.path
+        # sub_tree.path -> parent
         self.parent_db_key = "parent_db"
         self.parent_db = self._get_key_or_create(self.parent_db_key)
 
@@ -59,28 +59,30 @@ class TreeHandler(DatabaseHandler):
         row.add(item)
 
     @transaction_manager
-    def add_tree(self, tree, parent_path=None, root_path=None):
-        assert tree.path
-
+    def add_tree(self, tree, parent=None):
         if tree.path in self.path_db:
             self.remove_tree(tree.path)
 
+        # index all indexable attributes
         for index in tree.indexes:
+            if not getattr(tree, index):
+                continue
+
             self._add_to(
                 getattr(self, index + "_db"),
                 getattr(tree, index),
                 tree,
             )
 
-        if parent_path:
-            self._add_to(self.parent_db, tree.path, parent_path)
+        if parent:
+            self._add_to(self.parent_db, tree.path, parent)
 
         # make sure, that all sub-trees starts with path of parent tree
         for sub_tree in tree.sub_trees:
             assert sub_tree.path.startswith(tree.path)
 
         for sub_tree in tree.sub_trees:
-            self.add_tree(sub_tree, parent_path=tree.path)
+            self.add_tree(sub_tree, parent=tree)
 
     def _remove_from(self, db, index, item):
         with transaction.manager:
@@ -98,12 +100,13 @@ class TreeHandler(DatabaseHandler):
                 del db[index]
 
     def remove_tree_by_path(self, path):
-        tree = self.path_db.get(path, None)
+        trees = self.path_db.get(path, None)
 
-        if not tree:
+        if not trees:
             return
 
-        return self._remove_tree(tree)
+        for tree in trees:
+            return self._remove_tree(tree)
 
     def remove_tree(self, tree):
         return self.remove_tree_by_path(tree.path)
@@ -115,6 +118,9 @@ class TreeHandler(DatabaseHandler):
 
         # remove itself
         for index in tree.indexes:
+            if not getattr(tree, index):
+                continue
+
             self._remove_from(
                 getattr(self, index + "_db"),
                 getattr(tree, index),
