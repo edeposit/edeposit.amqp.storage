@@ -84,6 +84,19 @@ class TreeHandler(DatabaseHandler):
         for sub_tree in tree.sub_trees:
             self.add_tree(sub_tree, parent=tree)
 
+    def remove_tree_by_path(self, path):
+        with transaction.manager:
+            trees = self.path_db.get(path, None)
+
+        if not trees:
+            return
+
+        for tree in trees:
+            return self._remove_tree(tree)
+
+    def remove_tree(self, tree):
+        return self.remove_tree_by_path(tree.path)
+
     def _remove_from(self, db, index, item):
         with transaction.manager:
             row = db.get(index, None)
@@ -99,22 +112,11 @@ class TreeHandler(DatabaseHandler):
             if not row:
                 del db[index]
 
-    def remove_tree_by_path(self, path):
-        trees = self.path_db.get(path, None)
-
-        if not trees:
-            return
-
-        for tree in trees:
-            return self._remove_tree(tree)
-
-    def remove_tree(self, tree):
-        return self.remove_tree_by_path(tree.path)
-
-    def _remove_tree(self, tree):
+    @transaction_manager
+    def _remove_tree(self, tree, parent=None):
         # remove sub-trees
         for sub_tree in tree.sub_trees:
-            self._remove_tree(sub_tree)
+            self._remove_tree(sub_tree, parent=tree)
 
         # remove itself
         for index in tree.indexes:
@@ -127,4 +129,5 @@ class TreeHandler(DatabaseHandler):
                 tree,
             )
 
-        self._remove_from(self.parent_db, tree.path, tree)
+        if parent:
+            self._remove_from(self.parent_db, tree.path, parent)

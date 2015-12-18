@@ -104,3 +104,9 @@ def test_tree_handler_remove_tree(sample_tree, tree_handler):
     # assert second_subtree.aleph_id not in tree_handler.aleph_id_db
     # assert second_subtree.issn not in tree_handler.issn_db
     assert second_subtree.path not in tree_handler.path_db
+
+    assert not tree_handler.name_db
+    assert not tree_handler.aleph_id_db
+    assert not tree_handler.issn_db
+    assert not tree_handler.path_db
+    assert not tree_handler.parent_db
