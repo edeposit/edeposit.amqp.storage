@@ -131,3 +131,7 @@ class TreeHandler(DatabaseHandler):
 
         if parent:
             self._remove_from(self.parent_db, tree.path, parent)
+
+    @transaction_manager
+    def tree_by_issn(self, issn):
+        return list(self.issn_db.get(issn, []))
