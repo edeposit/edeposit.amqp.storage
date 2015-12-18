@@ -87,9 +87,9 @@ def alt_settings_path(zeo):
 #     return API_URL
 
 
-# @pytest.fixture(scope="session", autouse=True)
-# def client_conf_path(zeo):
-#     return tmp_context_name("zeo_client.conf")
+@pytest.fixture(scope="session", autouse=True)
+def client_conf_path(zeo):
+    return tmp_context_name("zeo_client.conf")
 
 
 # @pytest.fixture(scope="session", autouse=True)
