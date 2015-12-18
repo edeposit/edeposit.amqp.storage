@@ -25,6 +25,13 @@ class Tree(namedtuple('Tree', ["name",
         issn (str): ISSN given to the periodical.
         path (str): Path in the periodical structures.
     '''
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(*args, **kwargs)
+
+        assert self.path
+        assert type(self.sub_trees) in [list, tuple]
+        assert type(self.sub_publications) in [list, tuple]
+
     @property
     def indexes(self):
         return [
