@@ -4,6 +4,7 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
+import os.path
 from collections import namedtuple
 
 
@@ -50,6 +51,12 @@ class Tree(namedtuple('Tree', ["name",
 
         assert type(self.sub_trees) in [list, tuple]
         assert type(self.sub_publications) in [list, tuple]
+
+        if not self.path:
+            self.path = self.name
+
+        for sub_tree in self.sub_trees:
+            sub_tree.path = os.path.join(self.path, sub_tree.name)
 
     @property
     def path(self):
