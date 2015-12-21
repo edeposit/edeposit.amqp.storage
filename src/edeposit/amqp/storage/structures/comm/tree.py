@@ -74,3 +74,10 @@ class Tree(namedtuple('Tree', ["name",
             "issn",
             "path"
         ]
+
+    def __hash__(self):
+        return hash(
+            str(self.name) +
+            str(self.aleph_id) +
+            str(self.issn)
+        )
