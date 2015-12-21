@@ -14,6 +14,7 @@ class Tree(namedtuple('Tree', ["name",
                                "sub_publications",
                                "aleph_id",
                                "issn",
+                               "is_public",
                                "path_array"])):
     '''
     Communication structure used to sent data to `storage` subsystem over AMQP.
@@ -24,6 +25,7 @@ class Tree(namedtuple('Tree', ["name",
         sub_publications (list): List of sub-publication UUID's.
         aleph_id (str): ID used in aleph.
         issn (str): ISSN given to the periodical.
+        is_public (bool): Is the tree public?
         path (str, default ""): Path in the periodical structures.
     '''
 

@@ -24,6 +24,7 @@ def sample_tree():
                 ],
                 aleph_id=None,
                 issn=None,
+                is_public=True,
             ),
             Tree(
                 name="2014",
@@ -34,12 +35,14 @@ def sample_tree():
                 ],
                 aleph_id=None,
                 issn=None,
+                is_public=True,
             ),
         ],
         sub_publications=[
         ],
         aleph_id="0005389",
         issn="1805-8787",
+        is_public=True,
     )
 
 
@@ -51,6 +54,7 @@ def test_Tree():
         sub_publications=["first", "second"],
         aleph_id=None,
         issn=None,
+        is_public=True,
         # path="Mladá fronta/2015",
     )
 
@@ -70,6 +74,7 @@ def test_Tree_set_path():
         aleph_id=None,
         issn=None,
         path="Mladá fronta",
+        is_public=True,
     )
 
     assert t.name == "2015"
@@ -91,6 +96,7 @@ def test_Tree_set_path_array():
         aleph_id=None,
         issn=None,
         path_array=["Mladá fronta"],
+        is_public=True,
     )
 
     assert t.name == "2015"
