@@ -32,6 +32,7 @@ try:
     from storage import web_tools
 except ImportError:
     from edeposit.amqp.storage import DBPublication
+    from edeposit.amqp.storage.tree_handler import TreeHandler
     from edeposit.amqp.storage.publication_storage import search_publications
 
     from edeposit.amqp.storage import settings
@@ -39,6 +40,7 @@ except ImportError:
 
 
 # Variables ===================================================================
+_TREE_HANDLER = None
 INDEX_TEMPLATE = """<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="cs" xml:lang="cs">
 <head>
@@ -161,6 +163,15 @@ PRIVATE_ACCESS_MSG = """<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 
 
 # Functions & classes =========================================================
+def tree_handler():
+    global _TREE_HANDLER
+
+    if not _TREE_HANDLER:
+        _TREE_HANDLER = TreeHandler()
+
+    return _TREE_HANDLER
+
+
 @error(403)
 def error403(error):
     tb = error.traceback
@@ -235,9 +246,18 @@ def fetch_by_uuid(uuid):
     return response
 
 
-@route(join("/tree", "<issn>"))  # TODO: fix
-def list_periodical_tree(issn):
-    pass
+@route(join("/tree_by_issn", "<issn>"))  # TODO: fix
+def list_periodical_tree_by_issn(issn):
+    trees = tree_handler().trees_by_issn(issn)
+
+    print trees
+
+
+@route(join("/tree_by_path", "<path>"))  # TODO: fix
+def list_periodical_tree_by_path(path):
+    trees = tree_handler().trees_by_path(path)
+
+    print trees
 
 
 def list_publications():
