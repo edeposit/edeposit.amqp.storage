@@ -76,3 +76,35 @@ def test_tree_handler_remove_tree(sample_tree, tree_handler):
     assert not tree_handler.issn_db
     assert not tree_handler.path_db
     assert not tree_handler.parent_db
+
+
+def test_tree_handler_tree_by_issn(sample_tree, tree_handler):
+    tree_handler.add_tree(sample_tree)
+
+    trees = tree_handler.trees_by_issn(sample_tree.issn)
+
+    assert trees == set([sample_tree])
+
+
+def test_trees_by_path(sample_tree, tree_handler):
+    trees = tree_handler.trees_by_path(sample_tree.path)
+
+    assert trees == set([sample_tree])
+
+
+def test_subtrees_by_path(sample_tree, tree_handler):
+    sub_tree = tree_handler.trees_by_path(sample_tree.sub_trees[0].path)
+
+    assert sub_tree == set([sample_tree.sub_trees[0]])
+
+
+def test_trees_by_subpath(sample_tree, tree_handler):
+    trees = tree_handler.trees_by_subpath(sample_tree.path + "/20")
+
+    assert trees == set(sample_tree.sub_trees)
+
+
+def test_get_parent(sample_tree, tree_handler):
+    parent = tree_handler.get_parent(sample_tree.sub_trees[0])
+
+    assert parent == sample_tree
