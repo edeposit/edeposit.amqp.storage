@@ -135,3 +135,7 @@ class TreeHandler(DatabaseHandler):
     @transaction_manager
     def tree_by_issn(self, issn):
         return list(self.issn_db.get(issn, []))
+
+    @transaction_manager
+    def get_parent(self, tree):
+        return self.parent_db.get(tree.path)
