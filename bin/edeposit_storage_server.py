@@ -235,6 +235,11 @@ def fetch_by_uuid(uuid):
     return response
 
 
+@route(join("/tree", "<issn>"))  # TODO: fix
+def list_periodical_tree(issn):
+    pass
+
+
 def list_publications():
     """
     Return list of all publications in basic graphic HTML render.
