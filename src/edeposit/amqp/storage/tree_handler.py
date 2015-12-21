@@ -133,9 +133,32 @@ class TreeHandler(DatabaseHandler):
             self._remove_from(self.parent_db, tree.path, parent)
 
     @transaction_manager
-    def tree_by_issn(self, issn):
-        return list(self.issn_db.get(issn, []))
+    def trees_by_issn(self, issn):
+        return set(
+            self.issn_db.get(issn, OOSet()).keys()
+        )
 
     @transaction_manager
-    def get_parent(self, tree):
-        return self.parent_db.get(tree.path)
+    def trees_by_path(self, path):
+        return set(
+            self.path_db.get(path, OOSet()).keys()
+        )
+
+    @transaction_manager
+    def trees_by_subpath(self, sub_path):
+        matches = (
+            self.path_db[tree_path].keys()
+            for tree_path in self.path_db.iterkeys()
+            if tree_path.startswith(sub_path)
+        )
+
+        return set(sum(matches, []))  # flattern the list
+
+    @transaction_manager
+    def get_parent(self, tree, alt=None):
+        parent = self.parent_db.get(tree.path)
+
+        if not parent:
+            return alt
+
+        return list(parent)[0]
