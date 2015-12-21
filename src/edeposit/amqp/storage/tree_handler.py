@@ -13,14 +13,7 @@ from settings import ZEO_CLIENT_PATH
 from settings import TREE_PROJECT_KEY as PROJECT_KEY
 
 
-# Variables ===================================================================
 # Functions & classes =========================================================
-class InvalidSubtreeError(IndexError):
-    """
-    Raised in case, that sub-tree starts with different path than parent.
-    """
-
-
 class TreeHandler(DatabaseHandler):
     def __init__(self, conf_path=ZEO_CLIENT_PATH, project_key=PROJECT_KEY):
         super(self.__class__, self).__init__(
