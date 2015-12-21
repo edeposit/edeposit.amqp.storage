@@ -9,45 +9,11 @@ import pytest
 from storage.structures import Tree
 from storage.tree_handler import TreeHandler
 
+from structures.test_tree import sample_tree
+
 
 # Variables ===================================================================
 # Fixtures ====================================================================
-@pytest.fixture
-def sample_tree():
-    return Tree(
-        name="Mladá fronta",
-        sub_trees=[
-            Tree(
-                name="2015",
-                sub_trees=[],
-                sub_publications=[
-                    "first",
-                    "second"
-                ],
-                aleph_id=None,
-                issn=None,
-                path="Mladá fronta/2015",
-            ),
-            Tree(
-                name="2014",
-                sub_trees=[],
-                sub_publications=[
-                    "first",
-                    "second"
-                ],
-                aleph_id=None,
-                issn=None,
-                path="Mladá fronta/2014",
-            ),
-        ],
-        sub_publications=[
-        ],
-        aleph_id="0005389",
-        issn="1805-8787",
-        path="Mladá fronta",
-    )
-
-
 @pytest.fixture(scope="module", autouse=True)
 def tree_handler(client_conf_path):
     return TreeHandler(conf_path=client_conf_path)
