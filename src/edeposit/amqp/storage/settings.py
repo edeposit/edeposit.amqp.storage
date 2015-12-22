@@ -70,6 +70,8 @@ WEB_RELOADER = False
 
 DOWNLOAD_KEY = "download"  #: Used as part of the url. Don't change this later.
 UUID_DOWNLOAD_KEY = "UUID"  #: #: Used as part of the url. Don't change this.
+PATH_DOWNLOAD_KEY = "tree_by_path"
+ISSN_DOWNLOAD_KEY = "tree_by_issn"
 
 
 # User configuration reader (don't edit this) =================================
