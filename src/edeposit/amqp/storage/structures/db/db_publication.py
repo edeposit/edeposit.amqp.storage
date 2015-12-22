@@ -123,6 +123,10 @@ class DBPublication(Persistent, KwargsObj):
         )
 
     @property
+    def url(self):
+        return compose_full_url(self, uuid_url=True)
+
+    @property
     def indexes(self):
         """
         Returns:
@@ -159,8 +163,6 @@ class DBPublication(Persistent, KwargsObj):
         if not light_request:
             data = read_as_base64(self.file_pointer)
 
-        url = compose_full_url(self, uuid_url=True)
-
         return Publication(
             title=self.title,
             author=self.author,
@@ -176,7 +178,7 @@ class DBPublication(Persistent, KwargsObj):
             path=self.path,
 
             b64_data=data,
-            url=url,
+            url=self.url,
             file_pointer=self.file_pointer,
         )
 

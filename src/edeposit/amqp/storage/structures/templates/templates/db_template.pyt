@@ -128,6 +128,12 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
 % end  # //////////////////////////////////////////////////////////////////////
         )
 
+% if CLASS_NAME == "Publication": # *******************************************
+    @property
+    def url(self):
+        return compose_full_url(self, uuid_url=True)
+
+% end  # //////////////////////////////////////////////////////////////////////
     @property
     def indexes(self):
         """
@@ -156,15 +162,13 @@ class DB{{CLASS_NAME}}(Persistent, KwargsObj):
         if not light_request:
             data = read_as_base64(self.file_pointer)
 
-        url = compose_full_url(self, uuid_url=True)
-
         return {{CLASS_NAME}}(
     % for field in SAVEABLE_FIELDS:  # ****************************************
             {{field.name}}=self.{{field.name}},
     % end  # //////////////////////////////////////////////////////////////////
 
             b64_data=data,
-            url=url,
+            url=self.url,
             file_pointer=self.file_pointer,
         )
 % elif CLASS_NAME == "Archive":  # ********************************************
