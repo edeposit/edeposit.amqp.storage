@@ -8,6 +8,7 @@ from collections import namedtuple
 
 from archive import Archive
 from publication import Publication
+from tree import Tree
 
 
 # Functions & classes =========================================================
@@ -28,23 +29,18 @@ class SearchRequest(namedtuple("SearchRequest", ["query", "light_request"])):
     def __init__(self, query, light_request=False):
         SearchRequest._check_record_type(query)
 
-        self.query = query
-        self.__dict__["light_request"] = light_request
+        super(self.__class__, self).__init__(query, light_request)
 
     @staticmethod
     def _check_record_type(q):
-        msg = "Publication instance is expected!"
-        assert isinstance(q, Publication) or isinstance(q, Archive), msg
+        def check_type(q):
+            return (
+                isinstance(q, Publication) or
+                isinstance(q, Archive) or
+                isinstance(q, Tree)
+            )
 
-    @property
-    def query(self):
-        return self.__dict__["query"]
-
-    @query.setter
-    def query(self, q):
-        SearchRequest._check_record_type(q)
-
-        self.__dict__["query"] = q
+        assert check_type(q), "Publication instance is expected!"
 
 
 class SaveRequest(namedtuple("SaveRequest", ["record"])):
@@ -52,20 +48,10 @@ class SaveRequest(namedtuple("SaveRequest", ["record"])):
     Save `record` to the storage.
 
     Attributes:
-        record (obj): Instance of the :class:`.Publication` or
+        record (obj): Instance of the :class:`.Publication`,
         :class:`.Archive`.
     """
     def __init__(self, record):
         SearchRequest._check_record_type(record)
 
-        self.record = record
-
-    @property
-    def record(self):
-        return self.__dict__["record"]
-
-    @record.setter
-    def record(self, q):
-        SearchRequest._check_record_type(q)
-
-        self.__dict__["record"] = q
+        super(self.__class__, self).__init__(record)
