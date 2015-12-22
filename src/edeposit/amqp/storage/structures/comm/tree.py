@@ -49,10 +49,30 @@ class Tree(namedtuple('Tree', ["name",
         return super(Tree, self).__new__(self, *args, **kwargs)
 
     def __init__(self, *args, **kwargs):
+        """
+        Constructor.
+
+        Args:
+            name (str): Name of the periodical.
+            sub_trees (list): List of other trees.
+            sub_publications (list): List of sub-publication UUID's.
+            aleph_id (str): ID used in aleph.
+            issn (str): ISSN given to the periodical.
+            is_public (bool): Is the tree public?
+
+        Raises:
+            ValueError: In case that `name` is not set, or `sub_trees` or
+                        `sub_publications` is not list/tuple.
+        """
         super(self.__class__, self).__init__(*args, **kwargs)
 
-        assert type(self.sub_trees) in [list, tuple]
-        assert type(self.sub_publications) in [list, tuple]
+        # type checks
+        if not self.name.strip():
+            raise ValueError(".name property must be set!")
+        if type(self.sub_trees) not in [list, tuple]:
+            raise ValueError(".sub_trees property must contain list/tuple!")
+        if type(self.sub_publications) not in [list, tuple]:
+            raise ValueError(".sub_trees property must contain list/tuple!")
 
         if not self.path:
             self.path = self.name
@@ -70,11 +90,17 @@ class Tree(namedtuple('Tree', ["name",
 
     @property
     def indexes(self):
+        """
+        Return list of property names, which may be used for indexing in DB.
+
+        Returns:
+            list: List of strings.
+        """
         return [
-            "name",
-            "aleph_id",
+            "path",
             "issn",
-            "path"
+            "aleph_id",
+            "name",
         ]
 
     def __hash__(self):
