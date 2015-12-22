@@ -30,6 +30,7 @@ try:
     from storage import DBPublication
     from storage.tree_handler import tree_handler
     from storage.publication_storage import search_publications
+    from storage.publication_storage import search_pubs_by_uuid
 
     from storage import settings
     from storage import web_tools
@@ -37,6 +38,7 @@ except ImportError:
     from edeposit.amqp.storage import DBPublication
     from edeposit.amqp.storage.tree_handler import tree_handler
     from edeposit.amqp.storage.publication_storage import search_publications
+    from edeposit.amqp.storage.publication_storage import search_pubs_by_uuid
 
     from edeposit.amqp.storage import settings
     from edeposit.amqp.storage import web_tools
@@ -208,7 +210,7 @@ TREES_TEMPLATE = """<!DOCTYPE html>
 % end
 
 % for tree in trees:
-<h1>Seznam publikací periodika</h1>
+<h1>Seznam publikací periodika <em>{{tree.name}}</em></h1>
 
     {{ !render_tree(tree, 1) }}
 
@@ -230,7 +232,13 @@ TREE_TEMPLATE = """
 % if tree.sub_publications:
   <ul>
 %   for sub_publication_uuid in tree.sub_publications:
-    <li>{{ sub_publication_uuid }}</li>
+%     pub = pub_cache[sub_publication_uuid]
+
+%     if pub.is_public:
+    <li><a href="{{pub.url}}">{{ pub.title }}</a></li>
+%     else:
+    <li>{{ pub.title }} <em>(neveřejný zdroj)</em></li>
+%     end
 %   end
   </ul>
 
@@ -314,6 +322,25 @@ def fetch_by_uuid(uuid):
 
 
 def render_trees(trees, path_composer):
+    trees = list(trees)  # by default, this is set
+
+    def create_pub_cache(trees):
+        sub_pubs_uuids = sum((x.collect_publications() for x in trees), [])
+
+        uuid_mapping = {
+            uuid: search_pubs_by_uuid(uuid)
+            for uuid in set(sub_pubs_uuids)
+        }
+
+        # cleaned dict without blank matches
+        return {
+            uuid: pub[0]
+            for uuid, pub in uuid_mapping.iteritems()
+            if pub
+        }
+
+    pub_cache = create_pub_cache(trees)
+
     def render_tree(tree, ind=1):
         if not tree.is_public:
             return ""
@@ -323,15 +350,14 @@ def render_trees(trees, path_composer):
             render_tree=render_tree,
             ind=ind,
             path_composer=path_composer,
+            pub_cache=pub_cache,
         )
 
         # keep nice indentation
         ind_txt = ind * "  "
         return ind_txt + ("\n" + ind_txt).join(rendered_tree.splitlines())
 
-    trees = list(trees)
-    first_tree = trees[0]
-    parent = tree_handler().get_parent(first_tree)
+    parent = tree_handler().get_parent(trees[0])
     link_up = path_composer(parent) if parent else None
 
     return SimpleTemplate(TREES_TEMPLATE).render(
