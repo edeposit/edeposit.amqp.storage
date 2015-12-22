@@ -13,9 +13,11 @@ import structures
 from structures import Publication
 from structures import DBPublication
 
+from structures import Tree
 from structures import Archive
 from structures import DBArchive
 
+from structures import TreeInfo
 from structures import SaveRequest
 from structures import SearchResult
 from structures import SearchRequest
@@ -25,6 +27,10 @@ from publication_storage import search_publications
 
 from archive_storage import save_archive
 from archive_storage import search_archives
+
+from tree_handler import tree_handler
+
+from web_tools import compose_tree_url as _compose_tree_url
 
 
 # Exceptions ==================================================================
@@ -80,9 +86,21 @@ def reactToAMQPMessage(message, send_back):
     _hnas_protection()
 
     if _instanceof(message, SaveRequest):
+        # Tree
+        if _instanceof(message.record, Tree):
+            tree_handler().add_tree(message.record)
+
+            return TreeInfo(
+                path=message.record.path,
+                url_by_path=_compose_tree_url(message.record),
+                url_by_issn=_compose_tree_url(message.record, issn_url=True),
+            )
+
+        # Publication
         save_fn = save_publication
         class_ref = DBPublication
 
+        # Archive
         if _instanceof(message.record, Archive):
             save_fn = save_archive
             class_ref = DBArchive
@@ -92,9 +110,11 @@ def reactToAMQPMessage(message, send_back):
         )
 
     elif _instanceof(message, SearchRequest):
+        # Publication
         search_fn = search_publications
         class_ref = DBPublication
 
+        # Archive
         if _instanceof(message.query, Archive):
             search_fn = search_archives
             class_ref = DBArchive
