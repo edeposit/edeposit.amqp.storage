@@ -109,3 +109,11 @@ class Tree(namedtuple('Tree', ["name",
             str(self.aleph_id) +
             str(self.issn)
         )
+
+    def collect_publications(self):
+        pubs = list(self.sub_publications)
+
+        for sub_tree in self.sub_trees:
+            pubs.extend(sub_tree.collect_publications())
+
+        return pubs

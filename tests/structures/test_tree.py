@@ -111,3 +111,9 @@ def test_sample_tree(sample_tree):
     assert sample_tree.path == "Mladá fronta"
     assert sample_tree.sub_trees[0].path == "Mladá fronta/2015"
     assert sample_tree.sub_trees[1].path == "Mladá fronta/2014"
+
+
+def test_collect_publications(sample_tree):
+    pubs = sample_tree.collect_publications()
+
+    assert pubs == ["first", "second", "first", "second"]
