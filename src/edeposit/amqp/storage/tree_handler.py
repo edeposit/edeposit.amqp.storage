@@ -13,6 +13,10 @@ from settings import ZEO_CLIENT_PATH
 from settings import TREE_PROJECT_KEY as PROJECT_KEY
 
 
+# Variables ===================================================================
+_TREE_HANDLER = None
+
+
 # Functions & classes =========================================================
 class TreeHandler(DatabaseHandler):
     def __init__(self, conf_path=ZEO_CLIENT_PATH, project_key=PROJECT_KEY):
@@ -54,7 +58,7 @@ class TreeHandler(DatabaseHandler):
     @transaction_manager
     def add_tree(self, tree, parent=None):
         if tree.path in self.path_db:
-            self.remove_tree(tree.path)
+            self.remove_tree_by_path(tree.path)
 
         # index all indexable attributes
         for index in tree.indexes:
@@ -155,3 +159,12 @@ class TreeHandler(DatabaseHandler):
             return alt
 
         return list(parent)[0]
+
+
+def tree_handler():
+    global _TREE_HANDLER
+
+    if not _TREE_HANDLER:
+        _TREE_HANDLER = TreeHandler()
+
+    return _TREE_HANDLER
