@@ -4,6 +4,7 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
+import transaction
 from structures import DBPublication
 
 from storage_handler import InvalidType
@@ -69,6 +70,21 @@ def save_publication(pub):
     _get_handler().store_object(pub)
 
     return pub.to_comm(light_request=True)
+
+
+def search_pubs_by_uuid(uuid):
+    """
+    Search publications by `uuid`.
+
+    Args:
+        uuid (str): UUID of publication.
+
+    Returns:
+        list: List of matching :class:`.DBPublication` or ``[]`` if no match \
+              was found.
+    """
+    with transaction.manager:
+        return list(_get_handler()._zeo_key("uuid").get(uuid, []))
 
 
 def search_publications(query):
