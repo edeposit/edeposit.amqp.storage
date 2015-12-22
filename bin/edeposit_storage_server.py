@@ -10,6 +10,7 @@ import sys
 import os.path
 from os.path import join
 from os.path import dirname
+from urllib import unquote_plus
 
 from bottle import run
 from bottle import abort
@@ -26,13 +27,14 @@ sys.path.insert(0, join(dirname(__file__), "../src/edeposit/amqp"))
 
 try:
     from storage import DBPublication
+    from storage.tree_handler import tree_handler
     from storage.publication_storage import search_publications
 
     from storage import settings
     from storage import web_tools
 except ImportError:
     from edeposit.amqp.storage import DBPublication
-    from edeposit.amqp.storage.tree_handler import TreeHandler
+    from edeposit.amqp.storage.tree_handler import tree_handler
     from edeposit.amqp.storage.publication_storage import search_publications
 
     from edeposit.amqp.storage import settings
@@ -40,7 +42,6 @@ except ImportError:
 
 
 # Variables ===================================================================
-_TREE_HANDLER = None
 INDEX_TEMPLATE = """<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="cs" xml:lang="cs">
 <head>
@@ -105,7 +106,7 @@ INDEX_TEMPLATE = """<!DOCTYPE html>
     <table>
       <tr>
         <td colspan='4' class="title_link">
-          <a href="{{compose_url(pub, uuid_url=True)}}">{{pub.title}}</a>
+          <a href="{{compose_path(pub, uuid_url=True)}}">{{pub.title}}</a>
         </td>
       </tr>
       <tr>
@@ -163,15 +164,6 @@ PRIVATE_ACCESS_MSG = """<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 
 
 # Functions & classes =========================================================
-def tree_handler():
-    global _TREE_HANDLER
-
-    if not _TREE_HANDLER:
-        _TREE_HANDLER = TreeHandler()
-
-    return _TREE_HANDLER
-
-
 @error(403)
 def error403(error):
     tb = error.traceback
@@ -246,18 +238,18 @@ def fetch_by_uuid(uuid):
     return response
 
 
-@route(join("/tree_by_issn", "<issn>"))  # TODO: fix
+@route(join("/", settings.ISSN_DOWNLOAD_KEY, "<issn>"))  # TODO: fix
 def list_periodical_tree_by_issn(issn):
     trees = tree_handler().trees_by_issn(issn)
 
-    print trees
+    return str(trees)
 
 
-@route(join("/tree_by_path", "<path>"))  # TODO: fix
+@route(join("/", settings.PATH_DOWNLOAD_KEY, "<path>"))  # TODO: fix
 def list_periodical_tree_by_path(path):
-    trees = tree_handler().trees_by_path(path)
+    trees = tree_handler().trees_by_path(unquote_plus(path))
 
-    print trees
+    return str(trees)
 
 
 def list_publications():
@@ -270,7 +262,7 @@ def list_publications():
 
     return SimpleTemplate(INDEX_TEMPLATE).render(
         publications=publications,
-        compose_url=web_tools.compose_url,
+        compose_path=web_tools.compose_path,
         delimiter=":",
     )
 
