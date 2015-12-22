@@ -10,6 +10,7 @@ import sys
 import os.path
 from os.path import join
 from os.path import dirname
+from functools import partial
 from urllib import unquote_plus
 
 from bottle import run
@@ -163,6 +164,76 @@ PRIVATE_ACCESS_MSG = """<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 """
 
 
+TREES_TEMPLATE = """<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cs" xml:lang="cs">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Seznam publikací periodika</title>
+    <style>
+        html {
+            height: 95%;
+        }
+        body {
+            display: block;
+            margin: 0 auto;
+
+            margin-top: 1em;
+            margin-bottom: 1em;
+
+            width: 56.2em;
+            padding: 1em;
+
+            border: 1px solid gray;
+            text-align: justify;
+
+            min-height: 95%;
+        }
+        h1 {
+            text-align: center;
+        }
+        h2 {
+            font-size: 1.2em;
+        }
+        #content {
+            margin-top: 5em;
+        }
+        .sub_tree {
+            margin-left: 1em;
+        }
+    </style>
+</head>
+<body>
+% for tree in trees:
+<h1>Seznam publikací periodika</h1>
+
+    {{ !render_tree(tree, 1) }}
+
+% end
+
+</body>
+</html>
+"""
+
+
+TREE_TEMPLATE = """
+<div class="sub_tree">
+  <h2><a href="{{path_composer(tree)}}">{{tree.name}}</a></h2>
+
+% for sub_tree in tree.sub_trees:
+    {{!render_tree(sub_tree, ind+1)}}
+% end
+
+% if tree.sub_publications:
+  <ul>
+%   for sub_publication_uuid in tree.sub_publications:
+    <li>{{ sub_publication_uuid }}</li>
+%   end
+  </ul>
+
+</div>
+"""
+
+
 # Functions & classes =========================================================
 @error(403)
 def error403(error):
@@ -238,18 +309,54 @@ def fetch_by_uuid(uuid):
     return response
 
 
-@route(join("/", settings.ISSN_DOWNLOAD_KEY, "<issn>"))  # TODO: fix
-def list_periodical_tree_by_issn(issn):
+def render_trees(trees, path_composer):
+    def render_tree(tree, ind=1):
+        if not tree.is_public:
+            return ""
+
+        rendered_tree = SimpleTemplate(TREE_TEMPLATE).render(
+            tree=tree,
+            render_tree=render_tree,
+            ind=ind,
+            path_composer=path_composer,
+        )
+
+        # keep nice indentation
+        ind_txt = ind * "  "
+        return ind_txt + ("\n" + ind_txt).join(rendered_tree.splitlines())
+
+    return SimpleTemplate(TREES_TEMPLATE).render(
+        trees=trees,
+        render_tree=render_tree,
+    )
+
+
+@route(join("/", settings.ISSN_DOWNLOAD_KEY, "<issn>"))
+def show_periodical_tree_by_issn(issn):
     trees = tree_handler().trees_by_issn(issn)
 
-    return str(trees)
+    if not trees:
+        abort(404, "Dokument s ISSN '%s' není dostupný." % issn)
+
+    return render_trees(
+        trees,
+        partial(web_tools.compose_tree_path, issn=True)
+    )
 
 
-@route(join("/", settings.PATH_DOWNLOAD_KEY, "<path>"))  # TODO: fix
-def list_periodical_tree_by_path(path):
-    trees = tree_handler().trees_by_path(unquote_plus(path))
+@route(join("/", settings.PATH_DOWNLOAD_KEY, "<path:path>"))
+def show_periodical_tree_by_path(path):
+    path = unquote_plus(path)
+    trees = tree_handler().trees_by_path(path)
 
-    return str(trees)
+    if not trees:
+        path = path.decode("utf-8")
+        abort(404, "Dokument s názvem '%s' není dostupný." % path)
+
+    return render_trees(
+        trees,
+        partial(web_tools.compose_tree_path, issn=False)
+    )
 
 
 def list_publications():
