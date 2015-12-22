@@ -191,11 +191,11 @@ TREES_TEMPLATE = """<!DOCTYPE html>
         h1 {
             text-align: center;
         }
-        h2 {
-            font-size: 1.2em;
-        }
         #content {
             margin-top: 5em;
+        }
+        .link_up {
+            float: right;
         }
         .sub_tree {
             margin-left: 1em;
@@ -203,6 +203,10 @@ TREES_TEMPLATE = """<!DOCTYPE html>
     </style>
 </head>
 <body>
+% if link_up:
+    <a class="link_up" href="{{link_up}}">[Zpět]</a>
+% end
+
 % for tree in trees:
 <h1>Seznam publikací periodika</h1>
 
@@ -325,9 +329,15 @@ def render_trees(trees, path_composer):
         ind_txt = ind * "  "
         return ind_txt + ("\n" + ind_txt).join(rendered_tree.splitlines())
 
+    trees = list(trees)
+    first_tree = trees[0]
+    parent = tree_handler().get_parent(first_tree)
+    link_up = path_composer(parent) if parent else None
+
     return SimpleTemplate(TREES_TEMPLATE).render(
         trees=trees,
         render_tree=render_tree,
+        link_up=link_up,
     )
 
 
