@@ -47,7 +47,7 @@ def compose_path(pub, uuid_url=False):
         return join(
             "/",
             UUID_DOWNLOAD_KEY,
-            basename(pub.uuid)
+            str(pub.uuid)
         )
 
     return join(
@@ -79,7 +79,7 @@ def compose_tree_path(tree, issn=False):
     return join(
         "/",
         PATH_DOWNLOAD_KEY,
-        quote_plus(tree.path),
+        quote_plus(tree.path).replace("%2F", "/"),
     )
 
 
