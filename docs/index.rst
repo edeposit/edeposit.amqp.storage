@@ -32,10 +32,13 @@ API
 .. toctree::
     :maxdepth: 1
 
-    /api/api.rst
+    /api/tree_handler.rst
     /api/storage_handler.rst
+
+.. toctree::
+    :maxdepth: 1
+
     /api/web_tools.rst
-    /api/zconf.rst
     /api/settings.rst
 
 :doc:`/api/structures/structures`
