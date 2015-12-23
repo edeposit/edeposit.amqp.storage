@@ -1,44 +1,69 @@
 package edeposit.amqp.storage {
     package structures {
-        class struct_init as "_​_init__.py" <<M, Green>> {
-            Imports all structures to be
-            accessible at package level.
-            ---
-            $templater:module:structures/__init__
+        package comm {
+            class publication as "publication.py" <<M, Green>> {
+                Stucture for use
+                in AMQP communication.
+                ---
+                $templater:module:structures/comm/publication
+            }
+            class archive as "archive.py" <<M, Green>> {
+                Stucture for use
+                in AMQP communication.
+                ---
+                $templater:module:structures/comm/archive
+            }
+            class tree as "tree.py" <<M, Green>> {
+                Stucture for use
+                in AMQP communication.
+                ---
+                $templater:module:structures/comm/tree
+            }
+            class requests as "requests.py" <<M, Green>> {
+                AMQP requests.
+                ---
+                $templater:module:structures/comm/requests
+            }
+            class responses as "responses.py" <<M, Green>> {
+                AMQP resposes.
+                ---
+                $templater:module:structures/comm/responses
+            }
+            class comm_init as "_​_init__.py" <<M, Green>> {
+                Imports all structures to make
+                them accessible at package level.
+                ---
+                $templater:module:structures/comm/__init__
+            }
+
+            publication -d-> comm_init
+            archive -d-> comm_init
+            tree -d-> comm_init
+            requests -d-> comm_init
+            responses -d-> comm_init
         }
-        class publication as "publication.py" <<M, Green>> {
-            Stucture for use
-            in AMQP communication.
-            ---
-            $templater:module:structures/publication
-        }
-        class archive as "archive.py" <<M, Green>> {
-            Stucture for use
-            in AMQP communication.
-            ---
-            $templater:module:structures/archive
-        }
-        class db_publication as "db_publication.py" <<M, Green>> {
-            Structure for use in
-            ZODB.
-            ---
-            $templater:module:structures/db_publication
-        }
-        class db_archive as "db_archive.py" <<M, Green>> {
-            Structure for use in
-            ZODB.
-            ---
-            $templater:module:structures/db_archive
-        }
-        class requests as "requests.py" <<M, Green>> {
-            AMQP requests.
-            ---
-            $templater:module:structures/requests
-        }
-        class responses as "responses.py" <<M, Green>> {
-            AMQP resposes.
-            ---
-            $templater:module:structures/responses
+        package db {
+            class db_publication as "db_publication.py" <<M, Green>> {
+                Structure for use in
+                ZODB.
+                ---
+                $templater:module:structures/db/db_publication
+            }
+            class db_archive as "db_archive.py" <<M, Green>> {
+                Structure for use in
+                ZODB.
+                ---
+                $templater:module:structures/db/db_archive
+            }
+            class db_init as "_​_init__.py" <<M, Green>> {
+                Imports all structures to make
+                them accessible at package level.
+                ---
+                $templater:module:structures/db/__init__
+            }
+
+            db_publication -d-> db_init
+            db_archive -d-> db_init
         }
         class structures_generator as "structures_generator.py" <<S, Blue>> {
             Script used to generate both
@@ -47,36 +72,21 @@ package edeposit.amqp.storage {
             ---
             $templater:module:structures/structures_generator
         }
-    }
-    publication -d-> struct_init
-    db_publication -d-> struct_init
-    requests -d-> struct_init
-    responses -d-> struct_init
-
-    structures_generator .d.> archive: generates
-    structures_generator .d.> publication: generates
-    structures_generator .d.> db_archive: generates
-    structures_generator .d.> db_publication: generates
-
-
-    package zconf {
-        class zinit as "_​_init__.py" <<M, Green>> {
-            ZODB connector.
+        class struct_init as "_​_init__.py" <<M, Green>> {
+            Imports all structures to make
+            them accessible at package level.
             ---
-            $templater:module:zconf/__init__
+            $templater:module:structures/__init__
         }
-        class zeo as "zeo.conf" <<F, Red>> {
-            Default ZODB / ZEO
-            configuration file.
-        }
-        class zeo_client as "zeo_client.conf" <<F, Red>> {
-            Default config for
-            the ZEO client.
-        }
-    }
-    zeo -d-> zinit
-    zeo_client -d-> zinit
 
+        comm_init -d-> struct_init
+        db_init -d-> struct_init
+
+        structures_generator .d.> archive: generates
+        structures_generator .d.> publication: generates
+        structures_generator .d.> db_archive: generates
+        structures_generator .d.> db_publication: generates
+    }
 
     class init as "_​_init__.py" <<M, Green>> {
         AMQP connector.
@@ -97,6 +107,11 @@ package edeposit.amqp.storage {
         on.
         ---
         $templater:module:storage_handler
+    }
+    class tree_handler as "tree_handler.py" <<M, Green>> {
+        Tree database handler.
+        ---
+        $templater:module:tree_handler
     }
     class archive_storage as "archive_storage.py" <<M, Green>> {
         Saves DBArchive to
@@ -135,14 +150,15 @@ package edeposit.amqp.storage {
         .WEB_DB_TIMEOUT
     }
     struct_init -d-> init
-    zinit -d-> storage_handler
 
-    settings -r> storage_handler
+    settings -d-> storage_handler
+    settings -d-> tree_handler
     settings -d-> init
 
     storage_handler -d-> archive_storage: wraps
     storage_handler -d-> publication_storage: wraps
 
+    tree_handler -d-> init
     archive_storage -d-> init
     publication_storage -d-> init
 }

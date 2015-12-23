@@ -1,44 +1,69 @@
 package edeposit.amqp.storage {
     package structures {
-        class struct_init as "_​_init__.py" <<M, Green>> {
-            Imports all structures to be
-            accessible at package level.
-            ---
+        package comm {
+            class publication as "publication.py" <<M, Green>> {
+                Stucture for use
+                in AMQP communication.
+                ---
+                class Publication
+            }
+            class archive as "archive.py" <<M, Green>> {
+                Stucture for use
+                in AMQP communication.
+                ---
+                class Archive
+            }
+            class tree as "tree.py" <<M, Green>> {
+                Stucture for use
+                in AMQP communication.
+                ---
+                class Tree
+            }
+            class requests as "requests.py" <<M, Green>> {
+                AMQP requests.
+                ---
+                class SearchRequest
+                class SaveRequest
+            }
+            class responses as "responses.py" <<M, Green>> {
+                AMQP resposes.
+                ---
+                class SearchResult
+                class TreeInfo
+            }
+            class comm_init as "_​_init__.py" <<M, Green>> {
+                Imports all structures to make
+                them accessible at package level.
+                ---
+            }
+
+            publication -d-> comm_init
+            archive -d-> comm_init
+            tree -d-> comm_init
+            requests -d-> comm_init
+            responses -d-> comm_init
         }
-        class publication as "publication.py" <<M, Green>> {
-            Stucture for use
-            in AMQP communication.
-            ---
-            class Publication
-        }
-        class archive as "archive.py" <<M, Green>> {
-            Stucture for use
-            in AMQP communication.
-            ---
-            class Archive
-        }
-        class db_publication as "db_publication.py" <<M, Green>> {
-            Structure for use in
-            ZODB.
-            ---
-            class DBPublication
-        }
-        class db_archive as "db_archive.py" <<M, Green>> {
-            Structure for use in
-            ZODB.
-            ---
-            class DBArchive
-        }
-        class requests as "requests.py" <<M, Green>> {
-            AMQP requests.
-            ---
-            class SearchRequest
-            class SaveRequest
-        }
-        class responses as "responses.py" <<M, Green>> {
-            AMQP resposes.
-            ---
-            class SearchResult
+        package db {
+            class db_publication as "db_publication.py" <<M, Green>> {
+                Structure for use in
+                ZODB.
+                ---
+                class DBPublication
+            }
+            class db_archive as "db_archive.py" <<M, Green>> {
+                Structure for use in
+                ZODB.
+                ---
+                class DBArchive
+            }
+            class db_init as "_​_init__.py" <<M, Green>> {
+                Imports all structures to make
+                them accessible at package level.
+                ---
+            }
+
+            db_publication -d-> db_init
+            db_archive -d-> db_init
         }
         class structures_generator as "structures_generator.py" <<S, Blue>> {
             Script used to generate both
@@ -46,40 +71,20 @@ package edeposit.amqp.storage {
             structures.
             ---
         }
-    }
-    publication -d-> struct_init
-    db_publication -d-> struct_init
-    requests -d-> struct_init
-    responses -d-> struct_init
-
-    structures_generator .d.> archive: generates
-    structures_generator .d.> publication: generates
-    structures_generator .d.> db_archive: generates
-    structures_generator .d.> db_publication: generates
-
-
-    package zconf {
-        class zinit as "_​_init__.py" <<M, Green>> {
-            ZODB connector.
+        class struct_init as "_​_init__.py" <<M, Green>> {
+            Imports all structures to make
+            them accessible at package level.
             ---
-            use_new_connection()
-            cached_connection(fn, timeout)
-            get_zeo_connection(cached, on_close_callback)
-            get_zeo_root(project_key, cached)
-            get_zeo_key(key, new_type, cached, project_key)
         }
-        class zeo as "zeo.conf" <<F, Red>> {
-            Default ZODB / ZEO
-            configuration file.
-        }
-        class zeo_client as "zeo_client.conf" <<F, Red>> {
-            Default config for
-            the ZEO client.
-        }
-    }
-    zeo -d-> zinit
-    zeo_client -d-> zinit
 
+        comm_init -d-> struct_init
+        db_init -d-> struct_init
+
+        structures_generator .d.> archive: generates
+        structures_generator .d.> publication: generates
+        structures_generator .d.> db_archive: generates
+        structures_generator .d.> db_publication: generates
+    }
 
     class init as "_​_init__.py" <<M, Green>> {
         AMQP connector.
@@ -92,6 +97,7 @@ package edeposit.amqp.storage {
         class SearchResult
         class SearchRequest
             reactToAMQPMessage(message, send_back)
+            class HNASNotMountedException
     }
     class storage_handler as "storage_handler.py" <<M, Green>> {
         Saves objects to
@@ -99,10 +105,15 @@ package edeposit.amqp.storage {
         search indexes and so
         on.
         ---
-        store_object(obj)
-        search_objects(query)
         class InvalidType
         class UnindexableObject
+        class StorageHandler
+    }
+    class tree_handler as "tree_handler.py" <<M, Green>> {
+        Tree database handler.
+        ---
+        tree_handler()
+        class TreeHandler
     }
     class archive_storage as "archive_storage.py" <<M, Green>> {
         Saves DBArchive to
@@ -118,14 +129,17 @@ package edeposit.amqp.storage {
         storage_handler.
         ---
         save_publication(pub)
+        search_pubs_by_uuid(uuid)
         search_publications(query)
     }
     class web_tools as "web_tools.py" <<M, Green>> {
         Shared functions for url
         composition.
         ---
-        compose_url(pub, uuid_url)
+        compose_path(pub, uuid_url)
+        compose_tree_path(tree, issn)
         compose_full_url(pub, uuid_url)
+        compose_tree_url(tree, issn_url)
         class PrivatePublicationError
     }
     class settings as "settings.py" <<M, Green>> {
@@ -145,14 +159,15 @@ package edeposit.amqp.storage {
         .WEB_DB_TIMEOUT
     }
     struct_init -d-> init
-    zinit -d-> storage_handler
 
-    settings -r> storage_handler
+    settings -d-> storage_handler
+    settings -d-> tree_handler
     settings -d-> init
 
     storage_handler -d-> archive_storage: wraps
     storage_handler -d-> publication_storage: wraps
 
+    tree_handler -d-> init
     archive_storage -d-> init
     publication_storage -d-> init
 }
