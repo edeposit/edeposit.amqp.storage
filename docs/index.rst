@@ -55,16 +55,17 @@ AMQP:
 .. toctree::
     :maxdepth: 1
 
-    /api/structures/publication.rst
-    /api/structures/archive.rst
+    /api/structures/comm/publication.rst
+    /api/structures/comm/archive.rst
+    /api/structures/comm/tree.rst
 
 Database:
 
 .. toctree::
     :maxdepth: 1
 
-    /api/structures/db_publication.rst
-    /api/structures/db_archive.rst
+    /api/structures/db/db_publication.rst
+    /api/structures/db/db_archive.rst
 
 .. toctree::
     :maxdepth: 1
@@ -93,6 +94,7 @@ Here is the list of ``Request -> Response`` pairs describing responses to AMQP c
 
     SaveRequest.Archive -> Archive
     SaveRequest.Publication -> Publication
+    SaveRequest.Tree -> TreeInfo
 
     SearchRequest -> SearchResult
 
@@ -138,17 +140,18 @@ Example
     platform linux2 -- Python 2.7.6, pytest-2.8.2, py-1.4.30, pluggy-0.3.1
     rootdir: /home/bystrousak/Plocha/Dropbox/c0d3z/prace/edeposit.amqp.storage, inifile: 
     plugins: cov-1.8.1
-    collected 23 items
+    collected 35 items 
 
     tests/test_amqp_chain.py .....
     tests/test_publication_storage.py ........
-    tests/test_storage_handler.py .
+    tests/test_tree_handler.py ........
     tests/structures/test_db_archive.py ...
     tests/structures/test_db_publication.py ....
     tests/structures/test_publication.py .
     tests/structures/test_requests.py .
+    tests/structures/test_tree.py .....
 
-    ========================== 23 passed in 5.99 seconds ===========================
+    ========================== 35 passed in 11.02 seconds ==========================
 
 
 Indices and tables

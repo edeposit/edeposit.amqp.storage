@@ -15,14 +15,15 @@ AMQP communication structures
 .. toctree::
     :maxdepth: 1
 
-    /api/structures/publication.rst
-    /api/structures/archive.rst
+    /api/structures/comm/publication.rst
+    /api/structures/comm/archive.rst
+    /api/structures/comm/tree.rst
 
 Internal (database) structures
 ------------------------------
 
 .. toctree::
+    :maxdepth: 1
 
-    /api/structures/db_publication.rst
-    /api/structures/db_archive.rst
-
+    /api/structures/db/db_publication.rst
+    /api/structures/db/db_archive.rst
