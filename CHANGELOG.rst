@@ -9,6 +9,7 @@ Changelog
     - Added automatic temporary test environment generator.
     - Fixed #46 - bug in Mime handling.
     - Thanks to `zeo_connector`, cacheing is no longer needed, so everything should work instatly.
+    - Added support for Tree's of periodical documents.
 
 0.5.0 - 0.5.9
 -------------
