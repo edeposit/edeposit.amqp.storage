@@ -249,6 +249,9 @@ TREE_TEMPLATE = """
 # Functions & classes =========================================================
 @error(403)
 def error403(error):
+    """
+    Custom 403 page.
+    """
     tb = error.traceback
 
     if isinstance(tb, dict) and "name" in tb and "uuid" in tb:
@@ -322,9 +325,29 @@ def fetch_by_uuid(uuid):
 
 
 def render_trees(trees, path_composer):
+    """
+    Render list of `trees` to HTML.
+
+    Args:
+        trees (list): List of :class:`.Tree`.
+        path_composer (fn reference): Function used to compose paths from UUID.
+            Look at :func:`.compose_tree_path` from :mod:`.web_tools`.
+
+    Returns:
+        str: HTML representation of trees.
+    """
     trees = list(trees)  # by default, this is set
 
     def create_pub_cache(trees):
+        """
+        Create uuid -> DBPublication cache from all uuid's linked from `trees`.
+
+        Args:
+            trees (list): List of :class:`.Tree`.
+
+        Returns:
+            dict: {uuid: DBPublication}
+        """
         sub_pubs_uuids = sum((x.collect_publications() for x in trees), [])
 
         uuid_mapping = {
@@ -339,9 +362,22 @@ def render_trees(trees, path_composer):
             if pub
         }
 
+    # create uuid -> DBPublication cache
     pub_cache = create_pub_cache(trees)
 
     def render_tree(tree, ind=1):
+        """
+        Render the tree into HTML using :attr:`TREE_TEMPLATE`. Private trees
+        are ignored.
+
+        Args:
+            tree (obj): :class:`.Tree` instance.
+            ind (int, default 1): Indentation. This function is called
+                recursively.
+
+        Returns:
+            str: Rendered string.
+        """
         if not tree.is_public:
             return ""
 
@@ -357,6 +393,7 @@ def render_trees(trees, path_composer):
         ind_txt = ind * "  "
         return ind_txt + ("\n" + ind_txt).join(rendered_tree.splitlines())
 
+    # this is used to get reference for back button
     parent = tree_handler().get_parent(trees[0])
     link_up = path_composer(parent) if parent else None
 
@@ -369,6 +406,9 @@ def render_trees(trees, path_composer):
 
 @route(join("/", settings.ISSN_DOWNLOAD_KEY, "<issn>"))
 def show_periodical_tree_by_issn(issn):
+    """
+    Render tree using ISSN.
+    """
     trees = tree_handler().trees_by_issn(issn)
 
     if not trees:
@@ -382,6 +422,9 @@ def show_periodical_tree_by_issn(issn):
 
 @route(join("/", settings.PATH_DOWNLOAD_KEY, "<path:path>"))
 def show_periodical_tree_by_path(path):
+    """
+    Render tree using it's path.
+    """
     path = unquote_plus(path)
     trees = tree_handler().trees_by_path(path)
 
