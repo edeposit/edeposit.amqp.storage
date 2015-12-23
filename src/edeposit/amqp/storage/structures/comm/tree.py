@@ -111,6 +111,13 @@ class Tree(namedtuple('Tree', ["name",
         )
 
     def collect_publications(self):
+        """
+        Recursively collect list of all publications referenced in this
+        tree and all sub-trees.
+
+        Returns:
+            list: List of UUID strings.
+        """
         pubs = list(self.sub_publications)
 
         for sub_tree in self.sub_trees:
