@@ -49,8 +49,8 @@ AMQP:
 .. toctree::
     :maxdepth: 1
 
-    /api/structures/responses.rst
-    /api/structures/requests.rst
+    /api/structures/comm/responses.rst
+    /api/structures/comm/requests.rst
 
 .. toctree::
     :maxdepth: 1

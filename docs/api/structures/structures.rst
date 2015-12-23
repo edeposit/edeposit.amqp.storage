@@ -9,8 +9,8 @@ AMQP communication structures
 .. toctree::
     :maxdepth: 1
 
-    /api/structures/requests.rst
-    /api/structures/responses.rst
+    /api/structures/comm/requests.rst
+    /api/structures/comm/responses.rst
 
 .. toctree::
     :maxdepth: 1
